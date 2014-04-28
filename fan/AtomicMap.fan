@@ -11,7 +11,7 @@ using concurrent::AtomicRef
 ** This makes them lightweight but also susceptible to **data-loss** during race conditions.
 ** This may be acceptable for *caching* situations where values is easily re-calculated.
 ** 
-** Note that all objects held in the map have to be immutable.
+** Note that all objects held in the map must be immutable.
 ** 
 ** See [The Good, The Bad and The Ugly of Const Services]`http://www.fantomfactory.org/articles/good-bad-and-ugly-of-const-services#theUgly` for more details.
 const class AtomicMap {
@@ -45,14 +45,6 @@ const class AtomicMap {
 		}
 		return get(key)
 	}
-	
-	** Returns the value associated with the given key. 
-	** If key is not mapped, then return the value of the 'def' parameter.  
-	** If 'def' is omitted it defaults to 'null'.
-	@Operator
-	Obj? get(Obj key, Obj? def := null) {
-		map.get(key, def)
-	}
 
 	** Sets the key / value pair.
 	@Operator
@@ -62,21 +54,6 @@ const class AtomicMap {
 		rwMap := map.rw
 		rwMap[iKey] = iVal
 		map = rwMap
-	}
-
-	** Returns 'true' if the cache contains the given key
-	Bool containsKey(Obj key) {
-		map.containsKey(key)
-	}
-	
-	** Returns a list of all the mapped keys.
-	Obj[] keys() {
-		map.keys
-	}
-
-	** Returns a list of all the mapped values.
-	Obj[] vals() {
-		map.vals
 	}
 
 	** Remove all key/value pairs from the map. Return this.
@@ -95,6 +72,31 @@ const class AtomicMap {
 		return oVal 
 	}
 
+	// ---- Common Map Methods --------------------------------------------------------------------
+	
+	** Returns the value associated with the given key. 
+	** If key is not mapped, then return the value of the 'def' parameter.  
+	** If 'def' is omitted it defaults to 'null'.
+	@Operator
+	Obj? get(Obj key, Obj? def := null) {
+		map.get(key, def)
+	}
+
+	** Returns 'true' if the cache contains the given key
+	Bool containsKey(Obj key) {
+		map.containsKey(key)
+	}
+	
+	** Returns a list of all the mapped keys.
+	Obj[] keys() {
+		map.keys
+	}
+
+	** Returns a list of all the mapped values.
+	Obj?[] vals() {
+		map.vals
+	}
+	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
 		map.isEmpty
@@ -103,5 +105,5 @@ const class AtomicMap {
 	** Get the number of key/value pairs in the map.
 	Int size() {
 		map.size
-	}
+	}	
 }
