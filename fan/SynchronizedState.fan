@@ -3,21 +3,19 @@ using concurrent::ActorPool
 using concurrent::AtomicInt
 using concurrent::Future
 
-** A helper class to store and retrieve state between threads; use in 'const' classes.
-** For IoC this means your services can be declared as 'perApplication' or singleton scope and 
-** still hold useful data.
+** Provides 'synchronized' access to a (non- 'const') mutable object.
 ** 
 ** In Java terms, the 'getState() { ... }' method behaves in a similar fashion to the 
 ** 'synchronized' keyword, only allowing one thread through at a time.
 ** 
-** 'ConcurrentState' wraps a state object in an Actor, and provides access to it via the 
+** 'SynchronizedState' wraps a state object in an Actor, and provides access to it via the 
 ** 'withState' and 'getState' methods. Note that by their nature, these methods are immutable 
-** boundaries. Meaning that while all data in the State object can be mutable, but data passed in 
-** and out of the methods can not be. 
+** boundaries. Meaning that while data in the State object can be mutable, data passed to 
+** and from these methods can not be. 
 ** 
-** 'ConcurrentState' has been designed to be *type safe*, that is you cannot accidently call 
+** 'SynchronizedState' has been designed to be *type safe*, that is you cannot accidently call 
 ** methods on your State object. The compiler forces all access to the state object to be made 
-** through the 'withState' and 'getState' methods.
+** through the 'withState()' and 'getState()' methods.
 ** 
 ** A fully usable example of a mutable const map class is as follows:
 ** 
@@ -47,51 +45,21 @@ using concurrent::Future
 ** }
 ** <pre
 ** 
-** As alternatives to 'ConcurrentState' don't forget you also have 
-** [AtomicBool]`concurrent::AtomicBool`, [AtomicInt]`concurrent::AtomicInt` and 
-** [AtomicRef]`concurrent::AtomicRef`
-** 
-// FIXME: clean up API 
 const class SynchronizedState {
-	private static const Log 	log 		:= Utils.getLog(SynchronizedState#)
+	private static const Log 		log 	:= Utils.getLog(SynchronizedState#)
 	
-	** The 'ActorPool' used to store this object's 'Actor'. Set via a ctor it-block.
-			const ActorPool		actorPool
-	private const Actor 		stateActor
-	private const |->Obj?| 		stateFactory
-	private const ThreadLocals 	stash
+	private const Actor 			stateActor
+	private const ThreadLocalRef 	state
 	
-	** Keeps count of the number of 'ConcurrentState' instances that have been created.
-	** For debug purposes.
-	@NoDoc
-	static const AtomicInt			instanceCount	:= AtomicInt() 
-	
-	private Obj? state {
-		get { stash["state"] }
-		set { stash["state"] = it }
-	}
-
 	** The given state type must have a public no-args ctor as per `sys::Type.make`
-	new makeWithStateType(Type stateType, |This|? f := null) {
-		f?.call(this)
-		if (actorPool == null)
-			actorPool = ActorPool()
-		this.stateFactory	= |->Obj?| { stateType.make }
-		this.stash			= ThreadLocals(SynchronizedState#.name + "." + stateType.name)
+	new makeWithStateType(ActorPool actorPool, Type stateType) {
+		this.state			= ThreadLocalRef(stateType.name) |->Obj?| { stateType.make }
 		this.stateActor		= Actor(actorPool, |Obj? obj -> Obj?| { receive(obj) })
-		instanceCount.incrementAndGet
-//		Env.cur.err.printLine(Err().traceToStr.splitLines[4])
 	}
 
-	new makeWithStateFactory(|->Obj?| stateFactory, |This|? f := null) {
-		f?.call(this)
-		if (actorPool == null)
-			actorPool = ActorPool()
-		this.stateFactory	= stateFactory
-		this.stash			= ThreadLocals(SynchronizedState#.name + ".defaultName")
+	new makeWithStateFactory(ActorPool actorPool, |->Obj?| stateFactory) {
+		this.state			= ThreadLocalRef(SynchronizedState#.name, stateFactory)
 		this.stateActor		= Actor(actorPool, |Obj? obj -> Obj?| { receive(obj) })
-		instanceCount.incrementAndGet
-//		Env.cur.err.printLine(Err().traceToStr.splitLines[4])
 	}
 
 	** Use to access state, effectively wrapping the given func in a Java 'synchronized { ... }' 
@@ -126,10 +94,7 @@ const class SynchronizedState {
 
 		try {
 			// lazily create our state
-			if (state == null) 
-				state = stateFactory.call()
-
-			return func.call(state)
+			return func.call(state.val)
 
 		} catch (Err e) {
 			// if the func has a return type, then an the Err is rethrown on assignment

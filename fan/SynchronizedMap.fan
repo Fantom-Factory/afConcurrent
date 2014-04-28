@@ -56,13 +56,6 @@ const class SynchronizedMap {
 			return val
 		}
 	}
-	
-	** Returns the value associated with the given key. 
-	** If 'key' is not mapped, then return 'def'.  
-	@Operator
-	Obj? get(Obj key, Obj? def := null) {
-		map.get(key, def)
-	}
 
 	** Sets the key / value pair, ensuring no data is lost during multi-threaded race conditions.
 	** Though the same key may be overridden. Both the 'key' and 'val' must be immutable. 
@@ -75,21 +68,6 @@ const class SynchronizedMap {
 			newMap.set(iKey, iVal)
 			map = newMap
 		}
-	}
-
-	** Returns 'true' if the cache contains the given key
-	Bool containsKey(Obj key) {
-		map.containsKey(key)
-	}
-	
-	** Returns a list of all the mapped keys.
-	Obj[] keys() {
-		map.keys
-	}
-
-	** Returns a list of all the mapped values.
-	Obj[] vals() {
-		map.vals
 	}
 
 	** Remove all key/value pairs from the map. Return this.
@@ -113,6 +91,30 @@ const class SynchronizedMap {
 		}
 	}
 	
+	// ---- Common Map Methods --------------------------------------------------------------------
+	
+	** Returns the value associated with the given key. 
+	** If 'key' is not mapped, then return 'def'.  
+	@Operator
+	Obj? get(Obj key, Obj? def := null) {
+		map.get(key, def)
+	}
+
+	** Returns 'true' if the cache contains the given key
+	Bool containsKey(Obj key) {
+		map.containsKey(key)
+	}
+	
+	** Returns a list of all the mapped keys.
+	Obj[] keys() {
+		map.keys
+	}
+
+	** Returns a list of all the mapped values.
+	Obj?[] vals() {
+		map.vals
+	}
+	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
 		map.isEmpty
@@ -121,5 +123,5 @@ const class SynchronizedMap {
 	** Get the number of key/value pairs in the map.
 	Int size() {
 		map.size
-	}	
+	}
 }

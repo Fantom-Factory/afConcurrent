@@ -1,6 +1,6 @@
 using concurrent
 
-** A helper class that provides synchronized access to blocks of code. Example usage:
+** Provides 'synchronized' access to blocks of code. Example usage:
 ** 
 ** pre>
 ** const class Example : Synchronized {
@@ -24,7 +24,7 @@ const class Synchronized {
 	private static const Log 	log 	:= Utils.getLog(Synchronized#)
 	
 	private const Actor 		actor
-	private const ThreadLocal	syncing	:= ThreadLocal("synchronized")
+	private const ThreadLocalRef	insync	:= ThreadLocalRef("synchronized")
 
 	** Create a 'Synchronized' class that uses the given 'ActorPool'.
 	new make(ActorPool? actorPool := null) {
@@ -48,7 +48,7 @@ const class Synchronized {
 	** This effectively wraps the given func in a Java 'synchronized { ... }' block and returns a
 	** value. 
 	virtual Obj? synchronized(|->Obj?| f) {
-		if (syncing.val == true)
+		if (insync.val == true)
 			throw Err(ErrMsgs.synchronized_nestedCallsNotAllowed)
 
 		// explicit call to .toImmutable() - see http://fantom.org/sidewalk/topic/1798#c12190
@@ -69,7 +69,7 @@ const class Synchronized {
 		logErr	:= msg[0] as Bool
 		func 	:= msg[1] as |->Obj?|
 
-		syncing.val = true
+		insync.val = true
 		try {
 			return func.call()
 
@@ -81,7 +81,7 @@ const class Synchronized {
 			throw e
 
 		} finally {
-			syncing.remove
+			insync.purge
 		}
 	}	
 }
