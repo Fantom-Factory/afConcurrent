@@ -1,0 +1,32 @@
+Overview [#overview]
+********************
+Utility classes for sharing data between threads.
+
+
+
+Install [#Install]
+******************
+Install 'Concurrent' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
+
+  $ fanr install -r http://repo.status302.com/fanr/ afConcurrent
+
+To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
+
+  depends = ["sys 1.0", ..., "afConcurrent 0+"]
+
+
+
+Quick Start [#quickStart]
+*************************
+pre>
+  Example here
+<pre
+
+
+
+Release Notes [#releaseNotes]
+*****************************
+
+v0.0.2 [#v0.0.2]
+----------------
+ - New: Preview Release 
