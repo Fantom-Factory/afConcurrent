@@ -20,13 +20,13 @@ using concurrent::Future
 ** A fully usable example of a mutable const map class is as follows:
 ** 
 ** pre>
-** const class ConstMap {
-**   const ConcurrentState  conState  := ConcurrentState(ConstMapState#)
+** const class SyncMap {
+**   const SynchronizedState  conState  := SynchronizedState(MapState#)
 **   
 **   ** Note that both 'key' and 'value' need to be immutable
 **   @Operator
 **   Obj get(Obj key) {
-**     getState |ConstMapState state -> Obj?| {
+**     getState |MapState state -> Obj?| {
 **       return state.map[key]
 **     }
 **   }
@@ -34,13 +34,13 @@ using concurrent::Future
 **   ** Note that both 'key' and 'value' need to be immutable
 **   @Operator
 **   Void set(Obj key, Obj value) {
-**     withState |ConstMapState state| {
+**     withState |MapState state| {
 **       state.map[key] = value
 **     }
 **   }
 ** }
 ** 
-** class ConstMapState {
+** class MapState {
 **   Obj:Obj  map := [:]
 ** }
 ** <pre

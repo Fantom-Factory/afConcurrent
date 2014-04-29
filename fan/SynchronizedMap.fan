@@ -20,13 +20,6 @@ const class SynchronizedMap {
 		this.map = [:]
 		this.lock	= Synchronized(actorPool)
 	}
-
-	** Make a 'SynchronizedMap' using the given immutable map. 
-	** Use when you need a case insensitive map.
-	new makeWithMap(ActorPool actorPool, [Obj:Obj?] map) {
-		this.map = map
-		this.lock	= Synchronized(actorPool)
-	}
 	
 	** Gets or sets a read-only copy of the backing map.
 	[Obj:Obj?] map {

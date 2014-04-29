@@ -19,11 +19,6 @@ const class AtomicList {
 	new make() {
 		this.list = [,]
 	}
-
-	** Makes an 'AtomicList' wrapping the given immutable list. 
-	new makeWithList(Obj?[] list) {
-		this.list = list
-	}
 	
 	** Gets or sets a read-only copy of the backing map.
 	Obj?[] list {
@@ -60,6 +55,7 @@ const class AtomicList {
 
 	** Returns the item at the specified index.
 	** A negative index may be used to access an index from the end of the list.
+	@Operator
 	Obj? get(Int index) {
 		list[index]
 	}
