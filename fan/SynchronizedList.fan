@@ -1,28 +1,30 @@
+using concurrent::ActorPool
 using concurrent::AtomicRef
+using concurrent::Future
 
-** A List that provides fast reads and lightweight writes between threads.
+** A List that provides fast reads and 'synchronised' writes between threads, ensuring data integrity.
 ** Use when *reads* far out number the *writes*.
-**
+** 
 ** The list is stored in an [AtomicRef]`concurrent::AtomicRef` through which all reads are made. 
-** Writing makes a 'rw' copy of the list and is thus a more expensive operation.
 ** 
-** > **CAUTION:** 
-** Write operations ( 'add', 'remove' & 'clear' ) are not synchronised. 
-** This makes them lightweight but also susceptible to **data-loss** during race conditions.
-** This may be acceptable for *caching* situations where values is easily re-calculated.
+** All write operations ( 'get', 'remove' & 'clear' ) are made via 'synchronized' blocks 
+** ensuring no data is lost during race conditions. 
+** Writing makes a 'rw' copy of the map and is thus a more expensive operation.
 ** 
-** Note that all values held in the list must be immutable.
-const class AtomicList {
-	private const AtomicRef atomicList := AtomicRef()
+** Note that all objects held in the map have to be immutable.
+const class SynchronizedList {
+	private const AtomicRef 	atomicList := AtomicRef()
+	private const Synchronized	lock
 	
-	** Makes a new empty 'AtomicList'.
-	new make() {
-		this.list = [,]
+	new make(ActorPool actorPool) {
+		this.lock	= Synchronized(actorPool)
+		this.list 	= [,]
 	}
 
-	** Makes an 'AtomicList' wrapping the given immutable list. 
-	new makeWithList(Obj?[] list) {
-		this.list = list
+	** Make a 'SynchronizedList' using the given immutable list. 
+	new makeWithList(ActorPool actorPool, Obj?[] list) {
+		this.lock	= Synchronized(actorPool)
+		this.list	= list
 	}
 	
 	** Gets or sets a read-only copy of the backing map.
@@ -35,24 +37,30 @@ const class AtomicList {
 	** Return this. 
 	@Operator
 	This add(Obj? val) {
-		rwList := list.rw
-		rwList.add(val)
-		list = rwList
+		lock.synchronized |->| {
+			rwList := list.rw
+			rwList.add(val)
+			list = rwList
+		}
 		return this
 	}
 
 	** Removes the specified item from the list, returning the removed item.
 	** If the item was not mapped then return 'null'.
 	Obj? remove(Obj item) {
-		rwList := list.rw
-		oVal  := rwList.remove(item)
-		list = rwList
-		return oVal 
+		lock.synchronized |->Obj| {
+			rwList := list.rw
+			oVal := rwList.remove(item)
+			list = rwList
+			return oVal
+		}
 	}
 
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
-		list = list.rw.clear
+		lock.synchronized |->Obj| {
+			list = list.rw.clear			
+		}
 		return this
 	}
 

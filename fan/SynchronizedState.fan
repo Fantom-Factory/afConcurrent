@@ -46,19 +46,22 @@ using concurrent::Future
 ** <pre
 ** 
 const class SynchronizedState {
-	private static const Log 		log 	:= Utils.getLog(SynchronizedState#)
+	private static const Log 	log 	:= Utils.getLog(SynchronizedState#)
 	
-	private const Actor 			stateActor
-	private const ThreadLocalRef 	state
+	private const Actor 		stateActor
+	private const |->Obj?| 		stateFactory
+	private const LocalRef 		stateRef
 	
 	** The given state type must have a public no-args ctor as per `sys::Type.make`
 	new makeWithStateType(ActorPool actorPool, Type stateType) {
-		this.state			= ThreadLocalRef(stateType.name) |->Obj?| { stateType.make }
+		this.stateRef		= LocalRef(stateType.name)
+		this.stateFactory	= |->Obj?| { stateType.make }		
 		this.stateActor		= Actor(actorPool, |Obj? obj -> Obj?| { receive(obj) })
 	}
 
 	new makeWithStateFactory(ActorPool actorPool, |->Obj?| stateFactory) {
-		this.state			= ThreadLocalRef(SynchronizedState#.name, stateFactory)
+		this.stateRef		= LocalRef(SynchronizedState#.name)
+		this.stateFactory	= stateFactory
 		this.stateActor		= Actor(actorPool, |Obj? obj -> Obj?| { receive(obj) })
 	}
 
@@ -93,8 +96,11 @@ const class SynchronizedState {
 		func 	:= msg[1] as |Obj->Obj?|
 
 		try {
+			if (stateRef.val == null) 
+				stateRef.val = stateFactory.call
+			
 			// lazily create our state
-			return func.call(state.val)
+			return func.call(stateRef.val)
 
 		} catch (Err e) {
 			// if the func has a return type, then an the Err is rethrown on assignment
