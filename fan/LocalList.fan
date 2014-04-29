@@ -1,22 +1,26 @@
 
 ** Manages a List stored in 'Actor.locals' under a unique key.
+** 
+** 'LocalLists' are lazy, that is, no List is created or stored in 'Actor.locals' until you try to access it.
 const class LocalList {
 	
 	** The 'LocalRef' this 'LocalList' wraps. 
 	const LocalRef	localRef
 	
+	** Makes a 'LocalList' instance.
 	new make(Str name) {
-		this.localRef = LocalRef(name, [,])
+		this.localRef = LocalRef(name)
 	}
 
-	new makeWithList(Str name, Obj?[] list) {
-		this.localRef = LocalRef(name, list)
-	}
-	
 	** Gets or sets the thread local list
 	Obj?[] list {
-		get { localRef.val }
-		set { localRef.val = it.toImmutable }
+		get {
+			// should the const LocalList transcend threads
+			if (!localRef.isMapped)
+				localRef.val = [,]
+			return localRef.val
+		}
+		set { localRef.val = it }
 	}
 	
 	** Add the specified item to the end of the list.
@@ -43,6 +47,7 @@ const class LocalList {
 
 	** Returns the item at the specified index.
 	** A negative index may be used to access an index from the end of the list.
+	@Operator
 	Obj? get(Int index) {
 		list[index]
 	}

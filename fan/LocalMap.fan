@@ -1,23 +1,26 @@
 
 ** Manages a Map stored in 'Actor.locals' under a unique key.
+** 
+** 'LocalMaps' are lazy, that is, no Map is created or stored in 'Actor.locals' until you try to access it.
 const class LocalMap {
 	
 	** The 'LocalRef' this 'LocalMap' wraps. 
 	const LocalRef	localRef
-	
-	new make(Str name) {
-		this.localRef = LocalRef(name, [:])
-	}
 
-	** Use when you need a case insensitive map.
-	new makeWithMap(Str name, [Obj:Obj?] map) {
-		this.localRef = LocalRef(name, map)
+	** Makes a 'LocalMap' instance.
+	new make(Str name) {
+		this.localRef = LocalRef(name)
 	}
 	
 	** Gets or sets the thread local map
 	[Obj:Obj?] map {
-		get { localRef.val }
-		set { localRef.val = it.toImmutable }
+		get {
+			// should the const LocalMap transcend threads
+			if (!localRef.isMapped)
+				localRef.val = [:]
+			return localRef.val
+		}
+		set { localRef.val = it }
 	}
 	
 	** Returns the value associated with the given key. 

@@ -20,12 +20,6 @@ const class SynchronizedList {
 		this.lock	= Synchronized(actorPool)
 		this.list 	= [,]
 	}
-
-	** Make a 'SynchronizedList' using the given immutable list. 
-	new makeWithList(ActorPool actorPool, Obj?[] list) {
-		this.lock	= Synchronized(actorPool)
-		this.list	= list
-	}
 	
 	** Gets or sets a read-only copy of the backing map.
 	Obj?[] list {
@@ -68,6 +62,7 @@ const class SynchronizedList {
 
 	** Returns the item at the specified index.
 	** A negative index may be used to access an index from the end of the list.
+	@Operator
 	Obj? get(Int index) {
 		list[index]
 	}

@@ -18,15 +18,9 @@ const class AtomicMap {
 	private const AtomicRef atomicMap := AtomicRef()
 	
 	new make() {
-		this.map = [:] { ordered = true }
+		this.map = [:]
 	}
 
-	** Makes an 'AtomicMap' wrapping the given immutable map. 
-	** Use when you need a case insensitive map.
-	new makeWithMap([Obj:Obj?] map) {
-		this.map = map
-	}
-	
 	** Gets or sets a read-only copy of the backing map.
 	[Obj:Obj?] map {
 		get { atomicMap.val }
