@@ -21,10 +21,10 @@ using concurrent
 ** 
 ** @since 1.5.6
 const class Synchronized {
-	private static const Log 	log 	:= Utils.getLog(Synchronized#)
+	private static const Log	log 	:= Utils.getLog(Synchronized#)
 	
 	private const Actor 		actor
-	private const ThreadLocalRef	insync	:= ThreadLocalRef("synchronized")
+	private const LocalRef		insync	:= LocalRef("synchronized")
 
 	** Create a 'Synchronized' class that uses the given 'ActorPool'.
 	new make(ActorPool? actorPool := null) {
@@ -81,7 +81,7 @@ const class Synchronized {
 			throw e
 
 		} finally {
-			insync.purge
+			insync.cleanUp
 		}
 	}	
 }

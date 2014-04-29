@@ -21,7 +21,7 @@ const class SynchronizedMap {
 		this.lock	= Synchronized(actorPool)
 	}
 
-	** Make a 'ConcurrentCache' using the given immutable map. 
+	** Make a 'SynchronizedMap' using the given immutable map. 
 	** Use when you need a case insensitive map.
 	new makeWithMap(ActorPool actorPool, [Obj:Obj?] map) {
 		this.map = map

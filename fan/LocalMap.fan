@@ -1,45 +1,23 @@
 
-//ThreadLocalMap
-//LocalMap
-//
-//LocalList
-//LocalBool
-//LocalObj
-//LocalRef
-
 ** Manages a Map stored in 'Actor.locals' under a unique key.
-class ThreadLocalMap {
-	private const ThreadLocalRef	threadLocal
+const class LocalMap {
 	
-	** The qualified name this 'ThreadLocal' is stored under in 'Actor.locals'. 
-	** 'qname' is calculated from 'name'.
-	const Str qname
+	** The 'LocalRef' this 'LocalMap' wraps. 
+	const LocalRef	localRef
 	
-	** The variable name given to the ctor.
-	const Str name
-
 	new make(Str name) {
-		this.threadLocal = ThreadLocalRef(name) |->Obj?| { [:] }
-		this.qname	= threadLocal.qname
-		this.name	= threadLocal.name
+		this.localRef = LocalRef(name, [:])
 	}
 
 	** Use when you need a case insensitive map.
 	new makeWithMap(Str name, [Obj:Obj?] map) {
-		this.threadLocal = ThreadLocalRef(name) |->Obj?| { map }
-		this.qname	= threadLocal.qname
-		this.name	= threadLocal.name
-	}
-	
-	** Removes this object from 'Actor.locals'.
-	Void purge() {
-		threadLocal.purge
+		this.localRef = LocalRef(name, map)
 	}
 	
 	** Gets or sets the thread local map
 	[Obj:Obj?] map {
-		get { threadLocal.val }
-		set { threadLocal.val = it.toImmutable }
+		get { localRef.val }
+		set { localRef.val = it.toImmutable }
 	}
 	
 	** Returns the value associated with the given key. 
