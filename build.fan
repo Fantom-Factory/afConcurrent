@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afConcurrent"
 		summary = "(Internal) Utility classes for sharing data between threads"
-		version = Version("0.0.1")
+		version = Version("0.0.2")
 
 		meta = [
 			"org.name"		: "Alien-Factory",
@@ -14,7 +14,7 @@ class Build : BuildPod {
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afConcurrent",
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afconcurrent",
 			"license.name"	: "MIT Licence",	
-			"repo.private"	: "true"
+			"repo.private"	: "false"
 		]
 
 		depends = [
