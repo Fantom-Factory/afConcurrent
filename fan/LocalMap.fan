@@ -4,23 +4,33 @@
 ** 'LocalMaps' are lazy, that is, no Map is created or stored in 'Actor.locals' until you try to access it.
 const class LocalMap {
 	
-	// FIXME: ordered and caseInsensitive
-
 	** The 'LocalRef' this 'LocalMap' wraps. 
 	const LocalRef	localRef
 
+	** The default value to use for `get` when a key isn't mapped.
+	const Obj? def				:= null
+	
+	** Configures case sensitivity for maps with Str keys.
+	const Bool caseInsensitive	:= false
+
+	** If 'true' the map will maintain the order in which key/value pairs are added.
+	const Bool ordered			:= false
+	
 	** Makes a 'LocalMap' instance.
-	new make(Str name) {
+	new make(Str name, |This|? f := null) {
+		f?.call(this)
 		this.localRef = LocalRef(name)
 	}
 	
 	** Gets or sets the thread local map
 	[Obj:Obj?] map {
-		get {
-			// should the const LocalMap transcend threads
-			if (!localRef.isMapped)
-				localRef.val = [:]
-			return localRef.val
+		get { 
+			if (localRef.val == null)
+				localRef.val
+					= caseInsensitive
+					? [Str:Obj?][:] { it.def = this.def; it.caseInsensitive = true }
+					: [Obj:Obj?][:] { it.def = this.def; it.ordered = this.ordered }
+			return localRef.val 
 		}
 		set { localRef.val = it }
 	}
@@ -64,7 +74,7 @@ const class LocalMap {
 	** If key is not mapped, then return the value of the 'def' parameter.  
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
-	Obj? get(Obj key, Obj? def := null) {
+	Obj? get(Obj key, Obj? def := this.def) {
 		map.get(key, def)
 	}
 	

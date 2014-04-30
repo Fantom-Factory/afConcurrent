@@ -31,7 +31,7 @@ internal class TestCommonMapMethods : ConcurrentTest {
 		//  -rw
 		//  -size
 		//  -vals
-		
+
 		verify(map->isEmpty)
 		verifyEq(map->size, 0)
 		verifyFalse(map->containsKey(6))

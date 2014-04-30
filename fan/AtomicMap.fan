@@ -16,16 +16,29 @@ using concurrent::AtomicRef
 ** See [The Good, The Bad and The Ugly of Const Services]`http://www.fantomfactory.org/articles/good-bad-and-ugly-of-const-services#theUgly` for more details.
 const class AtomicMap {
 	private const AtomicRef atomicMap := AtomicRef()
-	
-	// FIXME: ordered and caseInsensitive
-	
-	new make() {
-		this.map = [:]
-	}
 
+	** The default value to use for `get` when a key isn't mapped.
+	const Obj? def				:= null
+	
+	** Configures case sensitivity for maps with Str keys.
+	const Bool caseInsensitive	:= false
+
+	** If 'true' the map will maintain the order in which key/value pairs are added.
+	const Bool ordered			:= false
+	
+	@NoDoc	// pointless ctor!
+	new make(|This|? f := null) { f?.call(this) }
+	
 	** Gets or sets a read-only copy of the backing map.
 	[Obj:Obj?] map {
-		get { atomicMap.val }
+		get { 
+			if (atomicMap.val == null)
+				atomicMap.val
+					= caseInsensitive
+					? [Str:Obj?][:] { it.def = this.def; it.caseInsensitive = true }.toImmutable
+					: [Obj:Obj?][:] { it.def = this.def; it.ordered = this.ordered }.toImmutable
+			return atomicMap.val 
+		}
 		set { atomicMap.val = it.toImmutable }
 	}
 	
@@ -79,7 +92,7 @@ const class AtomicMap {
 	** If key is not mapped, then return the value of the 'def' parameter.  
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
-	Obj? get(Obj key, Obj? def := null) {
+	Obj? get(Obj key, Obj? def := this.def) {
 		map.get(key, def)
 	}
 	

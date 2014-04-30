@@ -13,19 +13,36 @@ using concurrent::Future
 ** 
 ** Note that all objects held in the map have to be immutable.
 const class SynchronizedMap {
-	private const AtomicRef 	atomicMap := AtomicRef()
-	private const Synchronized	lock
+	private const AtomicRef atomicMap := AtomicRef()
 	
-	// FIXME: ordered and caseInsensitive, def
+	** The 'lock' object should you need to 'synchronize' on the Map.
+	const Synchronized	lock
+	
+	** The default value to use for `get` when a key isn't mapped.
+	const Obj? def				:= null
+	
+	** Configures case sensitivity for maps with Str keys.
+	const Bool caseInsensitive	:= false
 
-	new make(ActorPool actorPool) {
-		this.map = [:]
-		this.lock	= Synchronized(actorPool)
+	** If 'true' the map will maintain the order in which key/value pairs are added.
+	const Bool ordered			:= false
+
+	** Creates a 'SynchronizedMap' with the given 'ActorPool'.
+	new make(ActorPool actorPool, |This|? f := null) {
+		f?.call(this)
+		this.lock = Synchronized(actorPool)
 	}
 	
 	** Gets or sets a read-only copy of the backing map.
 	[Obj:Obj?] map {
-		get { atomicMap.val }
+		get { 
+			if (atomicMap.val == null)
+				atomicMap.val
+					= caseInsensitive
+					? [Str:Obj?][:] { it.def = this.def; it.caseInsensitive = true }.toImmutable
+					: [Obj:Obj?][:] { it.def = this.def; it.ordered = this.ordered }.toImmutable
+			return atomicMap.val 
+		}
 		set { atomicMap.val = it.toImmutable }
 	}
 	
@@ -97,7 +114,7 @@ const class SynchronizedMap {
 	** If key is not mapped, then return the value of the 'def' parameter.  
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
-	Obj? get(Obj key, Obj? def := null) {
+	Obj? get(Obj key, Obj? def := this.def) {
 		map.get(key, def)
 	}
 	

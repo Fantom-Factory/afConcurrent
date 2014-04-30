@@ -13,17 +13,23 @@ using concurrent::Future
 ** 
 ** Note that all objects held in the map have to be immutable.
 const class SynchronizedList {
-	private const AtomicRef 	atomicList := AtomicRef()
-	private const Synchronized	lock
+	private const AtomicRef atomicList := AtomicRef()
 	
+	** The 'lock' object should you need to 'synchronize' on the List.
+	const Synchronized	lock
+	
+	** Creates a 'SynchronizedMap' with the given 'ActorPool'.
 	new make(ActorPool actorPool) {
-		this.lock	= Synchronized(actorPool)
-		this.list 	= [,]
+		this.lock = Synchronized(actorPool)
 	}
 	
 	** Gets or sets a read-only copy of the backing map.
 	Obj?[] list {
-		get { atomicList.val }
+		get { 
+			if (atomicList.val == null)
+				atomicList.val = [,].toImmutable
+			return atomicList.val 
+		}
 		set { atomicList.val = it.toImmutable }
 	}
 	
