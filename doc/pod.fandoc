@@ -3,10 +3,8 @@ Overview [#overview]
 *'Concurrent' is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications.
 Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
 
-'Concurrent' is a collection of utility classes for sharing data between threads.
+'Concurrent' builds upon the standard Fantom [concurrent library]`http://fantom.org/doc/concurrent/index.html` and provides a collection of utility classes for sharing data between threads.
 
-'Concurrent' enhances the standard [Fantom concurrent library]`http://fantom.org/doc/concurrent/index.html` by
-providing
 
 
 Install [#Install]
@@ -23,22 +21,14 @@ To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan
 
 Usage [#usage]
 **************
-The Maps and Lists in this library aren't real Fantom Maps and Lists, but rather objects that wrap Maps and Lists.
-To that extent they share common methods ( 'get(), set(), add(), vals(), each(),' etc...) to make them look and behave like the objects they enclose.
-
- - drop in replacements
-
-You won't find *all* the Map methods on `AtomicMap` or its siblings, but hopefully enough for most common usecases.
-The underlying wrapped objects are always available for those un-common xxxx.
-
-The 'Concurrent' library delivers 3 different stategies for sharing data.
+The 'Concurrent' library delivers 3 strategies for sharing data:
 
 
 
-Syncrhonized Code, State, Lists and Maps [#syncrhonized]
-========================================================
-`Syncrhonized` provides synchronized access to blocks of code, akin to Java's 'synchronized' keyword.
-Extend the 'Syncrhonized' class to use a familiar syntax:
+Synchronized [#synchronized]
+============================
+`Synchronized` provides synchronized serial access to a block of code, akin to Java's 'synchronized' keyword.
+Extend the 'Synchronized' class to use the familiar syntax:
 
 pre>
 const class Example : Synchronized {
@@ -54,19 +44,11 @@ const class Example : Synchronized {
 }
 <pre
 
-'syncrhonized' is a way to provent a code block from being executed by multiple threads at the same time.
-You may wish to it, for example, when writing files from a web request.
+'Synchronized' works by calling the function from within the 'receive()' method of an [Actor]`concurrent::Actor`, which has important implications.
+First, the passed in function needs to be an [immutable func]`sys::Func`.
+Next, any object returned also has to be immutable (preferably) or serializable.
 
-'Syncrhonized' works by calling the function in the 'recieve()' method of an [Actor]`concurrent::Actor`, which has important (yet leaky) implications.
-The biggest caveat is that the passed in function needs to be [immutable]`sys::Func`.
-The next is that the returned object also has to be immutable (preferably) or serilaizable.
-
-When code executed asynchronously in 'Actors' throws an Err it has a nasty habit of being swallowed up.
-Thankfully the 'Syncrhonized.async()' method spots this and noisily logs the Err.
-
-'Syncrhonized' also prevents serious deadlocks by spotting when you attempt to nest calls to 'synchronized'.
-
-Similar to Java, 'Synchronized' may also be used as a locking mechanism. Consider:
+Instances of 'Synchronized' may also be used as a locking mechanism. For example:
 
 pre>
 class Example {
@@ -82,23 +64,25 @@ class Example {
 }
 <pre
 
-This is the principle used by `SynchronizedList` and `SynchronizedMap` classes when they wish to manipulate data held in the 'AtomicRef'.
-These classes
 
 
-Atomic Lists and Maps [#atomic]
-===============================
+Atomic [#atomic]
+================
+Atomic Lists and Maps are similar to their Synchronized counterparts in that they are backed by an object held in an 'AtomicRef'.
+But their write operations are *not* synchronized.
+This means they are much more *lightweight* but it also means they are susceptible to **data-loss** during race conditions between multiple threads.
+If used for caching situations where it is not essential for values to exist, this may be acceptable.
 
 
 
-Local Refs, Lists and Maps [#local]
-===================================
+Local [#local]
+==============
 Local Refs, Lists and Maps do not share data between threads, in fact, quite the opposite!
 
-They wrap data stored in 'Actor.locals()' thereby constraing it to only be accessed by the executing thread.
+They wrap data stored in 'Actor.locals()' thereby constraining it to only be accessed by the executing thread.
 The data is said to be *local* to that thread.
 
-But data held in 'Actor.locals()' is susceptible to being overwitten due to name clashes. Consider:
+But data held in 'Actor.locals()' is susceptible to being overwritten due to name clashes. Consider:
 
 pre>
 class Drink {
@@ -140,8 +124,6 @@ echo(kid.beer.qname) // --> 0002.beer
 
 While 'LocalRefs' are not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` and [IoC]`http://www.fantomfactory.org/pods/afBedIoC` use them to keep track of data to be cleaned up at the end of HTTP web requests.
 
-`LocalList` and `LocalMap` then wrap a 'LocalRef' providing useful List and Map semantics.
-
 
 
 Release Notes [#releaseNotes]
@@ -149,4 +131,4 @@ Release Notes [#releaseNotes]
 
 v0.0.2 [#v0.0.2]
 ----------------
- - New: Preview release
+ - New: Preview release.
