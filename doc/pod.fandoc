@@ -21,7 +21,7 @@ To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan
 
 Usage [#usage]
 **************
-The 'Concurrent' library delivers 3 strategies for sharing data:
+The 'Concurrent' library provides a few strategies for sharing data:
 
 
 
@@ -48,7 +48,7 @@ const class Example : Synchronized {
 First, the passed in function needs to be an [immutable func]`sys::Func`.
 Next, any object returned also has to be immutable (preferably) or serializable.
 
-Instances of 'Synchronized' may also be used as a locking mechanism. For example:
+Instances of 'Synchronized' may also be used as a mechanism for exclusive locking. For example:
 
 pre>
 class Example {

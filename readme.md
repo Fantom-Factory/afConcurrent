@@ -3,7 +3,7 @@
 *`Concurrent` is a support library that aids Alien-Factory in the development of libraries, frameworks and applications.
 Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
 
-`Concurrent` is a [Fantom](http://fantom.org/) library for ...
+'Concurrent' builds upon the standard Fantom [concurrent library]`http://fantom.org/doc/concurrent/index.html` and provides a collection of utility classes for sharing data between threads.
 
 
 
@@ -22,9 +22,3 @@ To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan
 ## Documentation
 
 Full API & fandocs are available on the [status302 repository](http://repo.status302.com/doc/afConcurrent/#overview).
-
-
-
-## Quick Start
-
-    Example here
