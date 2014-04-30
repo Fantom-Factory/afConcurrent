@@ -26,21 +26,77 @@ Usage [#usage]
 The Maps and Lists in this library aren't real Fantom Maps and Lists, but rather objects that wrap Maps and Lists.
 To that extent they share common methods ( 'get(), set(), add(), vals(), each(),' etc...) to make them look and behave like the objects they enclose.
 
+ - drop in replacements
+
 You won't find *all* the Map methods on `AtomicMap` or its siblings, but hopefully enough for most common usecases.
 The underlying wrapped objects are always available for those un-common xxxx.
 
 The 'Concurrent' library delivers 3 different stategies for sharing data.
 
+
+
+Syncrhonized Code, State, Lists and Maps [#syncrhonized]
+========================================================
+`Syncrhonized` provides synchronized access to blocks of code, akin to Java's 'synchronized' keyword.
+Extend the 'Syncrhonized' class to use a familiar syntax:
+
+pre>
+const class Example : Synchronized {
+    new make() : super(ActorPool()) { }
+
+    Void main() {
+        synchronized |->| {
+            // ...
+            // important stuff
+            // ...
+        }
+    }
+}
+<pre
+
+'syncrhonized' is a way to provent a code block from being executed by multiple threads at the same time.
+You may wish to it, for example, when writing files from a web request.
+
+'Syncrhonized' works by calling the function in the 'recieve()' method of an [Actor]`concurrent::Actor`, which has important (yet leaky) implications.
+The biggest caveat is that the passed in function needs to be [immutable]`sys::Func`.
+The next is that the returned object also has to be immutable (preferably) or serilaizable.
+
+When code executed asynchronously in 'Actors' throws an Err it has a nasty habit of being swallowed up.
+Thankfully the 'Syncrhonized.async()' method spots this and noisily logs the Err.
+
+'Syncrhonized' also prevents serious deadlocks by spotting when you attempt to nest calls to 'synchronized'.
+
+Similar to Java, 'Synchronized' may also be used as a locking mechanism. Consider:
+
+pre>
+class Example {
+    Synchronized lock := Synchronized(ActorPool())
+
+    Void main() {
+        lock.synchronized |->| {
+            // ...
+            // important stuff
+            // ...
+        }
+    }
+}
+<pre
+
+This is the principle used by `SynchronizedList` and `SynchronizedMap` classes when they wish to manipulate data held in the 'AtomicRef'.
+These classes
+
+
 Atomic Lists and Maps [#atomic]
 ===============================
 
 
+
 Local Refs, Lists and Maps [#local]
 ===================================
-Local Refs, Lists and Maps do no share data between threads, in fact, quite the opposite!
+Local Refs, Lists and Maps do not share data between threads, in fact, quite the opposite!
 
-They wrap data stored in 'Actor.locals()' thereby constraing it so it may only be accessed by the executing thread.
-The data is said to be *local* to the thread.
+They wrap data stored in 'Actor.locals()' thereby constraing it to only be accessed by the executing thread.
+The data is said to be *local* to that thread.
 
 But data held in 'Actor.locals()' is susceptible to being overwitten due to name clashes. Consider:
 
@@ -58,7 +114,7 @@ man.beer = "Ale"
 kid := Drink()
 kid.beer = "Ginger Ale"
 
-echo(man.beer)  // --> Ginger Ale
+echo(man.beer)  // --> Ginger Ale (WRONG!)
 echo(kid.beer)  // --> Ginger Ale
 <pre
 
@@ -82,18 +138,10 @@ echo(man.beer.qname) // --> 0001.beer
 echo(kid.beer.qname) // --> 0002.beer
 <pre
 
-`LocalList` and `LocalMap` then wrap 'LocalRef' providing useful semantics.
+While 'LocalRefs' are not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` and [IoC]`http://www.fantomfactory.org/pods/afBedIoC` use them to keep track of data to be cleaned up at the end of HTTP web requests.
 
-While not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` uses 'LocalRefs' to keep track of data that needs to be cleaned up at the end of HTTP web requests.
+`LocalList` and `LocalMap` then wrap a 'LocalRef' providing useful List and Map semantics.
 
-
-
-Syncrhonized Code, State, Lists and Maps [#syncrhonized]
-========================================================
-
-Syncrhonized prevents your code from causing serious deadlocks by throwing Errs whenever a situation arises (nested calls to synchronized)
-
-You may want to use it for instance, when writing files.
 
 
 Release Notes [#releaseNotes]

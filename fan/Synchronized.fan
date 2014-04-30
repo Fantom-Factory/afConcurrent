@@ -37,6 +37,8 @@ const class Synchronized {
 	** 
 	** Errs that occur within the block are logged but not rethrown unless you call 'get()' on 
 	** the returned 'Future'. 
+	** 
+	** The given func must be immutable.
 	Future async(|->Obj?| f) {
 		// explicit call to .toImmutable() - see http://fantom.org/sidewalk/topic/1798#c12190
 		func	:= f.toImmutable
@@ -46,6 +48,8 @@ const class Synchronized {
 
 	** This effectively wraps the given func in a Java 'synchronized { ... }' block and returns its
 	** calculated value. 
+	** 
+	** The given func must be immutable.
 	Obj? synchronized(|->Obj?| f) {
 		if (insync.val == true)
 			throw Err(ErrMsgs.synchronized_nestedCallsNotAllowed)
