@@ -20,14 +20,16 @@ internal class TestCommonListMethods : ConcurrentTest {
 	Void doCommonList(Obj list) {
 
 		// The checklist:
-		// -add
-		// -remove
-		//  clear
-		// -get
-		// -each
-		// -contains
-		// -isEmpty
-		// -size
+		//  -add
+		//  -remove
+		//   clear
+		
+		//  -contains
+		//  -each
+		//  -get
+		//  -isEmpty
+		//  -rw
+		//  -size
 		
 		verify(list->isEmpty)
 		verifyEq(list->size, 0)
@@ -48,6 +50,7 @@ internal class TestCommonListMethods : ConcurrentTest {
 		list->remove(6)
 		verifyEq(list->get(0), 9)
 		verifyEq(list->size, 1)
+		verifyEq(list->rw->size, 1)
 
 		list->clear
 		verify(list->isEmpty)

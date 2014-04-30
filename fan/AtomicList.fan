@@ -53,11 +53,9 @@ const class AtomicList {
 
 	// ---- Common List Methods --------------------------------------------------------------------
 
-	** Returns the item at the specified index.
-	** A negative index may be used to access an index from the end of the list.
-	@Operator
-	Obj? get(Int index) {
-		list[index]
+	** Returns 'true' if this list contains the specified item.
+	Bool contains(Obj? item) {
+		list.contains(item)
 	}
 	
 	** Call the specified function for every item in the list.
@@ -65,9 +63,11 @@ const class AtomicList {
 		list.each(c)
 	}
 	
-	** Returns 'true' if this list contains the specified item.
-	Bool contains(Obj? item) {
-		list.contains(item)
+	** Returns the item at the specified index.
+	** A negative index may be used to access an index from the end of the list.
+	@Operator
+	Obj? get(Int index) {
+		list[index]
 	}
 	
 	** Return 'true' if size() == 0
@@ -75,6 +75,11 @@ const class AtomicList {
 		list.isEmpty
 	}
 
+	** Get a read-write, mutable List instance with the same contents.
+	Obj?[] rw() {
+		list.rw
+	}
+	
 	** Get the number of values in the map.
 	Int size() {
 		list.size

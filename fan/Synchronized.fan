@@ -18,8 +18,6 @@ using concurrent
 **   }
 ** }
 ** <pre
-** 
-** @since 1.5.6
 const class Synchronized {
 	private static const Log	log 	:= Utils.getLog(Synchronized#)
 	
