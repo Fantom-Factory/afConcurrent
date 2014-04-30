@@ -1,5 +1,8 @@
 # Concurrent
 
+*`Concurrent` is a support library that aids Alien-Factory in the development of libraries, frameworks and applications.
+Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
+
 `Concurrent` is a [Fantom](http://fantom.org/) library for ...
 
 

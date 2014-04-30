@@ -15,6 +15,24 @@ internal class TestLocalRef : Test {
 		verify(kid.beer.qname.endsWith(".beer")) // --> 0002.beer
 	}
 	
+	Void testInitValue() {
+		ref := LocalRef("init", 0)
+		verify(ref.isMapped)
+		
+		ref.cleanUp
+		verifyFalse(ref.isMapped)
+	}
+
+	Void testNuffinSetByDefault() {
+		ref := LocalRef("init", null)
+		verifyFalse(ref.isMapped)
+
+		ref.val = 0
+		verify(ref.isMapped)
+		
+		ref.cleanUp
+		verifyFalse(ref.isMapped)
+	}
 }
 
 internal class T_Drink {

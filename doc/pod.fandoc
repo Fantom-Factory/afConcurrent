@@ -1,9 +1,12 @@
 Overview [#overview]
 ********************
-Utility classes for sharing data between threads.
+*'Concurrent' is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications.
+Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
+
+'Concurrent' is a collection of utility classes for sharing data between threads.
 
 'Concurrent' enhances the standard [Fantom concurrent library]`http://fantom.org/doc/concurrent/index.html` by
-
+providing
 
 
 Install [#Install]
@@ -88,6 +91,7 @@ While not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods
 Syncrhonized Code, State, Lists and Maps [#syncrhonized]
 ========================================================
 
+Syncrhonized prevents your code from causing serious deadlocks by throwing Errs whenever a situation arises (nested calls to synchronized)
 
 
 Release Notes [#releaseNotes]

@@ -15,8 +15,7 @@ const class LocalList {
 	** Gets or sets the thread local list
 	Obj?[] list {
 		get {
-			// should the const LocalList transcend threads
-			if (!localRef.isMapped)
+			if (localRef.val == null)
 				localRef.val = [,]
 			return localRef.val
 		}
