@@ -19,11 +19,11 @@ internal class TestSynchronizedState : ConcurrentTest {
 		verifyEq(val, 1)
 
 		val  = sync.withState |T_State state -> Obj| { ++state.data }.get
-		verifyEq(val, 2)		
+		verifyEq(val, 2)
 	}
-
 }
 
 internal class T_State {
 	Int data
 }
+
