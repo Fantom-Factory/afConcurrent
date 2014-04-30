@@ -93,6 +93,8 @@ Syncrhonized Code, State, Lists and Maps [#syncrhonized]
 
 Syncrhonized prevents your code from causing serious deadlocks by throwing Errs whenever a situation arises (nested calls to synchronized)
 
+You may want to use it for instance, when writing files.
+
 
 Release Notes [#releaseNotes]
 *****************************
