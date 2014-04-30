@@ -27,8 +27,8 @@ const class Synchronized {
 	private const LocalRef		insync	:= LocalRef("synchronized")
 
 	** Create a 'Synchronized' class that uses the given 'ActorPool'.
-	new make(ActorPool? actorPool := null) {
-		this.actor	= Actor(actorPool ?: ActorPool(), |Obj? obj -> Obj?| { receive(obj) })
+	new make(ActorPool actorPool) {
+		this.actor	= Actor(actorPool, |Obj? obj -> Obj?| { receive(obj) })
 	}
 
 	** This effectively wraps the given func in a Java 'synchronized { ... }' block that gets executed in it's own good time!

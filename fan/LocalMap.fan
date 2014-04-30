@@ -1,9 +1,11 @@
 
-** Manages a Map stored in 'Actor.locals' under a unique key.
+** Manages a Map stored in 'Actor.locals' with a unique key.
 ** 
 ** 'LocalMaps' are lazy, that is, no Map is created or stored in 'Actor.locals' until you try to access it.
 const class LocalMap {
 	
+	// FIXME: ordered and caseInsensitive
+
 	** The 'LocalRef' this 'LocalMap' wraps. 
 	const LocalRef	localRef
 

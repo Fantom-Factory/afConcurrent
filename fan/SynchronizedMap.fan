@@ -16,6 +16,8 @@ const class SynchronizedMap {
 	private const AtomicRef 	atomicMap := AtomicRef()
 	private const Synchronized	lock
 	
+	// FIXME: ordered and caseInsensitive
+
 	new make(ActorPool actorPool) {
 		this.map = [:]
 		this.lock	= Synchronized(actorPool)

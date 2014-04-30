@@ -1,5 +1,5 @@
 
-** Manages a List stored in 'Actor.locals' under a unique key.
+** Manages a List stored in 'Actor.locals' with a unique key.
 ** 
 ** 'LocalLists' are lazy, that is, no List is created or stored in 'Actor.locals' until you try to access it.
 const class LocalList {

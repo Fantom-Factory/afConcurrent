@@ -1,6 +1,6 @@
 using concurrent
 
-** Manages an object reference stored in 'Actor.locals' under a unique key.
+** Manages an Obj reference stored in 'Actor.locals' with a unique key.
 const class LocalRef {	
 	static 
 	private const AtomicInt	counter	:= AtomicInt(0)

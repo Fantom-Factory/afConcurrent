@@ -2,13 +2,15 @@ Overview [#overview]
 ********************
 Utility classes for sharing data between threads.
 
+'Concurrent' enhances the standard [Fantom concurrent library]`http://fantom.org/doc/concurrent/index.html` by
+
 
 
 Install [#Install]
 ******************
 Install 'Concurrent' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
 
-  $ fanr install -r http://repo.status302.com/fanr/ afConcurrent
+  C:\> fanr install -r http://repo.status302.com/fanr/ afConcurrent
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
@@ -16,11 +18,75 @@ To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan
 
 
 
-Quick Start [#quickStart]
-*************************
+Usage [#usage]
+**************
+The Maps and Lists in this library aren't real Fantom Maps and Lists, but rather objects that wrap Maps and Lists.
+To that extent they share common methods ( 'get(), set(), add(), vals(), each(),' etc...) to make them look and behave like the objects they enclose.
+
+You won't find *all* the Map methods on `AtomicMap` or its siblings, but hopefully enough for most common usecases.
+The underlying wrapped objects are always available for those un-common xxxx.
+
+The 'Concurrent' library delivers 3 different stategies for sharing data.
+
+Atomic Lists and Maps [#atomic]
+===============================
+
+
+Local Refs, Lists and Maps [#local]
+===================================
+Local Refs, Lists and Maps do no share data between threads, in fact, quite the opposite!
+
+They wrap data stored in 'Actor.locals()' thereby constraing it so it may only be accessed by the executing thread.
+The data is said to be *local* to the thread.
+
+But data held in 'Actor.locals()' is susceptible to being overwitten due to name clashes. Consider:
+
 pre>
-  Example here
+class Drink {
+    Str beer {
+      get { Actor.locals["beer"] }
+      set { Actor.locals["beer"] = it }
+    }
+}
+
+man := Drink()
+man.beer = "Ale"
+
+kid := Drink()
+kid.beer = "Ginger Ale"
+
+echo(man.beer)  // --> Ginger Ale
+echo(kid.beer)  // --> Ginger Ale
 <pre
+
+To prevent this, `LocalRef` creates a unique qualified name to store the data under:
+
+pre>
+class Drink {
+    LocalRef beer := LocalRef("beer")
+}
+
+man := Drink()
+man.beer.val = "Ale"
+
+kid := Drink()
+kid.beer.val = "Ginger Ale"
+
+echo(man.beer.val)   // --> Ale
+echo(kid.beer.val)   // --> Ginger Ale
+
+echo(man.beer.qname) // --> 0001.beer
+echo(kid.beer.qname) // --> 0002.beer
+<pre
+
+`LocalList` and `LocalMap` then wrap 'LocalRef' providing useful semantics.
+
+While not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` uses 'LocalRefs' to keep track of data that needs to be cleaned up at the end of HTTP web requests.
+
+
+
+Syncrhonized Code, State, Lists and Maps [#syncrhonized]
+========================================================
 
 
 
@@ -29,4 +95,4 @@ Release Notes [#releaseNotes]
 
 v0.0.2 [#v0.0.2]
 ----------------
- - New: Preview Release 
+ - New: Preview release
