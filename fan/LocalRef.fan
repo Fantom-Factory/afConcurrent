@@ -21,7 +21,7 @@ const class LocalRef {
 	new make(Str name, Obj? initVal := null) {
 		this.qname 	= createPrefix(name, 4)
 		this.name 	= name
-		if (initVal != null)
+		if (initVal != null)	// FIXME: test nothing stored unless it has to
 			this.val	= initVal
 	}
 

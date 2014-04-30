@@ -16,7 +16,7 @@ const class SynchronizedMap {
 	private const AtomicRef 	atomicMap := AtomicRef()
 	private const Synchronized	lock
 	
-	// FIXME: ordered and caseInsensitive
+	// FIXME: ordered and caseInsensitive, def
 
 	new make(ActorPool actorPool) {
 		this.map = [:]
@@ -87,27 +87,18 @@ const class SynchronizedMap {
 	}
 	
 	// ---- Common Map Methods --------------------------------------------------------------------
-	
-	** Returns the value associated with the given key. 
-	** If 'key' is not mapped, then return 'def'.  
-	@Operator
-	Obj? get(Obj key, Obj? def := null) {
-		map.get(key, def)
-	}
 
 	** Returns 'true' if the cache contains the given key
 	Bool containsKey(Obj key) {
 		map.containsKey(key)
 	}
 	
-	** Returns a list of all the mapped keys.
-	Obj[] keys() {
-		map.keys
-	}
-
-	** Returns a list of all the mapped values.
-	Obj?[] vals() {
-		map.vals
+	** Returns the value associated with the given key. 
+	** If key is not mapped, then return the value of the 'def' parameter.  
+	** If 'def' is omitted it defaults to 'null'.
+	@Operator
+	Obj? get(Obj key, Obj? def := null) {
+		map.get(key, def)
 	}
 	
 	** Return 'true' if size() == 0
@@ -115,8 +106,23 @@ const class SynchronizedMap {
 		map.isEmpty
 	}
 
+	** Returns a list of all the mapped keys.
+	Obj[] keys() {
+		map.keys
+	}
+
+	** Get a read-write, mutable Map instance with the same contents.
+	[Obj:Obj?] rw() {
+		map.rw
+	}
+
 	** Get the number of key/value pairs in the map.
 	Int size() {
 		map.size
+	}
+
+	** Returns a list of all the mapped values.
+	Obj?[] vals() {
+		map.vals
 	}
 }
