@@ -1,3 +1,4 @@
+using concurrent
 
 internal class TestSynchronized : ConcurrentTest {
 	
@@ -15,7 +16,7 @@ internal class TestSynchronized : ConcurrentTest {
 }
 
 internal const class T_Sync : Synchronized {
-	new make() : super() { }
+	new make() : super(ActorPool()) { }
 	
 	Void sync() {
 		synchronized |->| { nested }

@@ -17,6 +17,8 @@ using concurrent::AtomicRef
 const class AtomicMap {
 	private const AtomicRef atomicMap := AtomicRef()
 	
+	// FIXME: ordered and caseInsensitive
+	
 	new make() {
 		this.map = [:]
 	}
