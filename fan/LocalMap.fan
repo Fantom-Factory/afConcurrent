@@ -19,19 +19,16 @@ const class LocalMap {
 	** Makes a 'LocalMap' instance.
 	new make(Str name, |This|? f := null) {
 		f?.call(this)
-		this.localRef = LocalRef(name)
+		this.localRef = LocalRef(name) |->Obj?| {
+			caseInsensitive
+				? [Str:Obj?][:] { it.def = this.def; it.caseInsensitive = true }
+				: [Obj:Obj?][:] { it.def = this.def; it.ordered = this.ordered }
+		}
 	}
 	
 	** Gets or sets the thread local map
 	[Obj:Obj?] map {
-		get { 
-			if (localRef.val == null)
-				localRef.val
-					= caseInsensitive
-					? [Str:Obj?][:] { it.def = this.def; it.caseInsensitive = true }
-					: [Obj:Obj?][:] { it.def = this.def; it.ordered = this.ordered }
-			return localRef.val 
-		}
+		get { localRef.val }
 		set { localRef.val = it }
 	}
 	

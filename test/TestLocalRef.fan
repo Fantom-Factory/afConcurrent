@@ -15,8 +15,11 @@ internal class TestLocalRef : Test {
 		verify(kid.beer.qname.endsWith(".beer")) // --> 0002.beer
 	}
 	
-	Void testInitValue() {
-		ref := LocalRef("init", 0)
+	Void testLazyInitFunc() {
+		ref := LocalRef("init") |->Obj?| { 0 }
+		verifyFalse(ref.isMapped)
+		
+		v := ref.val
 		verify(ref.isMapped)
 		
 		ref.cleanUp

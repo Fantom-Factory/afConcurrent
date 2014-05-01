@@ -5,6 +5,8 @@ const class LocalRef {
 	static 
 	private const AtomicInt	counter	:= AtomicInt(0)
 	
+	private const |->Obj?|? defFunc
+	
 	** The qualified name this 'ThreadLocal' is stored under in 'Actor.locals'. 
 	** 'qname' is calculated from 'name'.
 	const Str qname
@@ -12,17 +14,28 @@ const class LocalRef {
 	** The variable name given to the ctor.
 	const Str name
 
+	** The object held in 'Actor.locals'. If a value is not mapped when read, 'initFunc()' is 
+	** called to create a default object. 
 	Obj? val {
-		get { Actor.locals[qname] }
+		get {
+			if (!isMapped)
+				Actor.locals[qname] = defFunc?.call
+			return Actor.locals[qname]
+		}
 		set { Actor.locals[qname] = it }
 	}
 	
-	** Creates an entry in 'Actor.locals' using the given name.
-	new make(Str name, Obj? initVal := null) {
-		this.qname 	= createPrefix(name, 4)
-		this.name 	= name
-		if (initVal != null)
-			this.val	= initVal
+	** Creates a 'LocalRef' with given name.
+	** 
+	** If not null, 'defFunc' is called to create a default object whenever 'val' is read and a 
+	** value is not mapped in 'Actor.locals'. This object is then stored and returned. 
+	** This allows the creation of non-const default objects in multiple threads.
+	** 
+	** 'initFunc' must be immutable.  
+	new makeWithFunc(Str name, |->Obj?|? defFunc := null) {
+		this.qname 		= createPrefix(name, 4)
+		this.name 		= name
+		this.defFunc	= defFunc
 	}
 
 	** Returns 'true' if 'Actor.locals' holds an entry for this 'qname'.

@@ -9,16 +9,12 @@ const class LocalList {
 	
 	** Makes a 'LocalList' instance.
 	new make(Str name) {
-		this.localRef = LocalRef(name)
+		this.localRef = LocalRef(name) |->Obj?| { [,] }
 	}
 
 	** Gets or sets the thread local list
 	Obj?[] list {
-		get {
-			if (localRef.val == null)
-				localRef.val = [,]
-			return localRef.val
-		}
+		get { localRef.val }
 		set { localRef.val = it }
 	}
 	
