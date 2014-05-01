@@ -19,11 +19,12 @@ class Build : BuildPod {
 
 		depends = [
 			"sys 1.0",
-			"concurrent 1.0"
+			"concurrent 1.0",
+			"build 1.0"
 		]
 
 		srcDirs = [`test/`, `fan/`, `fan/internal/`]
-		resDirs = [`doc/`]
+		resDirs = [`licence.txt`, `doc/`]
 
 		docApi = true
 		docSrc = true
@@ -31,8 +32,7 @@ class Build : BuildPod {
 	
 	@Target { help = "Compile to pod file and associated natives" }
 	override Void compile() {
-		// exclude test code when building the pod
-		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
+		// test src & res excluded by "stripTest" in etc/build/config.props
 
 		super.compile
 		
