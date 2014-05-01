@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afConcurrent"
 		summary = "(Internal) Utility classes for sharing data between threads"
-		version = Version("0.0.3")
+		version = Version("1.0.1")
 
 		meta = [
 			"org.name"		: "Alien-Factory",
