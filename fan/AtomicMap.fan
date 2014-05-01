@@ -48,11 +48,13 @@ const class AtomicMap {
 	** This method is **NOT** thread safe. If two Actors call this method at the same time, the 
 	** value function will be called twice for the same key.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
-		if (!containsKey(key)) {
-			val := valFunc.call(key)
-			set(key, val)
+		iKey  := key.toImmutable
+		if (!containsKey(iKey)) {
+			val  := valFunc.call(iKey)
+			iVal := val.toImmutable
+			set(iKey, iVal)
 		}
-		return get(key)
+		return get(iKey)
 	}
 
 	** Sets the key / value pair.
@@ -83,7 +85,7 @@ const class AtomicMap {
 
 	// ---- Common Map Methods --------------------------------------------------------------------
 
-	** Returns 'true' if the cache contains the given key
+	** Returns 'true' if the map contains the given key
 	Bool containsKey(Obj key) {
 		map.containsKey(key)
 	}

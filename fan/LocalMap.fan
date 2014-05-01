@@ -62,7 +62,7 @@ const class LocalMap {
 	
 	// ---- Common Map Methods --------------------------------------------------------------------
 
-	** Returns 'true' if the cache contains the given key
+	** Returns 'true' if the map contains the given key
 	Bool containsKey(Obj key) {
 		map.containsKey(key)
 	}
