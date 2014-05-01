@@ -129,7 +129,9 @@ While 'LocalRefs' are not too exiting on their own, [BedSheet]`http://www.fantom
 Release Notes [#releaseNotes]
 *****************************
 
-v0.0.2 [#v0.0.2]
+v1.0.0 [#v1.0.0]
 ----------------
- - New: Preview release.
+ - New: Initial release.
+ - New: Added 'SynchronizedFileMap'.
  - Chg: 'LocalRef' ctor now takes a 'defFunc' instead of an 'initValue'.
+

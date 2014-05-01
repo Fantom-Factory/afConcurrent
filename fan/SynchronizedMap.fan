@@ -54,23 +54,24 @@ const class SynchronizedMap {
 		if (containsKey(key))
 			return get(key)
 		
-		iKey := key.toImmutable
+		iKey  := key.toImmutable
+		iFunc := valFunc.toImmutable
 		return lock.synchronized |->Obj?| {
 			// double lock
 			if (containsKey(iKey))
 				return get(iKey)
 
-			val := valFunc.call(key)
+			val := iFunc.call(iKey)
 			iVal := val.toImmutable
 			newMap := map.rw
 			newMap.set(iKey, iVal)
 			map = newMap
-			return val
+			return iVal
 		}
 	}
 
 	** Sets the key / value pair, ensuring no data is lost during multi-threaded race conditions.
-	** Though the same key may be overridden. Both the 'key' and 'val' must be immutable. 
+	** Both the 'key' and 'val' must be immutable. 
 	@Operator
 	Void set(Obj key, Obj? val) {
 		iKey := key.toImmutable
@@ -84,6 +85,10 @@ const class SynchronizedMap {
 
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
+		// clear needs to be sync'ed, 'cos 
+		// - a write func may copy the map
+		// - we clear
+		// - the write func the sets the map back! 
 		lock.synchronized |->| {
 			map = map.rw.clear
 		}
@@ -105,7 +110,7 @@ const class SynchronizedMap {
 	
 	// ---- Common Map Methods --------------------------------------------------------------------
 
-	** Returns 'true' if the cache contains the given key
+	** Returns 'true' if the map contains the given key
 	Bool containsKey(Obj key) {
 		map.containsKey(key)
 	}
