@@ -15,7 +15,7 @@ Install 'Concurrent' with the Fantom Repository Manager ( [fanr]`http://fantom.o
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
-  depends = ["sys 1.0", ..., "afConcurrent 0+"]
+  depends = ["sys 1.0", ..., "afConcurrent 1.0+"]
 
 
 

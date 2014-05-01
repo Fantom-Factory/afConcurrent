@@ -11,11 +11,11 @@ Though you are welcome to use it, you may find features are missing and the docu
 
 Install `Concurrent` with the Fantom Respository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
-    $ fanr install -r http://repo.status302.com/fanr/ afConcurrent
+    C:\> fanr install -r http://repo.status302.com/fanr/ afConcurrent
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afConcurrent 0+"]
+    depends = ["sys 1.0", ..., "afConcurrent 1.0+"]
 
 
 
