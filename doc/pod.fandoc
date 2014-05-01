@@ -122,7 +122,7 @@ echo(man.beer.qname) // --> 0001.beer
 echo(kid.beer.qname) // --> 0002.beer
 <pre
 
-While 'LocalRefs' are not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` and [IoC]`http://www.fantomfactory.org/pods/afBedIoC` use them to keep track of data to be cleaned up at the end of HTTP web requests.
+While 'LocalRefs' are not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet#.U2FhEihfyJA` and [IoC]`http://www.fantomfactory.org/pods/afIoc#.U2FfiihfyJA` use them to keep track of data to be cleaned up at the end of HTTP web requests.
 
 
 
@@ -132,3 +132,4 @@ Release Notes [#releaseNotes]
 v0.0.2 [#v0.0.2]
 ----------------
  - New: Preview release.
+ - Chg: 'LocalRef' ctor now takes a 'defFunc' instead of an 'initValue'.
