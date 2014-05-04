@@ -49,7 +49,8 @@ const class LocalMap {
 
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
-		map.clear
+		if (localRef.isMapped)
+			map.clear
 		return this
 	}
 
@@ -64,7 +65,7 @@ const class LocalMap {
 
 	** Returns 'true' if the map contains the given key
 	Bool containsKey(Obj key) {
-		map.containsKey(key)
+		localRef.isMapped ? map.containsKey(key) : false
 	}
 	
 	** Returns the value associated with the given key. 
@@ -72,31 +73,26 @@ const class LocalMap {
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
 	Obj? get(Obj key, Obj? def := this.def) {
-		map.get(key, def)
+		localRef.isMapped ? map.get(key, def) : def
 	}
 	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
-		map.isEmpty
+		localRef.isMapped ? map.isEmpty : true
 	}
 
 	** Returns a list of all the mapped keys.
 	Obj[] keys() {
-		map.keys
-	}
-
-	** Get a read-write, mutable Map instance with the same contents.
-	[Obj:Obj?] rw() {
-		map.rw
+		localRef.isMapped ? map.keys : Obj#.emptyList
 	}
 
 	** Get the number of key/value pairs in the map.
 	Int size() {
-		map.size
+		localRef.isMapped ? map.size : 0
 	}
 
 	** Returns a list of all the mapped values.
 	Obj?[] vals() {
-		map.vals
+		localRef.isMapped ? map.vals : Obj#.emptyList
 	}
 }

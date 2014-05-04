@@ -15,6 +15,34 @@ internal class TestLocalMap : ConcurrentTest {
 //		verifyFalse(map.localRef.isMapped)
 	}
 
+	// because local lists and maps tend to be numerous (one per thread!), 
+	// try not to create loads of empty ones for useless methods
+	Void testLazyLazyCreation() {
+		map := LocalMap("map")
+		verifyFalse(map.localRef.isMapped)
+		
+		map.clear
+		verifyFalse(map.localRef.isMapped)
+
+		verifyFalse(map.containsKey(6))
+		verifyFalse(map.localRef.isMapped)
+
+		verifyNull(map[6])
+		verifyFalse(map.localRef.isMapped)
+		
+		verify(map.isEmpty)
+		verifyFalse(map.localRef.isMapped)
+
+		verify(map.keys.isEmpty)
+		verifyFalse(map.localRef.isMapped)
+
+		verifyEq(map.size, 0)
+		verifyFalse(map.localRef.isMapped)
+
+		verify(map.vals.isEmpty)
+		verifyFalse(map.localRef.isMapped)
+	}
+	
 	Void testDef() {
 		val := LocalMap("map") { it.def = 69 }.get("wotever")
 		verifyEq(val, 69)
