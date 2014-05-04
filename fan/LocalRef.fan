@@ -18,8 +18,9 @@ const class LocalRef {
 	** called to create a default object. 
 	Obj? val {
 		get {
-			if (!isMapped)
-				Actor.locals[qname] = defFunc?.call
+			// don't set a local var if it's null!
+			if (!isMapped && defFunc != null)
+				Actor.locals[qname] = defFunc.call
 			return Actor.locals[qname]
 		}
 		set { Actor.locals[qname] = it }

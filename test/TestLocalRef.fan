@@ -26,6 +26,15 @@ internal class TestLocalRef : Test {
 		verifyFalse(ref.isMapped)
 	}
 
+	// don't create a local ref when reading null! ('cos Synchronized does it a lot!)
+	Void testLazyLazyInitFunc() {
+		ref := LocalRef("lazy")
+		verifyFalse(ref.isMapped)
+		
+		v := ref.val
+		verifyFalse(ref.isMapped)
+	}
+
 	Void testNuffinSetByDefault() {
 		ref := LocalRef("init", null)
 		verifyFalse(ref.isMapped)

@@ -3,15 +3,15 @@ using concurrent
 internal class TestCommonMapMethods : ConcurrentTest {
 
 	Void testAtomicMap() {
-		doCommonMap(AtomicMap(), ["wot", 6, "ping", "nul", "nul2"])
+		doCommonMap(AtomicMap(), ["wot", 6, "ping", "nul", "nul2"], true)
 	}
 
 	Void testLocalMap() {
-		doCommonMap(LocalMap("localMap"), ["wot", 6, "ping", "nul", "nul2"])
+		doCommonMap(LocalMap("localMap"), ["wot", 6, "ping", "nul", "nul2"], false)
 	}
 
 	Void testSynchronizedMap() {
-		doCommonMap(SynchronizedMap(ActorPool()), ["wot", 6, "ping", "nul", "nul2"])
+		doCommonMap(SynchronizedMap(ActorPool()), ["wot", 6, "ping", "nul", "nul2"], true)
 	}
 
 	Void testSynchronizedFileMap() {
@@ -20,12 +20,12 @@ internal class TestCommonMapMethods : ConcurrentTest {
 		f3 := File.createTemp("afConcurrent", ".txt").deleteOnExit
 		f4 := File.createTemp("afConcurrent", ".txt").deleteOnExit
 		f5 := File.createTemp("afConcurrent", ".txt").deleteOnExit
-		doCommonMap(SynchronizedFileMap(ActorPool()), [f1, f2, f3, f4, f5])
+		doCommonMap(SynchronizedFileMap(ActorPool()), [f1, f2, f3, f4, f5], true)
 	}
 	
 	** We don't care so much about list specifics, we just want to exercise the methods to uncover 
 	** any potential obvious oversights / typos.
-	Void doCommonMap(Obj map, Obj[] key) {
+	Void doCommonMap(Obj map, Obj[] key, Bool rw) {
 		wot := key[0]; six := key[1]; ping := key[2]; nul := key[3]; nul2 := key[4]
 		
 		// The checklist:
@@ -71,7 +71,8 @@ internal class TestCommonMapMethods : ConcurrentTest {
 		verifyEq(map->get(six), null)
 		verifyEq(map->get(wot), "ever")
 		verifyEq(map->size, 2)
-		verifyEq(map->rw->size, 2)
+		if (rw)
+			verifyEq(map->rw->size, 2)
 
 		map->clear
 		verify(map->isEmpty)

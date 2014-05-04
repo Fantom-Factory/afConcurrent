@@ -4,20 +4,20 @@ internal class TestCommonListMethods : ConcurrentTest {
 	
 
 	Void testAtomicList() {
-		doCommonList(AtomicList())
+		doCommonList(AtomicList(), true)
 	}
 
 	Void testLocalList() {
-		doCommonList(LocalList("localList"))
+		doCommonList(LocalList("localList"), false)
 	}
 
 	Void testSynchronizedList() {
-		doCommonList(SynchronizedList(ActorPool()))
+		doCommonList(SynchronizedList(ActorPool()), true)
 	}
 	
 	** We don't care so much about list specifics, we just want to exercise the methods to uncover 
 	** any potential obvious oversights / typos.
-	Void doCommonList(Obj list) {
+	Void doCommonList(Obj list, Bool rw) {
 
 		// The checklist:
 		//  -add
@@ -50,7 +50,8 @@ internal class TestCommonListMethods : ConcurrentTest {
 		list->remove(6)
 		verifyEq(list->get(0), 9)
 		verifyEq(list->size, 1)
-		verifyEq(list->rw->size, 1)
+		if (rw)
+			verifyEq(list->rw->size, 1)
 
 		list->clear
 		verify(list->isEmpty)

@@ -34,7 +34,8 @@ const class LocalList {
 
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
-		list.clear
+		if (localRef.isMapped)
+			list.clear
 		return this
 	}
 
@@ -42,33 +43,29 @@ const class LocalList {
 
 	** Returns 'true' if this list contains the specified item.
 	Bool contains(Obj? item) {
-		list.contains(item)
+		localRef.isMapped ? list.contains(item) : false
 	}
 	
 	** Call the specified function for every item in the list.
 	Void each(|Obj? item, Int index| c) {
-		list.each(c)
+		if (localRef.isMapped)
+			list.each(c)
 	}
 	
 	** Returns the item at the specified index.
 	** A negative index may be used to access an index from the end of the list.
 	@Operator
 	Obj? get(Int index) {
-		list[index]
+		localRef.isMapped ? list[index] : throw IndexErr(index.toStr)
 	}
 	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
-		list.isEmpty
-	}
-
-	** Get a read-write, mutable List instance with the same contents.
-	Obj?[] rw() {
-		list.rw
+		localRef.isMapped ? list.isEmpty : true
 	}
 	
 	** Get the number of values in the map.
 	Int size() {
-		list.size
+		localRef.isMapped ? list.size : 0
 	}
 }

@@ -128,6 +128,9 @@ While 'LocalRefs' are not too exiting on their own, [BedSheet]`http://www.fantom
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.2 [#v1.0.2]
+----------------
+ - New: 'LocalRefs', 'LocalLists' and 'LocalMaps' are now really lazy and don't create objects unless they really need to.
 
 v1.0.0 [#v1.0.0]
 ----------------
