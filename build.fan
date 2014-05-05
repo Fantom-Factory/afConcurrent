@@ -14,7 +14,9 @@ class Build : BuildPod {
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afConcurrent",
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afconcurrent",
 			"license.name"	: "MIT Licence",	
-			"repo.private"	: "true"
+			"repo.private"	: "true",
+			
+			"tags"			: "system"
 		]
 
 		depends = [
