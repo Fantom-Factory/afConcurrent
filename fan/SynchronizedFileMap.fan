@@ -13,6 +13,9 @@ const class SynchronizedFileMap {
 	** The default value to use for `get` when a key isn't mapped.
 	const Obj? def				:= null
 	
+	** Used to parameterize the backing map. 
+	const Type valType			:= Obj?#
+
 	** Creates a 'SynchronizedMap' with the given 'ActorPool'.
 	** 
 	** 'timeout' is how long to wait between individual file checks.
@@ -20,8 +23,8 @@ const class SynchronizedFileMap {
 	** Set to 'null' to check the file *every* time.
 	new make(ActorPool actorPool, Duration timeout := 30sec, |This|? f := null) {
 		f?.call(this)
-		this.cache	 	= SynchronizedMap(actorPool)
-		this.fileData	= AtomicMap()
+		this.cache	 	= SynchronizedMap(actorPool) { it.keyType = File#; it.valType = this.valType }
+		this.fileData	= AtomicMap() { it.keyType = FileModState#; it.valType = this.valType }
 		this.timeout 	= timeout
 	}
 	

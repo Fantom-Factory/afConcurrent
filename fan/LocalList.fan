@@ -7,9 +7,13 @@ const class LocalList {
 	** The 'LocalRef' this 'LocalList' wraps. 
 	const LocalRef	localRef
 	
-	** Makes a 'LocalList' instance.
-	new make(Str name) {
-		this.localRef = LocalRef(name) |->Obj?| { [,] }
+	** Used to parameterize the backing list. 
+	const Type listType	:= Obj?#
+	
+	** Makes a 'LocalList' instance. 'name' is passed to 'LocalList'.
+	new make(Str name := "LocalList", |This|? f := null) {
+		this.localRef = LocalRef(name) |->Obj?| { listType.emptyList.rw }
+		f?.call(this)
 	}
 
 	** Gets or sets the thread local list

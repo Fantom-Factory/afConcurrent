@@ -16,13 +16,26 @@ const class LocalMap {
 	** If 'true' the map will maintain the order in which key/value pairs are added.
 	const Bool ordered			:= false
 	
-	** Makes a 'LocalMap' instance.
-	new make(Str name, |This|? f := null) {
+	** Used to parameterize the backing map.
+	** Must be non-nullable.
+	const Type keyType			:= Obj#
+	
+	** Used to parameterize the backing map. 
+	const Type valType			:= Obj?#
+
+	** Makes a 'LocalMap' instance. 'name' is passed to 'LocalRef'.
+	new make(Str name := "LocalMap", |This|? f := null) {
 		f?.call(this)
+		if (caseInsensitive && keyType == Obj#)
+			keyType = Str#
 		this.localRef = LocalRef(name) |->Obj?| {
-			caseInsensitive
-				? [Str:Obj?][:] { it.def = this.def; it.caseInsensitive = true }
-				: [Obj:Obj?][:] { it.def = this.def; it.ordered = this.ordered }
+			Map.make(Map#.parameterize(["K":keyType, "V":valType])) {
+				if (this.def != null)
+					it.def = this.def
+				if (this.caseInsensitive) 
+					it.caseInsensitive = this.caseInsensitive 
+				it.ordered = this.ordered 
+			}
 		}
 	}
 	
@@ -83,7 +96,7 @@ const class LocalMap {
 
 	** Returns a list of all the mapped keys.
 	Obj[] keys() {
-		localRef.isMapped ? map.keys : Obj#.emptyList
+		localRef.isMapped ? map.keys : keyType.emptyList
 	}
 
 	** Get the number of key/value pairs in the map.
@@ -93,6 +106,6 @@ const class LocalMap {
 
 	** Returns a list of all the mapped values.
 	Obj?[] vals() {
-		localRef.isMapped ? map.vals : Obj#.emptyList
+		localRef.isMapped ? map.vals : valType.emptyList
 	}
 }

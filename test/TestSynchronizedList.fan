@@ -13,4 +13,15 @@ internal class TestSynchronizedList : ConcurrentTest {
 			SynchronizedList(ActorPool()).add(Buf())			
 		}
 	}
+	
+	Void testListType() {
+		verifyEq(SynchronizedList(ActorPool()) { listType = Obj?# }.list.typeof,	Obj?[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { listType = Obj?# }.list.of, 		Obj?#)
+
+		verifyEq(SynchronizedList(ActorPool()) { listType = Str?# }.list.typeof,	Str?[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { listType = Str?# }.list.of,		Str?#)
+
+		verifyEq(SynchronizedList(ActorPool()) { listType = Int# }.list.typeof,		Int[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { listType = Int# }.list.of, 		Int#)
+	}
 }

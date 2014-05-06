@@ -15,11 +15,17 @@ using concurrent::AtomicRef
 const class AtomicList {
 	private const AtomicRef atomicList := AtomicRef()
 	
+	** Used to parameterize the backing list. 
+	const Type listType	:= Obj?#
+	
+	@NoDoc	// it's a boring ctor!
+	new make(|This|? f := null) { f?.call(this) }
+
 	** Gets or sets a read-only copy of the backing map.
 	Obj?[] list {
 		get {
 			if (atomicList.val == null)
-				atomicList.val = [,].toImmutable
+				atomicList.val = listType.emptyList
 			return atomicList.val 
 		}
 		set { atomicList.val = it.toImmutable }

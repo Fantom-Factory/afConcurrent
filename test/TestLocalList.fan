@@ -42,4 +42,14 @@ internal class TestLocalList : ConcurrentTest {
 		verifyFalse(list.localRef.isMapped)
 	}
 	
+	Void testListType() {
+		verifyEq(LocalList("list") { listType = Obj?# }.list.typeof,	Obj?[]#)			
+		verifyEq(LocalList("list") { listType = Obj?# }.list.of, 		Obj?#)
+
+		verifyEq(LocalList("list") { listType = Str?# }.list.typeof,	Str?[]#)			
+		verifyEq(LocalList("list") { listType = Str?# }.list.of,		Str?#)
+
+		verifyEq(LocalList("list") { listType = Int# }.list.typeof,		Int[]#)			
+		verifyEq(LocalList("list") { listType = Int# }.list.of, 		Int#)
+	}
 }

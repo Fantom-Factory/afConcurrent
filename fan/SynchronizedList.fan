@@ -18,16 +18,20 @@ const class SynchronizedList {
 	** The 'lock' object should you need to 'synchronize' on the List.
 	const Synchronized	lock
 	
+	** Used to parameterize the backing list. 
+	const Type listType	:= Obj?#
+
 	** Creates a 'SynchronizedMap' with the given 'ActorPool'.
-	new make(ActorPool actorPool) {
+	new make(ActorPool actorPool, |This|? f := null) {
 		this.lock = Synchronized(actorPool)
+		f?.call(this)
 	}
 	
 	** Gets or sets a read-only copy of the backing map.
 	Obj?[] list {
 		get { 
 			if (atomicList.val == null)
-				atomicList.val = [,].toImmutable
+				atomicList.val = listType.emptyList
 			return atomicList.val 
 		}
 		set { atomicList.val = it.toImmutable }

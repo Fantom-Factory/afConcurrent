@@ -27,20 +27,32 @@ const class SynchronizedMap {
 	** If 'true' the map will maintain the order in which key/value pairs are added.
 	const Bool ordered			:= false
 
+	** Used to parameterize the backing map.
+	** Must be non-nullable.
+	const Type keyType			:= Obj#
+	
+	** Used to parameterize the backing map. 
+	const Type valType			:= Obj?#
+
 	** Creates a 'SynchronizedMap' with the given 'ActorPool'.
 	new make(ActorPool actorPool, |This|? f := null) {
-		f?.call(this)
 		this.lock = Synchronized(actorPool)
+		f?.call(this)
+		if (caseInsensitive && keyType == Obj#)
+			keyType = Str#
 	}
 	
 	** Gets or sets a read-only copy of the backing map.
 	[Obj:Obj?] map {
 		get { 
 			if (atomicMap.val == null)
-				atomicMap.val
-					= caseInsensitive
-					? [Str:Obj?][:] { it.def = this.def; it.caseInsensitive = true }.toImmutable
-					: [Obj:Obj?][:] { it.def = this.def; it.ordered = this.ordered }.toImmutable
+				atomicMap.val = Map.make(Map#.parameterize(["K":keyType, "V":valType])) {
+					if (this.def != null)
+						it.def = this.def 
+					if (this.caseInsensitive) 
+						it.caseInsensitive = this.caseInsensitive 
+					it.ordered = this.ordered 
+				}.toImmutable
 			return atomicMap.val 
 		}
 		set { atomicMap.val = it.toImmutable }
