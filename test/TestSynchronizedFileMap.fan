@@ -10,6 +10,9 @@ internal class TestSynchronizedFileMap : ConcurrentTest {
 		
 		sfm := SynchronizedFileMap(ActorPool(), 100ms)
 		
+		verify(sfm.isModified(f1))
+		verify(sfm.isModified(f2))
+
 		v1 := sfm.getOrAddOrUpdate(f1) { counter.getAndIncrement }
 		verifyEq(v1, 0)
 		v1 = sfm.getOrAddOrUpdate(f1) { counter.getAndIncrement }
@@ -24,11 +27,17 @@ internal class TestSynchronizedFileMap : ConcurrentTest {
 		v2 = sfm.getOrAddOrUpdate(f2) { counter.getAndIncrement }
 		verifyEq(v2, 1)
 		
+		verifyFalse(sfm.isModified(f1))
+		verifyFalse(sfm.isModified(f2))
+
 		// cater for the FAT32, 2 second rounding
 		Actor.sleep(2sec)	
 		f1.open.writeChars("Porn!").close
 		f2.open.writeChars("Porn!").close
 
+		verify(sfm.isModified(f1))
+		verify(sfm.isModified(f2))
+	
 		v1 = sfm.getOrAddOrUpdate(f1) { counter.getAndIncrement }
 		verifyEq(v1, 2)
 		v2 = sfm.getOrAddOrUpdate(f2) { counter.getAndIncrement }
@@ -37,7 +46,10 @@ internal class TestSynchronizedFileMap : ConcurrentTest {
 		v1 = sfm.getOrAddOrUpdate(f1) { counter.getAndIncrement }
 		verifyEq(v1, 2)
 		v2 = sfm.getOrAddOrUpdate(f2) { counter.getAndIncrement }
-		verifyEq(v2, 3)		
+		verifyEq(v2, 3)
+
+		verifyFalse(sfm.isModified(f1))
+		verifyFalse(sfm.isModified(f2))
 	}
 	
 	Void testMapType() {

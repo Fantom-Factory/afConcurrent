@@ -87,7 +87,7 @@ const class SynchronizedFileMap {
 	}
 	
 	** Returns the value associated with the given file. 
-	** If it doesn't exist, **or the file has been updated since the last read,** then it is added from 
+	** If it doesn't exist, **or the file has been updated since the last get,** then it is added from 
 	** the given value function. 
 	** 
 	** Set 'timeout' in the ctor to avoid hitting the file system on every call to this method.
@@ -114,6 +114,18 @@ const class SynchronizedFileMap {
 		return cache[key]
 	}
 
+	** Returns 'true' if a subsequent call to 'getOrAddOrUpdate()' would result in the 'valFunc' 
+	** being executed. This method does not modify any state and returns 'true' if the file has 
+	** not been added to the map.
+	Bool isModified(File key) {
+		fileMod := (FileModState?) fileData[key]
+		if (fileMod == null)
+			return true
+		if (!fileMod.isTimedOut(timeout))
+			return false
+		return fileMod.isModified(key)
+	}
+	
 	private Obj? setFile(File iKey, |File->Obj?| iFunc) {
 		val  := iFunc.call(iKey)
 		iVal := val.toImmutable
