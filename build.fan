@@ -10,13 +10,12 @@ class Build : BuildPod {
 		meta = [
 			"proj.name"		: "Concurrent",
 			"tags"			: "system",
-			"repo.private"	: "true"		
+			"repo.private"	: "false"		
 		]
 
 		depends = [
 			"sys 1.0",
-			"concurrent 1.0",
-			"build 1.0"
+			"concurrent 1.0"
 		]
 
 		srcDirs = [`test/`, `fan/`, `fan/internal/`]
