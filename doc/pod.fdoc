@@ -1,21 +1,27 @@
 Overview [#overview]
 ********************
-*'Concurrent' is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications.
+*@{project.name} is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications.
 Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
 
-'Concurrent' builds upon the standard Fantom [concurrent library]`http://fantom.org/doc/concurrent/index.html` and provides a collection of utility classes for sharing data between threads.
+'Concurrent' builds upon the standard Fantom [concurrent library]`pod:concurrent` and provides a collection of utility classes for sharing data between threads.
 
 
 
 Install [#Install]
 ******************
-Install 'Concurrent' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
+Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::Tool.install` ):
 
-  C:\> fanr install -r http://repo.status302.com/fanr/ afConcurrent
+  C:\> fanr install -r http://repo.status302.com/fanr/ @{pod.name}
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
-  depends = ["sys 1.0", ..., "afConcurrent 1.0+"]
+  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}+"]
+
+
+
+Documentation [#documentation]
+******************************
+Full API & fandocs are available on the [Status302 repository]`http://repo.status302.com/doc/@{pod.name}/#overview`.
 
 
 
@@ -122,7 +128,7 @@ echo(man.beer.qname) // --> 0001.beer
 echo(kid.beer.qname) // --> 0002.beer
 <pre
 
-While 'LocalRefs' are not too exiting on their own, [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet#.U2FhEihfyJA` and [IoC]`http://www.fantomfactory.org/pods/afIoc#.U2FfiihfyJA` use them to keep track of data to be cleaned up at the end of HTTP web requests.
+While 'LocalRefs' are not too exiting on their own, [BedSheet]`pod:afBedSheet` and [IoC]`pod:afIoc` use them to keep track of data to be cleaned up at the end of HTTP web requests.
 
 
 
