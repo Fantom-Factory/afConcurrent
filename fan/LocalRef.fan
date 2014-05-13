@@ -46,6 +46,7 @@ const class LocalRef {
 	
 	** Removes this object from 'Actor.locals'.
 	Void cleanUp() {
+		Actor.locals[qname] = null
 		Actor.locals.remove(qname)
 	}
 	

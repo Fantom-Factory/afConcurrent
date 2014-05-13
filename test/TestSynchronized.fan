@@ -63,6 +63,11 @@ internal class TestSynchronized : ConcurrentTest {
 			lock.synchronized |->Buf| { Buf() }
 		}
 		verify(logs.isEmpty)
+		
+		// test sync msg doesn't hide other IOErrs
+		verifyErrMsg(IOErr#, "Batman") {
+			lock.synchronized |->Buf| { throw IOErr("Batman") }
+		}
 	}
 
 	Void testTimeout() {

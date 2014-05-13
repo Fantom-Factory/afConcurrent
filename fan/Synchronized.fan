@@ -55,7 +55,7 @@ const class Synchronized {
 		try {
 			return future.get(timeout)
 		} catch (IOErr err) {
-			throw IOErr(ErrMsgs.synchronized_notImmutable(f.returns), err)
+			throw err.msg.contains("Not serializable") ? IOErr(ErrMsgs.synchronized_notImmutable(f.returns), err) : err
 		}
 	}
 
