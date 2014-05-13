@@ -134,6 +134,10 @@ While 'LocalRefs' are not too exiting on their own, [BedSheet]`pod:afBedSheet` a
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.4 [#v1.0.4]
+----------------
+ - Bug: 'Synchronized' could mistakenly wrap un-related 'IOErrs' with it's own immutable err msg.
+
 v1.0.2 [#v1.0.2]
 ----------------
  - New: All Maps and Lists can be parameterized with Types. Set them in the it-block ctor.
