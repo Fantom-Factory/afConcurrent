@@ -10,6 +10,14 @@ internal mixin ErrMsgs {
 	}
 	
 	static Str synchronized_notImmutable(Type returns) {
-		"Synchronized return type ${returns} is not immutable or serializable"
+		stripSys("Synchronized return type ${returns.signature} is not immutable or serializable")
+	}
+
+	static Str wrongType(Type? wrong, Type right, Str type) {
+		stripSys("'${wrong?.signature}' does not fit ${type} type '${right.signature}'")		
+	}
+
+	static Str stripSys(Str str) {
+		str.replace("sys::", "")
 	}
 }

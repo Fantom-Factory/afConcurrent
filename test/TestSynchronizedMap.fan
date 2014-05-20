@@ -43,6 +43,7 @@ internal class TestSynchronizedMap : ConcurrentTest {
 			SynchronizedMap(ActorPool()).getOrAdd(0) { datum }
 		}
 	}
+	private Obj datum() { 69 }
 	
 	Void testMapType() {
 		verifyEq(SynchronizedMap(ActorPool()) { keyType = Obj#; valType = Obj?# }.map.typeof,	[Obj:Obj?]#)			
@@ -53,5 +54,31 @@ internal class TestSynchronizedMap : ConcurrentTest {
 		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int?#; valType = Str# }.map.typeof.params["K"], Int?#)
 	}
 	
-	private Obj datum() { 69 }
+	Void testMapTypeChecks() {
+		map := SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str# }
+		
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Str#, Int#, "Map key")) {
+			map["str"] = "str"
+		}
+
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Str#, Int#, "Map key")) {
+			map.getOrAdd("str") { "str" }
+		}
+		
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "Map value")) {
+			map[13] = 13
+		}
+
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "Map value")) {
+			map.getOrAdd(13) { 13 }
+		}
+		
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int:Obj#, Int:Str#, "Map")) {
+			map.map = Int:Obj[:]
+		}
+
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "Map value")) {
+			map[13] = null
+		}
+	}
 }

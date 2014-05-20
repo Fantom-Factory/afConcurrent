@@ -42,7 +42,10 @@ const class LocalMap {
 	** Gets or sets the thread local map
 	[Obj:Obj?] map {
 		get { localRef.val }
-		set { localRef.val = it }
+		set { 
+			Utils.checkMapType(it.typeof, keyType, valType)
+			localRef.val = it 
+		}
 	}
 	
 	** Returns the value associated with the given key. 
@@ -50,13 +53,20 @@ const class LocalMap {
 	** 
 	** This method is thread safe. 'valFunc' will not be called twice for the same key.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
-		map.getOrAdd(key, valFunc)
+		Utils.checkType(key.typeof,  keyType, "Map key")
+		return map.getOrAdd(key) |Obj k1->Obj?| {
+			val := valFunc(k1)
+			Utils.checkType(val?.typeof, valType, "Map value")
+			return val
+		}
 	}
 
 	** Sets the key / value pair, ensuring no data is lost during multi-threaded race conditions.
 	** Though the same key may be overridden. Both the 'key' and 'val' must be immutable. 
 	@Operator
 	Void set(Obj key, Obj? val) {
+		Utils.checkType(key.typeof,  keyType, "Map key")
+		Utils.checkType(val?.typeof, valType, "Map value")
 		map[key] = val
 	}
 

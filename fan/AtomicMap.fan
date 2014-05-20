@@ -53,7 +53,10 @@ const class AtomicMap {
 				}.toImmutable
 			return atomicMap.val 
 		}
-		set { atomicMap.val = it.toImmutable }
+		set {
+			Utils.checkMapType(it.typeof, keyType, valType)
+			atomicMap.val = it.toImmutable 
+		}
 	}
 	
 	** Returns the value associated with the given key. If it doesn't exist then it is added from 
@@ -62,9 +65,11 @@ const class AtomicMap {
 	** This method is **NOT** thread safe. If two Actors call this method at the same time, the 
 	** value function will be called twice for the same key.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
+		Utils.checkType(key.typeof, keyType, "Map key")
 		iKey  := key.toImmutable
 		if (!containsKey(iKey)) {
 			val  := valFunc.call(iKey)
+			Utils.checkType(val?.typeof, valType, "Map value")
 			iVal := val.toImmutable
 			set(iKey, iVal)
 		}
@@ -74,6 +79,8 @@ const class AtomicMap {
 	** Sets the key / value pair.
 	@Operator
 	Void set(Obj key, Obj? val) {
+		Utils.checkType(key.typeof,  keyType, "Map key")
+		Utils.checkType(val?.typeof, valType, "Map value")
 		iKey  := key.toImmutable
 		iVal  := val.toImmutable
 		rwMap := map.rw

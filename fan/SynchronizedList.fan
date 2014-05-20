@@ -34,13 +34,17 @@ const class SynchronizedList {
 				atomicList.val = listType.emptyList
 			return atomicList.val 
 		}
-		set { atomicList.val = it.toImmutable }
+		set { 
+			Utils.checkListType(it.typeof, listType)
+			atomicList.val = it.toImmutable 
+		}
 	}
 	
 	** Add the specified item to the end of the list.
 	** Return this. 
 	@Operator
 	This add(Obj? val) {
+		Utils.checkType(val?.typeof, listType, "List value")
 		lock.synchronized |->| {
 			rwList := list.rw
 			rwList.add(val)

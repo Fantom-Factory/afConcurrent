@@ -28,19 +28,23 @@ const class AtomicList {
 				atomicList.val = listType.emptyList
 			return atomicList.val 
 		}
-		set { atomicList.val = it.toImmutable }
+		set {
+			Utils.checkListType(it.typeof, listType)
+			atomicList.val = it.toImmutable 
+		}
 	}
 	
 	** Add the specified item to the end of the list.
 	** Return this. 
 	@Operator
 	This add(Obj? val) {
+		Utils.checkType(val?.typeof, listType, "List value")
 		rwList := list.rw
 		rwList.add(val)
 		list = rwList
 		return this
 	}
-
+	
 	** Removes the specified item from the list, returning the removed item.
 	** If the item was not mapped then return 'null'.
 	Obj? remove(Obj item) {

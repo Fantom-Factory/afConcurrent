@@ -19,13 +19,17 @@ const class LocalList {
 	** Gets or sets the thread local list
 	Obj?[] list {
 		get { localRef.val }
-		set { localRef.val = it }
+		set { 
+			Utils.checkListType(it.typeof, listType)
+			localRef.val = it 
+		}
 	}
 	
 	** Add the specified item to the end of the list.
 	** Return this. 
 	@Operator
 	This add(Obj? val) {
+		Utils.checkType(val?.typeof, listType, "List value")
 		list.add(val)
 		return this
 	}
