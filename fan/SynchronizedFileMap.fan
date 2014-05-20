@@ -21,10 +21,10 @@ const class SynchronizedFileMap {
 	** 'timeout' is how long to wait between individual file checks.
 	** Use to avoid excessive reads of the file system.
 	** Set to 'null' to check the file *every* time.
-	new make(ActorPool actorPool, Duration timeout := 30sec, |This|? f := null) {
+	new make(ActorPool actorPool, Duration? timeout := 30sec, |This|? f := null) {
 		f?.call(this)
 		this.cache	 	= SynchronizedMap(actorPool) { it.keyType = File#; it.valType = this.valType }
-		this.fileData	= AtomicMap() { it.keyType = FileModState#; it.valType = this.valType }
+		this.fileData	= AtomicMap() 				 { it.keyType = File#; it.valType = FileModState# }
 		this.timeout 	= timeout
 	}
 	
@@ -39,6 +39,7 @@ const class SynchronizedFileMap {
 	** Sets the key / value pair, ensuring no data is lost during multi-threaded race conditions.
 	@Operator
 	Void set(File key, Obj? val) {
+		Utils.checkType(val?.typeof, valType, "Map value")
 		iKey := key.toImmutable
 		iVal := val.toImmutable
 		cache.lock.synchronized |->| {
@@ -128,6 +129,7 @@ const class SynchronizedFileMap {
 	
 	private Obj? setFile(File iKey, |File->Obj?| iFunc) {
 		val  := iFunc.call(iKey)
+		Utils.checkType(val?.typeof, valType, "Map value")
 		iVal := val.toImmutable
 		newMap := cache.map.rw
 		newMap.set(iKey, iVal)

@@ -56,4 +56,25 @@ internal class TestSynchronizedFileMap : ConcurrentTest {
 		verifyEq(SynchronizedFileMap(ActorPool(), 100ms) { valType = Obj?# }.map.typeof,	[File:Obj?]#)			
 		verifyEq(SynchronizedFileMap(ActorPool(), 100ms) { valType = Str#  }.map.typeof,	[File:Str]#)
 	}
+	
+	Void testMapTypeChecks() {
+		map := SynchronizedFileMap(ActorPool(), null) { valType = Str# }
+		f1 := File.createTemp("afConcurrent", ".txt").deleteOnExit
+		
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "Map value")) {
+			map[f1] = 13
+		}
+
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "Map value")) {
+			map.getOrAdd(f1) { 13 }
+		}
+
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "Map value")) {
+			map.getOrAddOrUpdate(f1) { 13 }
+		}
+
+		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "Map value")) {
+			map[f1] = null
+		}
+	}
 }

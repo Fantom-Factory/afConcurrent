@@ -55,7 +55,10 @@ const class SynchronizedMap {
 				}.toImmutable
 			return atomicMap.val 
 		}
-		set { atomicMap.val = it.toImmutable }
+		set { 
+			Utils.checkMapType(it.typeof, keyType, valType)
+			atomicMap.val = it.toImmutable 
+		}
 	}
 	
 	** Returns the value associated with the given key. 
@@ -63,6 +66,7 @@ const class SynchronizedMap {
 	** 
 	** This method is thread safe. 'valFunc' will not be called twice for the same key.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
+		Utils.checkType(key.typeof,  keyType, "Map key")
 		if (containsKey(key))
 			return get(key)
 		
@@ -74,6 +78,7 @@ const class SynchronizedMap {
 				return get(iKey)
 
 			val := iFunc.call(iKey)
+			Utils.checkType(val?.typeof, valType, "Map value")
 			iVal := val.toImmutable
 			newMap := map.rw
 			newMap.set(iKey, iVal)
@@ -86,6 +91,8 @@ const class SynchronizedMap {
 	** Both the 'key' and 'val' must be immutable. 
 	@Operator
 	Void set(Obj key, Obj? val) {
+		Utils.checkType(key.typeof,  keyType, "Map key")
+		Utils.checkType(val?.typeof, valType, "Map value")
 		iKey := key.toImmutable
 		iVal := val.toImmutable
 		lock.synchronized |->| {
