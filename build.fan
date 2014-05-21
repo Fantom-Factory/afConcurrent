@@ -5,12 +5,12 @@ class Build : BuildPod {
 	new make() {
 		podName = "afConcurrent"
 		summary = "(Internal) Utility classes for sharing data between threads"
-		version = Version("1.0.4")
+		version = Version("1.0.5")
 
 		meta = [
 			"proj.name"		: "Concurrent",
 			"tags"			: "system",
-			"repo.private"	: "false"		
+			"repo.private"	: "true"		
 		]
 
 		depends = [
