@@ -136,7 +136,9 @@ Release Notes [#releaseNotes]
 *****************************
 v1.0.4 [#v1.0.4]
 ----------------
+ - New: Runtime type checks on all List and Map, keys and values.
  - Bug: 'Synchronized' could mistakenly wrap un-related 'IOErrs' with it's own immutable err msg.
+ - Bug: Could not set the `SynchronizedFileMap` timeout to 'null'.
 
 v1.0.2 [#v1.0.2]
 ----------------
