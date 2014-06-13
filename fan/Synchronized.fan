@@ -19,12 +19,28 @@ const class Synchronized {
 	private const LocalRef		insync	:= LocalRef("synchronized")
 
 	** The default timeout to use when waiting for 'synchronized' blocks to complete.
+	** 
+	** The default timeout of 'null' blocks forever.
 	const Duration? timeout
+
+	** Determines if this synchronised lock is re-entrant or not.
+	** Re-entrant locks allow multiple nested calls to 'synchronized()' (on *this* object) without 
+	** fear of deadlocks.
+	** 
+	** Because re-entrant locks are often considered an indication of bad design, setting 
+	** 'reentrant' to 'false' will disable nested calls to 'synchronized()', throwing an Err 
+	** instead.
+	** 
+	** Defaults to 'true'.
+	const Bool reentrant := true
 	
 	** Create a 'Synchronized' class that uses the given 'ActorPool' and timeout.
-	new make(ActorPool actorPool, Duration? timeout := null) {
+	** 
+	** The default timeout of 'null' blocks forever.
+	new make(ActorPool actorPool, Duration? timeout := null, |This|? f := null) {
 		this.actor	 = Actor(actorPool, |Obj? obj -> Obj?| { receive(obj) })
 		this.timeout = timeout
+		f?.call(this)
 	}
 
 	** Runs the given func asynchronously, using this Synchronized's 'ActorPool'.
@@ -45,6 +61,9 @@ const class Synchronized {
 	** 
 	** The given func and return value must be immutable.
 	Obj? synchronized(|->Obj?| f) {
+		if (reentrant && insync.val == true)
+			return f.call()
+
 		if (insync.val == true)
 			throw Err(ErrMsgs.synchronized_nestedCallsNotAllowed)
 
