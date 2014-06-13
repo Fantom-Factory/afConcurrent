@@ -59,7 +59,7 @@ const class SynchronizedFileMap {
 	** Remove the key/value pair identified by the specified key
 	** from the map and return the value. 
 	** If the key was not mapped then return 'null'.
-	Obj? remove(Obj key) {
+	Obj? remove(File key) {
 		iKey := key.toImmutable
 		return cache.lock.synchronized |->Obj?| {
 			newMap := cache.map.rw
@@ -149,7 +149,7 @@ const class SynchronizedFileMap {
 	** If key is not mapped, then return the value of the 'def' parameter.  
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
-	Obj? get(Obj key, Obj? def := this.def) {
+	Obj? get(File key, Obj? def := this.def) {
 		map.get(key, def)
 	}
 
