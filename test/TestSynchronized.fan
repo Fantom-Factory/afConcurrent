@@ -14,23 +14,50 @@ internal class TestSynchronized : ConcurrentTest {
 		Log.removeHandler(handler)		
 	}
 	
-	Void testNestedSync() {
+	Void testNestingSyncInsideSync() {
 		pool := ActorPool()
 		verifyErrMsg(Err#, ErrMsgs.synchronized_nestedCallsNotAllowed) {
-			T_Sync(pool).sync			
+			T_Sync(pool) { it.reentrant = false }.syncToSync			
 		}
 		verify(logs.isEmpty)
 	}
 
-	Void testNestedAsync() {
+	Void testNestingSyncInsideSyncReentrant() {
+		pool := ActorPool()
+		tada := T_Sync(pool).syncToSync
+		verifyEq(tada, "Ta daa!")
+		verify(logs.isEmpty)
+	}
+
+	Void testNestingSyncInsideAsync() {
 		pool := ActorPool()
 		
-		T_Sync(pool).syncForget
+		T_Sync(pool) { it.reentrant = false }.asyncToSync
 		
 		pool.stop.join
 		rec := logs[0] as LogRec
 		verifyEq(rec.msg, ErrMsgs.synchronized_silentErr)
 		verifyEq(rec.err.msg, ErrMsgs.synchronized_nestedCallsNotAllowed)
+	}
+
+	Void testNestingSyncInsideAsyncReentrant() {
+		pool := ActorPool()
+		
+		T_Sync(pool).asyncToSync
+		
+		pool.stop.join
+		verify(logs.isEmpty)
+	}
+
+	Void testNestedAsyncInsideAsyncIsOkay() {
+		pool := ActorPool()
+		
+		sync := T_Sync(pool)
+		sync.asyncToAsync
+		Actor.sleep(100ms)
+		pool.stop.join
+
+		verifyEq(sync.asyncDone.val, "DONE")
 	}
 	
 	Void testErrsInSyncAreRethrown() {
@@ -77,21 +104,29 @@ internal class TestSynchronized : ConcurrentTest {
 		}
 		verify(logs.isEmpty)
 	}
-
 }
 
 internal const class T_Sync : Synchronized {
-	new make(ActorPool pool) : super(pool) { }
+	new make(ActorPool pool, |This|? in := null) : super(pool, null, in) { }
+	const AtomicRef asyncDone	:= AtomicRef() 
 	
-	Void sync() {
-		synchronized |->| { nested }
+	Str syncToSync() {
+		synchronized |->Str| { syncAgain }
 	}
 
-	Void syncForget() {
-		async |->| { nested }
+	Void asyncToSync() {
+		async |->| { syncAgain }
 	}
 
-	Void nested() {
-		synchronized |->| { null?.toStr }		
+	Void asyncToAsync() {
+		async |->| { asyncAgain }
+	}
+
+	Str syncAgain() {
+		synchronized |->Str| { "Ta daa!" }		
+	}
+
+	Void asyncAgain() {
+		async |->| { asyncDone.val = "DONE" }		
 	}
 }
