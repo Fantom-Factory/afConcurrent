@@ -10,6 +10,9 @@ const class SynchronizedFileMap {
 	private const AtomicMap 		fileData
 	private const Duration?			timeout
 
+	** The 'lock' object should you need to 'synchronize' on the file map.
+	const Synchronized	lock
+	
 	** The default value to use for `get` when a key isn't mapped.
 	const Obj? def				:= null
 	
@@ -22,10 +25,11 @@ const class SynchronizedFileMap {
 	** Use to avoid excessive reads of the file system.
 	** Set to 'null' to check the file *every* time.
 	new make(ActorPool actorPool, Duration? timeout := 30sec, |This|? f := null) {
+		this.timeout 	= timeout
 		f?.call(this)
 		this.cache	 	= SynchronizedMap(actorPool) { it.keyType = File#; it.valType = this.valType }
 		this.fileData	= AtomicMap() 				 { it.keyType = File#; it.valType = FileModState# }
-		this.timeout 	= timeout
+		this.lock		= cache.lock
 	}
 	
 	** Gets or sets a read-only copy of the backing map.
@@ -98,17 +102,33 @@ const class SynchronizedFileMap {
 		if (fileMod?.isTimedOut(timeout) ?: true) {
 			iKey  := key.toImmutable
 			iFunc := valFunc.toImmutable
-			cache.lock.synchronized |->| {
+			return cache.lock.synchronized |->Obj?| {
 				// double lock
 				fileMod2 := (FileModState?) fileData[iKey]				
 				if (fileMod2?.isTimedOut(timeout) ?: true) {
+
+					// if file not exist, still call func, but remove old version from cache
+					if (!iKey.exists) {
+						val  := iFunc.call(iKey)
+						Utils.checkType(val?.typeof, valType, "Map value")
+						iVal := val.toImmutable
+						
+						if (fileMod2 != null) {
+							newMap := cache.map.rw
+							newMap.remove(iKey)
+							fileData.remove(iKey)
+							cache.map = newMap
+						}
+						return iVal
+					}
 					
 					if (fileMod2?.isModified(iKey) ?: true) 
-						setFile(iKey, iFunc)
-					else
-						// just update the last checked
-						fileData.set(iKey, FileModState(iKey.modified))
+						return setFile(iKey, iFunc)
+
+					// just update the last checked
+					fileData.set(iKey, FileModState(iKey.modified))
 				}
+				return cache[key]
 			}
 		}
 
@@ -116,8 +136,8 @@ const class SynchronizedFileMap {
 	}
 
 	** Returns 'true' if a subsequent call to 'getOrAddOrUpdate()' would result in the 'valFunc' 
-	** being executed. This method does not modify any state and returns 'true' if the file has 
-	** not been added to the map.
+	** being executed. 
+	** This method does not modify any state.
 	Bool isModified(File key) {
 		fileMod := (FileModState?) fileData[key]
 		if (fileMod == null)
@@ -131,10 +151,15 @@ const class SynchronizedFileMap {
 		val  := iFunc.call(iKey)
 		Utils.checkType(val?.typeof, valType, "Map value")
 		iVal := val.toImmutable
-		newMap := cache.map.rw
-		newMap.set(iKey, iVal)
-		fileData.set(iKey, FileModState(iKey.modified))
-		cache.map = newMap		
+		
+		// only cache when the file exists
+		if (iKey.exists) {
+			newMap := cache.map.rw
+			newMap.set(iKey, iVal)
+			fileData.set(iKey, FileModState(iKey.modified))
+			cache.map = newMap
+		}
+
 		return iVal
 	}
 	
@@ -195,6 +220,7 @@ internal const class FileModState {
 	}
 	
 	Bool isModified(File file) {
+		// this returns false when the file doesn't exist
 		file.modified > lastModified
 	}
 }

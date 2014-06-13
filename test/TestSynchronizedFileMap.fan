@@ -77,4 +77,32 @@ internal class TestSynchronizedFileMap : ConcurrentTest {
 			map[f1] = null
 		}
 	}
+	
+	Void testOnlyCachesIfExists() {
+		f1 := `asdf-donotexist-asdf.txt`.toFile
+		f2 := File.createTemp("afConcurrent", ".txt").deleteOnExit
+
+		sfm := SynchronizedFileMap(ActorPool(), 100ms)
+		
+		v1 := sfm.getOrAddOrUpdate(f1) { "File1" }
+		v2 := sfm.getOrAddOrUpdate(f2) { "File2" }
+		
+		verifyEq(v1, "File1")	// return a result as if all went okay
+		verifyEq(v2, "File2")
+		
+		verifyEq(sfm.get(f1), null)
+		verifyEq(sfm.get(f2), "File2")
+
+		// now what happens when we delete a file that's already cached!!??
+		f2.delete
+
+		// cater for the FAT32, 2 second rounding
+		Actor.sleep(2sec)	
+
+		v2 = sfm.getOrAddOrUpdate(f2) { "File2 Again" }
+		verifyEq(v2, "File2 Again")
+		verifyEq(sfm.get(f2), null)
+
+		verifyEq(sfm.size, 0)
+	}
 }

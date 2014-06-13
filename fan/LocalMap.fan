@@ -25,9 +25,6 @@ const class LocalMap {
 
 	** Makes a 'LocalMap' instance. 'name' is passed to 'LocalRef'.
 	new make(Str name := "LocalMap", |This|? f := null) {
-		f?.call(this)
-		if (caseInsensitive && keyType == Obj#)
-			keyType = Str#
 		this.localRef = LocalRef(name) |->Obj?| {
 			Map.make(Map#.parameterize(["K":keyType, "V":valType])) {
 				if (this.def != null)
@@ -37,6 +34,9 @@ const class LocalMap {
 				it.ordered = this.ordered 
 			}
 		}
+		f?.call(this)
+		if (caseInsensitive && keyType == Obj#)
+			keyType = Str#
 	}
 	
 	** Gets or sets the thread local map
