@@ -29,20 +29,22 @@ using concurrent::Future
 ** }
 ** <pre
 const class SynchronizedState {
-	private const Synchronized	stateLock
 	private const |->Obj?| 		stateFactory
 	private const LocalRef 		stateRef
 	
+	** The 'lock' object should you need to 'synchronize' on the state.
+	const Synchronized	lock
+
 	** The given state type must have a public no-args ctor as per [Type.make]`sys::Type#make`.
 	new makeWithType(ActorPool actorPool, Type stateType) {
-		this.stateLock		= Synchronized(actorPool) 
+		this.lock			= Synchronized(actorPool) 
 		this.stateRef		= LocalRef(stateType.name)
 		this.stateFactory	= |->Obj?| { stateType.make }		
 	}
 
 	** The given (immutable) factory func is used to create the state object inside it's thread.
 	new makeWithFactory(ActorPool actorPool, |->Obj?| stateFactory) {
-		this.stateLock		= Synchronized(actorPool) 
+		this.lock			= Synchronized(actorPool) 
 		this.stateRef		= LocalRef(SynchronizedState#.name)
 		this.stateFactory	= stateFactory
 	}
@@ -52,7 +54,7 @@ const class SynchronizedState {
 	** The given func should be immutable. 
 	Future withState(|Obj state -> Obj?| func) {
 		iFunc := func.toImmutable
-		return stateLock.async |->Obj?| { callFunc(iFunc) }
+		return lock.async |->Obj?| { callFunc(iFunc) }
 	}
 
 	** Calls the given func synchronously, passing in the State object and returning the func's 
@@ -61,7 +63,7 @@ const class SynchronizedState {
 	** The given func should be immutable. 
 	Obj? getState(|Obj state -> Obj?| func) {
 		iFunc := func.toImmutable
-		return stateLock.synchronized |->Obj?| { callFunc(iFunc) }
+		return lock.synchronized |->Obj?| { callFunc(iFunc) }
 	}
 	
 	private Obj? callFunc(|Obj?->Obj?| func) {
