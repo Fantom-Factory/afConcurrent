@@ -50,7 +50,7 @@ internal class TestSynchronizedMap : ConcurrentTest {
 		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str?# }.map.typeof,	[Int:Str?]#)			
 		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str#  }.map.typeof,	[Int:Str]#)
 		
-		// interesting - an nullable key type! 
+		// interesting - an nullable key type! See http://fantom.org/sidewalk/topic/2279#c14493
 		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int?#; valType = Str# }.map.typeof.params["K"], Int?#)
 	}
 	

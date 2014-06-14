@@ -1,14 +1,34 @@
 using concurrent
 
-** A 'SynchronisedMap', keyed on 'File', that updates its contents if the file is updated.
-** Use as a cache based on the content of the file, see 'getOrAddOrUpdate()'.
+** A 'Synchronized' cache whose values update should their associated file key be modified.
+** Values are updated upon calling 'getOrAddOrUpdate()' - they do not update themselves autonomously!   
 ** 
-** Note that all objects held in the map have to be immutable.
+** To prevent excessive polling of the file system, and given every call to 'File.exists()' typically 
+** takes [at least 8ms-12ms]`http://stackoverflow.com/questions/6321180/how-expensive-is-file-exists-in-java#answer-6321277`, 
+** you can set a timeout 'Duration'. Every file in the cache notes when it polled the file system 
+** last, and waits at least this amount of time before polling again.
+** 
+** Note that values are only added to the cache should the file actually exist. Given there are an 
+** infinite number of files that don't exist, this prevents your cache from growing unbounded.
+** (Also, how do you tell if a file has been modified if it doesn't exist!?)
+** 
+** Upon calling 'set()', 'getOrAdd()' or 'getOrAddOrUpdate()' should a file not exist (or has 
+** subsequently been deleted) then the value function is still executed and its result returned. 
+** However nothing is stored in the cache, and any previous value keyed against the file is removed.
+** This ensures that the content of the cache only relates to files that exist.
+** 
+** Although surprising, the above behaviour is usually what you want and works very well.  
+** 
+** Note that all objects held in the cache have to be immutable.
 // Used by efanXtra, Genesis, BsMoustache, BsEfan
 const class SynchronizedFileMap {
 	private const SynchronizedMap 	cache
 	private const AtomicMap 		fileData
-	private const Duration?			timeout
+
+	** The duration between individual file checks.
+	** Use to avoid excessive reads of the file system.
+	** Set to 'null' to check the file *every* time.
+	const Duration?		timeout
 
 	** The 'lock' object should you need to 'synchronize' on the file map.
 	const Synchronized	lock
@@ -19,15 +39,11 @@ const class SynchronizedFileMap {
 	** Used to parameterize the backing map. 
 	const Type valType			:= Obj?#
 
-	** Creates a 'SynchronizedMap' with the given 'ActorPool'.
-	** 
-	** 'timeout' is how long to wait between individual file checks.
-	** Use to avoid excessive reads of the file system.
-	** Set to 'null' to check the file *every* time.
+	** Creates a 'SynchronizedMap' with the given 'ActorPool' and 'timeout'.
 	new make(ActorPool actorPool, Duration? timeout := 30sec, |This|? f := null) {
 		this.timeout 	= timeout
 		f?.call(this)
-		this.cache	 	= SynchronizedMap(actorPool) { it.keyType = File#; it.valType = this.valType }
+		this.cache	 	= SynchronizedMap(actorPool) { it.keyType = File#; it.valType = this.valType  }
 		this.fileData	= AtomicMap() 				 { it.keyType = File#; it.valType = FileModState# }
 		this.lock		= cache.lock
 	}
@@ -41,6 +57,8 @@ const class SynchronizedFileMap {
 	}
 
 	** Sets the key / value pair, ensuring no data is lost during multi-threaded race conditions.
+	** 
+	** Nothing is added should the file not exist.
 	@Operator
 	Void set(File key, Obj? val) {
 		Utils.checkType(val?.typeof, valType, "Map value")
@@ -75,7 +93,9 @@ const class SynchronizedFileMap {
 	}
 
 	** Returns the value associated with the given key. 
-	** If it doesn't exist then it is added from the value function. 
+	** If the key is not mapped then it is added from the value function.
+	** 
+	** If the file does not exist, the 'valFunc' is executed but nothing is added to the cache. 
 	Obj? getOrAdd(File key, |File->Obj?| valFunc) {
 		if (containsKey(key))
 			return get(key)
@@ -92,10 +112,12 @@ const class SynchronizedFileMap {
 	}
 	
 	** Returns the value associated with the given file. 
-	** If it doesn't exist, **or the file has been updated since the last get,** then it is added from 
-	** the given value function. 
+	** If it doesn't exist, **or the file has been modified** since the last call to 'getOrAddOrUpdate()', 
+	** then it is added from the given value function. 
 	** 
 	** Set 'timeout' in the ctor to avoid hitting the file system on every call to this method.
+	** 
+	** If the file does not exist, the 'valFunc' is executed but nothing is added to the cache. 
 	Obj? getOrAddOrUpdate(File key, |File->Obj?| valFunc) {
 		fileMod := (FileModState?) fileData[key]
 		
@@ -107,23 +129,11 @@ const class SynchronizedFileMap {
 				fileMod2 := (FileModState?) fileData[iKey]				
 				if (fileMod2?.isTimedOut(timeout) ?: true) {
 
-					// if file not exist, still call func, but remove old version from cache
-					if (!iKey.exists) {
-						val  := iFunc.call(iKey)
-						Utils.checkType(val?.typeof, valType, "Map value")
-						iVal := val.toImmutable
-						
-						if (fileMod2 != null) {
-							newMap := cache.map.rw
-							newMap.remove(iKey)
-							fileData.remove(iKey)
-							cache.map = newMap
-						}
-						return iVal
-					}
-					
-					if (fileMod2?.isModified(iKey) ?: true) 
+					if (fileMod2?.isModified(iKey) ?: true)
 						return setFile(iKey, iFunc)
+
+					if (!iKey.exists)
+						return setFile(iKey, iFunc)				
 
 					// just update the last checked
 					fileData.set(iKey, FileModState(iKey.modified))
@@ -157,6 +167,12 @@ const class SynchronizedFileMap {
 			newMap := cache.map.rw
 			newMap.set(iKey, iVal)
 			fileData.set(iKey, FileModState(iKey.modified))
+			cache.map = newMap
+		
+		} else if (cache.containsKey(iKey)) {
+			newMap := cache.map.rw
+			newMap.remove(iKey)
+			fileData.remove(iKey)
 			cache.map = newMap
 		}
 
@@ -219,8 +235,8 @@ internal const class FileModState {
 			: (DateTime.now - lastChecked) > timeout
 	}
 	
+	** Returns 'false' when the file doesn't exist
 	Bool isModified(File file) {
-		// this returns false when the file doesn't exist
 		file.modified > lastModified
 	}
 }
