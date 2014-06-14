@@ -134,6 +134,8 @@ Release Notes [#releaseNotes]
 v1.0.6 [#v1.0.6]
 ----------------
  - New: 'Synchronized' locks are re-entrant by default.
+ - Chg: 'SynchronizedFileMap' only caches values whose associated file exists.
+ - Bug: 'SynchronizedFileMap' would Err if handed a non-existant file.
 
 v1.0.4 [#v1.0.4]
 ----------------
