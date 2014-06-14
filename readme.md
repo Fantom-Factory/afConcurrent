@@ -108,5 +108,5 @@ echo(man.beer.qname) // --> 0001.beer
 echo(kid.beer.qname) // --> 0002.beer
 ```
 
-While `LocalRefs` are not too exiting on their own, [BedSheet](http://www.fantomfactory.org/pods/afBedSheet) and [IoC](http://www.fantomfactory.org/pods/afIoc) use them to keep track of data to be cleaned up at the end of HTTP web requests.
+While `LocalRefs` are not too exciting on their own, [BedSheet](http://www.fantomfactory.org/pods/afBedSheet) and [IoC](http://www.fantomfactory.org/pods/afIoc) use them to keep track of data to be cleaned up at the end of HTTP web requests.
 
