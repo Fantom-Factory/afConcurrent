@@ -5,7 +5,7 @@ using concurrent
 ** pre>
 ** lock := Synchronized(ActorPool())
 ** 
-** val := synchronized |->Obj?| {
+** val := lock.synchronized |->Obj?| {
 **     // ...
 **     // important stuff
 **     // ...
