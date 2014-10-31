@@ -9,7 +9,6 @@ class Build : BuildPod {
 
 		meta = [
 			"proj.name"		: "Concurrent",
-			"internal"		: "true",
 			"tags"			: "system",
 			"repo.private"	: "true"		
 		]
