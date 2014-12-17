@@ -10,7 +10,7 @@ class Build : BuildPod {
 		meta = [
 			"proj.name"		: "Concurrent",
 			"tags"			: "system",
-			"repo.private"	: "true"		
+			"repo.private"	: "false"		
 		]
 
 		depends = [
