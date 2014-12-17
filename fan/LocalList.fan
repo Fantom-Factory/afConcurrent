@@ -8,11 +8,13 @@ const class LocalList {
 	const LocalRef	localRef
 	
 	** Used to parameterize the backing list. 
-	const Type listType	:= Obj?#
+	** 
+	**   LocalList("name") { it.valType = Str# }
+	const Type valType	:= Obj?#
 	
 	** Makes a 'LocalList' instance. 'name' is passed to 'LocalList'.
 	new make(Str name := "LocalList", |This|? f := null) {
-		this.localRef = LocalRef(name) |->Obj?| { listType.emptyList.rw }
+		this.localRef = LocalRef(name) |->Obj?| { valType.emptyList.rw }
 		f?.call(this)
 	}
 
@@ -20,7 +22,7 @@ const class LocalList {
 	Obj?[] list {
 		get { localRef.val }
 		set { 
-			Utils.checkListType(it.typeof, listType)
+			Utils.checkListType(it.typeof, valType)
 			localRef.val = it 
 		}
 	}
@@ -29,7 +31,7 @@ const class LocalList {
 	** Return this. 
 	@Operator
 	This add(Obj? val) {
-		Utils.checkType(val?.typeof, listType, "List value")
+		Utils.checkType(val?.typeof, valType, "List value")
 		list.add(val)
 		return this
 	}

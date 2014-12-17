@@ -61,10 +61,10 @@ const class Synchronized {
 	** 
 	** The given func and return value must be immutable.
 	Obj? synchronized(|->Obj?| f) {
-		if (reentrant && insync.val == true)
+		if (reentrant && inSync)
 			return f.call()
 
-		if (insync.val == true)
+		if (inSync)
 			throw Err(ErrMsgs.synchronized_nestedCallsNotAllowed)
 
 		// explicit call to .toImmutable() - see http://fantom.org/sidewalk/topic/1798#c12190
@@ -78,6 +78,19 @@ const class Synchronized {
 		}
 	}
 
+	** Returns 'true' if the current thread is running inside the synchronised Actor. E.g.:
+	**   
+	**   lock := Synchronized(ActorPool())
+	**   lock.inSync    // --> false
+	** 
+	**   lock.synchronized |->| {
+	**     lock.inSync  // --> true
+	**     ...
+	**   }
+	Bool inSync() {
+		insync.val == true
+	}
+	
 	private Obj? receive(Obj[] msg) {
 		logErr	:= msg[0] as Bool
 		func 	:= msg[1] as |->Obj?|

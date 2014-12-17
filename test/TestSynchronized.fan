@@ -104,6 +104,14 @@ internal class TestSynchronized : ConcurrentTest {
 		}
 		verify(logs.isEmpty)
 	}
+
+	Void testInSync() {
+		lock := Synchronized(ActorPool())
+		verifyFalse(lock.inSync)
+		
+		wasInSync := lock.synchronized |->Bool| { lock.inSync }
+		verify(wasInSync)
+	}
 }
 
 internal const class T_Sync : Synchronized {
