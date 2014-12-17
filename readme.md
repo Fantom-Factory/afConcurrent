@@ -1,7 +1,5 @@
 ## Overview 
 
-*Concurrent is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
-
 `Concurrent` builds upon the standard Fantom [concurrent library](http://fantom.org/doc/concurrent/index.html) and provides a collection of utility classes for sharing data between threads.
 
 ## Install 

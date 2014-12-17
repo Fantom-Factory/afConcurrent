@@ -11,16 +11,24 @@ const class LocalMap {
 	const Obj? def				:= null
 	
 	** Configures case sensitivity for maps with Str keys.
+	** 
+	**   LocalMap("name") { it.keyType = Str#; it.caseInsensitive = true }
 	const Bool caseInsensitive	:= false
 
 	** If 'true' the map will maintain the order in which key/value pairs are added.
+	** 
+	**   LocalMap("name") { it.ordered = true }
 	const Bool ordered			:= false
 	
 	** Used to parameterize the backing map.
 	** Must be non-nullable.
+	** 
+	**   LocalMap("name") { it.keyType = Int# }
 	const Type keyType			:= Obj#
 	
 	** Used to parameterize the backing map. 
+	** 
+	**   LocalMap("name") { it.valType = Str# }
 	const Type valType			:= Obj?#
 
 	** Makes a 'LocalMap' instance. 'name' is passed to 'LocalRef'.

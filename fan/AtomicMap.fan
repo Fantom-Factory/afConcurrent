@@ -13,7 +13,7 @@ using concurrent::AtomicRef
 ** 
 ** Note that all objects held in the map must be immutable.
 ** 
-** See [The Good, The Bad and The Ugly of Const Services]`http://www.fantomfactory.org/articles/good-bad-and-ugly-of-const-services#theUgly` for more details.
+** See [From One Thread to Another...]`http://www.fantomfactory.org/articles/from-one-thread-to-another#atomicMap` for more details.
 const class AtomicMap {
 	private const AtomicRef atomicMap := AtomicRef()
 
@@ -21,16 +21,24 @@ const class AtomicMap {
 	const Obj? def				:= null
 	
 	** Configures case sensitivity for maps with 'Str' keys.
+	** 
+	**   AtomicMap() { it.keyType = Str#; it.caseInsensitive = true }
 	const Bool caseInsensitive	:= false
 
 	** If 'true' the map will maintain the order in which key/value pairs are added.
+	** 
+	**   AtomicMap() { it.ordered = true }
 	const Bool ordered			:= false
 	
 	** Used to parameterize the backing map.
 	** Must be non-nullable.
+	** 
+	**   AtomicMap() { it.keyType = Int# }
 	const Type keyType			:= Obj#
 	
 	** Used to parameterize the backing map. 
+	** 
+	**   AtomicMap() { it.valType = Int# }
 	const Type valType			:= Obj?#
 	
 	@NoDoc	// pointless ctor!

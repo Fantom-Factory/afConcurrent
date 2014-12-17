@@ -131,6 +131,11 @@ While 'LocalRefs' are not too exciting on their own, [BedSheet]`pod:afBedSheet` 
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.8 [#v1.0.8]
+----------------
+ - New: Added 'Synchronized.inSync()' method to tell if you're currently in the Sync thread or not.
+ - Chg: Renamed 'listType' to 'valType' in 'LocalList' and 'AtomicList'. (Potential breaking change.)
+
 v1.0.6 [#v1.0.6]
 ----------------
  - New: 'Synchronized' locks are re-entrant by default.

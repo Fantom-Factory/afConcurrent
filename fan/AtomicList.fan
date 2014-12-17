@@ -15,8 +15,10 @@ using concurrent::AtomicRef
 const class AtomicList {
 	private const AtomicRef atomicList := AtomicRef()
 	
-	** Used to parameterize the backing list. 
-	const Type listType	:= Obj?#
+	** Used to parameterize the backing list.
+	** 
+	**   AtomicList() { it.valType = Str# }
+	const Type valType	:= Obj?#
 	
 	@NoDoc	// it's a boring ctor!
 	new make(|This|? f := null) { f?.call(this) }
@@ -25,11 +27,11 @@ const class AtomicList {
 	Obj?[] list {
 		get {
 			if (atomicList.val == null)
-				atomicList.val = listType.emptyList
+				atomicList.val = valType.emptyList
 			return atomicList.val 
 		}
 		set {
-			Utils.checkListType(it.typeof, listType)
+			Utils.checkListType(it.typeof, valType)
 			atomicList.val = it.toImmutable 
 		}
 	}
@@ -38,7 +40,7 @@ const class AtomicList {
 	** Return this. 
 	@Operator
 	This add(Obj? val) {
-		Utils.checkType(val?.typeof, listType, "List value")
+		Utils.checkType(val?.typeof, valType, "List value")
 		rwList := list.rw
 		rwList.add(val)
 		list = rwList
