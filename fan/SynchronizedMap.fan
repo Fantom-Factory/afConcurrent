@@ -65,6 +65,8 @@ const class SynchronizedMap {
 	** If it doesn't exist then it is added from the value function. 
 	** 
 	** This method is thread safe. 'valFunc' will not be called twice for the same key.
+	**  
+	** Note that 'valFunc' should be immutable and, if used, is executed in a different thread to the calling thread.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
 		Utils.checkType(key.typeof,  keyType, "Map key")
 		if (containsKey(key))
