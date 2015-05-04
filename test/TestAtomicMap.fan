@@ -46,9 +46,6 @@ internal class TestAtomicMap : ConcurrentTest {
 		verifyEq(AtomicMap() { keyType = Obj#; valType = Obj?# }.map.typeof,	[Obj:Obj?]#)			
 		verifyEq(AtomicMap() { keyType = Int#; valType = Str?# }.map.typeof,	[Int:Str?]#)			
 		verifyEq(AtomicMap() { keyType = Int#; valType = Str#  }.map.typeof,	[Int:Str]#)
-		
-		// interesting - an nullable key type! 
-		verifyEq(AtomicMap() { keyType = Int?#; valType = Str# }.map.typeof.params["K"], Int?#)
 	}
 	
 	Void testMapTypeChecks() {

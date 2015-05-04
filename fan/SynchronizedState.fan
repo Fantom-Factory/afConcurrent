@@ -35,7 +35,7 @@ const class SynchronizedState {
 	** The 'lock' object should you need to 'synchronize' on the state.
 	const Synchronized	lock
 
-	** The given state type must have a public no-args ctor as per [Type.make]`sys::Type#make`.
+	** The given state type must have a public no-args ctor as per [Type.make]`sys::Type.make`.
 	new makeWithType(ActorPool actorPool, Type stateType) {
 		this.lock			= Synchronized(actorPool) 
 		this.stateRef		= LocalRef(stateType.name)
