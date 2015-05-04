@@ -96,6 +96,8 @@ const class SynchronizedFileMap {
 	** If the key is not mapped then it is added from the value function.
 	** 
 	** If the file does not exist, the 'valFunc' is executed but nothing is added to the cache. 
+	**  
+	** Note that 'valFunc' should be immutable and, if used, is executed in a different thread to the calling thread.
 	Obj? getOrAdd(File key, |File->Obj?| valFunc) {
 		if (containsKey(key))
 			return get(key)
@@ -117,7 +119,9 @@ const class SynchronizedFileMap {
 	** 
 	** Set 'timeout' in the ctor to avoid hitting the file system on every call to this method.
 	** 
-	** If the file does not exist, the 'valFunc' is executed but nothing is added to the cache. 
+	** If the file does not exist, the 'valFunc' is executed but nothing is added to the cache.
+	**  
+	** Note that 'valFunc' should be immutable and, if used, is executed in a different thread to the calling thread.
 	Obj? getOrAddOrUpdate(File key, |File->Obj?| valFunc) {
 		fileMod := (FileModState?) fileData[key]
 		
