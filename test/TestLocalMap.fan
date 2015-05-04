@@ -67,9 +67,6 @@ internal class TestLocalMap : ConcurrentTest {
 		verifyEq(LocalMap("map") { keyType = Int#; valType = Str?# }.map.typeof,	[Int:Str?]#)			
 		verifyEq(LocalMap("map") { keyType = Int#; valType = Str#  }.map.typeof,	[Int:Str]#)
 		
-		// interesting - an nullable key type! 
-		verifyEq(LocalMap("map") { keyType = Int?#; valType = Str# }.map.typeof.params["K"], Int?#)
-		
 		empty := LocalMap("map") { keyType = Int#; valType = Str#  }
 		verifyEq(empty.keys.of, Int#)
 		verifyEq(empty.vals.of, Str#)

@@ -1,8 +1,14 @@
-## Overview 
+#Concurrent v1.0.8
+---
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
+[![pod: v1.0.8](http://img.shields.io/badge/pod-v1.0.8-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
+![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
+
+## Overview
 
 `Concurrent` builds upon the standard Fantom [concurrent library](http://fantom.org/doc/concurrent/index.html) and provides a collection of utility classes for sharing data between threads.
 
-## Install 
+## Install
 
 Install `Concurrent` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
@@ -12,15 +18,15 @@ To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan
 
     depends = ["sys 1.0", ..., "afConcurrent 1.0+"]
 
-## Documentation 
+## Documentation
 
 Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afConcurrent/#overview).
 
-## Usage 
+## Usage
 
 The `Concurrent` library provides a few strategies for sharing data:
 
-### Synchronized 
+### Synchronized
 
 [Synchronized](http://repo.status302.com/doc/afConcurrent/Synchronized.html) provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. Extend the `Synchronized` class to use the familiar syntax:
 
@@ -56,11 +62,11 @@ class Example {
 }
 ```
 
-### Atomic 
+### Atomic
 
 Atomic Lists and Maps are similar to their Synchronized counterparts in that they are backed by an object held in an `AtomicRef`. But their write operations are *not* synchronized. This means they are much more *lightweight* but it also means they are susceptible to **data-loss** during race conditions between multiple threads. If used for caching situations where it is not essential for values to exist, this may be acceptable.
 
-### Local 
+### Local
 
 Local Refs, Lists and Maps do not share data between threads, in fact, quite the opposite!
 
