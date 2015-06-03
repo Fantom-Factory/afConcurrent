@@ -16,19 +16,19 @@ Install `Concurrent` with the Fantom Repository Manager ( [fanr](http://fantom.o
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afConcurrent 1.0+"]
+    depends = ["sys 1.0", ..., "afConcurrent 1.0"]
 
 ## Documentation
 
-Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afConcurrent/#overview).
+Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afConcurrent/).
 
 ## Usage
 
-The `Concurrent` library provides a few strategies for sharing data:
+The `Concurrent` library provides strategies for sharing data between threads:
 
 ### Synchronized
 
-[Synchronized](http://repo.status302.com/doc/afConcurrent/Synchronized.html) provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. Extend the `Synchronized` class to use the familiar syntax:
+[Synchronized](http://pods.fantomfactory.org/pods/afConcurrent/api/Synchronized) provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. Extend the `Synchronized` class to use the familiar syntax:
 
 ```
 const class Example : Synchronized {
@@ -62,9 +62,24 @@ class Example {
 }
 ```
 
+The Concurrent library supplies the following *synchronized* constructs:
+
+- [Synchronized](http://pods.fantomfactory.org/pods/afConcurrent/api/Synchronized)
+- [SynchronizedState](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedState)
+- [SynchronizedList](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedList)
+- [SynchronizedMap](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedMap)
+- [SynchronizedFileMap](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedFileMap)
+
+See the individual classes for more details.
+
 ### Atomic
 
 Atomic Lists and Maps are similar to their Synchronized counterparts in that they are backed by an object held in an `AtomicRef`. But their write operations are *not* synchronized. This means they are much more *lightweight* but it also means they are susceptible to **data-loss** during race conditions between multiple threads. If used for caching situations where it is not essential for values to exist, this may be acceptable.
+
+See:
+
+- [AtomicList](http://pods.fantomfactory.org/pods/afConcurrent/api/AtomicList)
+- [AtomicMap](http://pods.fantomfactory.org/pods/afConcurrent/api/AtomicMap)
 
 ### Local
 
@@ -72,7 +87,7 @@ Local Refs, Lists and Maps do not share data between threads, in fact, quite the
 
 They wrap data stored in `Actor.locals()` thereby constraining it to only be accessed by the executing thread. The data is said to be *local* to that thread.
 
-But data held in `Actor.locals()` is susceptible to being overwritten due to name clashes. Consider:
+The problem is that data held in `Actor.locals()` is susceptible to being overwritten due to name clashes. Consider:
 
 ```
 class Drink {
@@ -92,7 +107,7 @@ echo(man.beer)  // --> Ginger Ale (WRONG!)
 echo(kid.beer)  // --> Ginger Ale
 ```
 
-To prevent this, [LocalRef](http://repo.status302.com/doc/afConcurrent/LocalRef.html) creates a unique qualified name to store the data under:
+To prevent this, [LocalRef](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRef) creates a unique qualified name to store the data under:
 
 ```
 class Drink {
@@ -112,5 +127,11 @@ echo(man.beer.qname) // --> 0001.beer
 echo(kid.beer.qname) // --> 0002.beer
 ```
 
-While `LocalRefs` are not too exciting on their own, [BedSheet](http://www.fantomfactory.org/pods/afBedSheet) and [IoC](http://www.fantomfactory.org/pods/afIoc) use them to keep track of data to be cleaned up at the end of HTTP web requests.
+While `LocalRefs` are not too exciting on their own, [BedSheet](http://pods.fantomfactory.org/pods/afBedSheet) and [IoC](http://pods.fantomfactory.org/pods/afIoc) use them to keep track of data to be cleaned up at the end of HTTP web requests.
+
+See:
+
+- [LocalRef](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRef)
+- [LocalList](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalList)
+- [LocalMap](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalMap)
 
