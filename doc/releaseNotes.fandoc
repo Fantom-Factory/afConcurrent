@@ -1,0 +1,31 @@
+Versions
+********
+v1.0.8
+======
+ - New: Added 'Synchronized.inSync()' method to tell if you're currently in the Sync thread or not.
+ - Chg: Renamed 'listType' to 'valType' in 'LocalList' and 'AtomicList'. (Potential breaking change.)
+
+v1.0.6
+======
+ - New: 'Synchronized' locks are re-entrant by default.
+ - Chg: 'SynchronizedFileMap' only caches values whose associated file exists.
+ - Bug: 'SynchronizedFileMap' would Err if handed a non-existant file.
+
+v1.0.4
+======
+ - New: Runtime type checks on all List and Map, keys and values.
+ - Bug: 'Synchronized' could mistakenly wrap un-related 'IOErrs' with it's own immutable err msg.
+ - Bug: Could not set the `SynchronizedFileMap` timeout to 'null'.
+
+v1.0.2
+======
+ - New: All Maps and Lists can be parameterized with Types. Set them in the it-block ctor.
+ - New: 'LocalRefs', 'LocalLists' and 'LocalMaps' are now really lazy and don't create objects unless they really need to.
+ - New: Added 'SynchronizedFileMap.isModified(File)'.
+
+v1.0.0
+======
+ - New: Initial release.
+ - New: Added 'SynchronizedFileMap'.
+ - Chg: 'LocalRef' ctor now takes a 'defFunc' instead of an 'initValue'.
+

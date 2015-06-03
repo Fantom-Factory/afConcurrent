@@ -21,22 +21,30 @@ const class AtomicMap {
 	const Obj? def				:= null
 	
 	** Configures case sensitivity for maps with 'Str' keys.
-	** 
+	**
+	**   syntax: fantom
+	**  
 	**   AtomicMap() { it.keyType = Str#; it.caseInsensitive = true }
 	const Bool caseInsensitive	:= false
 
 	** If 'true' the map will maintain the order in which key/value pairs are added.
 	** 
+	**   syntax: fantom
+	**  
 	**   AtomicMap() { it.ordered = true }
 	const Bool ordered			:= false
 	
 	** Used to parameterize the backing map.
 	** Must be non-nullable.
 	** 
+	**   syntax: fantom
+	**  
 	**   AtomicMap() { it.keyType = Int# }
 	const Type keyType			:= Obj#
 	
 	** Used to parameterize the backing map. 
+	** 
+	**   syntax: fantom 
 	** 
 	**   AtomicMap() { it.valType = Int# }
 	const Type valType			:= Obj?#

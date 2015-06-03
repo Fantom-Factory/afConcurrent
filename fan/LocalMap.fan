@@ -13,21 +13,29 @@ const class LocalMap {
 	** Configures case sensitivity for maps with Str keys.
 	** 
 	**   LocalMap("name") { it.keyType = Str#; it.caseInsensitive = true }
+	**   syntax: fantom
+	**  
 	const Bool caseInsensitive	:= false
 
 	** If 'true' the map will maintain the order in which key/value pairs are added.
 	** 
+	**   syntax: fantom
+	**  
 	**   LocalMap("name") { it.ordered = true }
 	const Bool ordered			:= false
 	
 	** Used to parameterize the backing map.
 	** Must be non-nullable.
 	** 
+	**   syntax: fantom
+	**  
 	**   LocalMap("name") { it.keyType = Int# }
 	const Type keyType			:= Obj#
 	
 	** Used to parameterize the backing map. 
 	** 
+	**   syntax: fantom
+	**  
 	**   LocalMap("name") { it.valType = Str# }
 	const Type valType			:= Obj?#
 

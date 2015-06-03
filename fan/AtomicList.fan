@@ -17,6 +17,8 @@ const class AtomicList {
 	
 	** Used to parameterize the backing list.
 	** 
+	**   syntax: fantom
+	**  
 	**   AtomicList() { it.valType = Str# }
 	const Type valType	:= Obj?#
 	
