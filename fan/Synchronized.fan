@@ -3,6 +3,8 @@ using concurrent
 ** Provides 'synchronized' access to blocks of code. Example usage:
 ** 
 ** pre>
+** syntax: fantom
+**  
 ** lock := Synchronized(ActorPool())
 ** 
 ** val := lock.synchronized |->Obj?| {
@@ -80,6 +82,8 @@ const class Synchronized {
 
 	** Returns 'true' if the current thread is running inside the synchronised Actor. E.g.:
 	**   
+	**   syntax: fantom
+	**  
 	**   lock := Synchronized(ActorPool())
 	**   lock.inSync    // --> false
 	** 

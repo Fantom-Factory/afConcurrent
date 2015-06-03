@@ -16,6 +16,8 @@ using concurrent::Future
 ** Example usage:
 ** 
 ** pre>
+** syntax: fantom
+**  
 ** sync := SynchronizedState(ActorPool(), Mutable#)
 ** msg  := "That's cool, dude!"
 ** 

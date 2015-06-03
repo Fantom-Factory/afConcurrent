@@ -9,6 +9,8 @@ const class LocalList {
 	
 	** Used to parameterize the backing list. 
 	** 
+	**   syntax: fantom
+	**  
 	**   LocalList("name") { it.valType = Str# }
 	const Type valType	:= Obj?#
 	
