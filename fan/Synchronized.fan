@@ -15,7 +15,7 @@ using concurrent
 ** }
 ** <pre
 const class Synchronized {
-	private static const Log	log 	:= Utils.getLog(Synchronized#)
+	private static const Log	log 	:= Synchronized#.pod.log
 	
 	private const Actor 		actor
 	private const LocalRef		insync	:= LocalRef("synchronized")

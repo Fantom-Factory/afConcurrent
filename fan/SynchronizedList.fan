@@ -3,7 +3,6 @@ using concurrent::AtomicRef
 using concurrent::Future
 
 ** A List that provides fast reads and 'synchronised' writes between threads, ensuring data integrity.
-** Use when *reads* far out number the *writes*.
 ** 
 ** The list is stored in an [AtomicRef]`concurrent::AtomicRef` through which all reads are made. 
 ** 
@@ -11,7 +10,7 @@ using concurrent::Future
 ** ensuring no data is lost during race conditions. 
 ** Writing makes a 'rw' copy of the map and is thus a more expensive operation.
 ** 
-** Note that all objects held in the map have to be immutable.
+** All values held in the list must be immutable.
 const class SynchronizedList {
 	private const AtomicRef atomicList := AtomicRef()
 	
