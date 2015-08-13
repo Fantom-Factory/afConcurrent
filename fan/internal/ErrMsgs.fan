@@ -1,4 +1,5 @@
 
+@Js
 internal mixin ErrMsgs {
 	
 	static Str synchronized_nestedCallsNotAllowed() {

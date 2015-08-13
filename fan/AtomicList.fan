@@ -1,7 +1,6 @@
 using concurrent::AtomicRef
 
 ** A List that provides fast reads and lightweight writes between threads.
-** Use when *reads* far out number the *writes*.
 **
 ** The list is stored in an [AtomicRef]`concurrent::AtomicRef` through which all reads are made. 
 ** Writing makes a 'rw' copy of the list and is thus a more expensive operation.
@@ -9,9 +8,10 @@ using concurrent::AtomicRef
 ** > **CAUTION:** 
 ** Write operations ( 'add', 'remove' & 'clear' ) are not synchronised. 
 ** This makes them lightweight but also susceptible to **data-loss** during race conditions.
-** This may be acceptable for *caching* situations where values is easily re-calculated.
+** This may be acceptable for *caching* situations where values are easily re-calculated.
 ** 
-** Note that all values held in the list must be immutable.
+** All values held in the list must be immutable.
+@Js
 const class AtomicList {
 	private const AtomicRef atomicList := AtomicRef()
 	

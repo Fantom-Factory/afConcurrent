@@ -1,5 +1,9 @@
 Versions
 ********
+v1.0.10
+=======
+ - New: Made 'AtomicList' and 'AtomicMap' available in Javascript.
+
 v1.0.8
 ======
  - New: Added 'Synchronized.inSync()' method to tell if you're currently in the Sync thread or not.

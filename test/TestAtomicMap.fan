@@ -1,4 +1,5 @@
 
+@Js
 internal class TestAtomicMap : ConcurrentTest {
 
 	Void testDef() {

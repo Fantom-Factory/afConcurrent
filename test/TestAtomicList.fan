@@ -1,4 +1,5 @@
 
+@Js
 internal class TestAtomicList : ConcurrentTest {
 	
 	Void testMutableLists() {
