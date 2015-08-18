@@ -1,6 +1,7 @@
 
 ** In normal Base64 encoding, an Int of '0' is returned as 'AAAAAAAAAAE=' which is not quite what we want!
 ** http://tools.ietf.org/html/rfc4648#section-5
+@Js
 internal class Base64 {	
 	private static const Str base64	:= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
 	

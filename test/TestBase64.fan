@@ -1,4 +1,5 @@
 
+@Js
 internal class TestBase64 : Test {
 	
 	Void testToBase64() {
@@ -19,6 +20,7 @@ internal class TestBase64 : Test {
 		verifyEq(Base64.toBase64(75), "1B")
 		verifyEq(Base64.toBase64(76), "1C")
 
+		// TODO: Javascript Ints don't get this big!
 		verifyEq(Base64.toBase64(5293177106265578783), "4br98YWC9qV")
 		verifyEq(Base64.toBase64(Int.maxVal), "7__________")
 	}
@@ -28,6 +30,7 @@ internal class TestBase64 : Test {
 		verifyEq(Base64.fromBase64("0001"), 1)
 		verifyEq(Base64.fromBase64("0002"), 2)
 
+		// TODO: Javascript Ints don't get this big!
 		verifyEq(Base64.fromBase64("4br98YWC9qV"), 5293177106265578783)
 		verifyEq(Base64.fromBase64("7__________"), Int.maxVal)
 	}

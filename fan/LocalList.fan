@@ -2,6 +2,7 @@
 ** Manages a List stored in 'Actor.locals' with a unique key.
 ** 
 ** Note that 'LocalLists' are lazy; that is, no List is created or stored in 'Actor.locals' until accessed.
+// @Js	- see http://fantom.org/forum/topic/1144
 const class LocalList {
 	
 	** The 'LocalRef' this 'LocalList' wraps. 
@@ -16,7 +17,7 @@ const class LocalList {
 	
 	** Makes a 'LocalList' instance. 'name' is passed to 'LocalList'.
 	new make(Str name := "LocalList", |This|? f := null) {
-		this.localRef = LocalRef(name) |->Obj?| { valType.emptyList.rw }
+		this.localRef = LocalRef(name) |->Obj?| { valType.emptyList.rw }.toImmutable
 		f?.call(this)
 	}
 

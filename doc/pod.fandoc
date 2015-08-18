@@ -1,6 +1,6 @@
 Overview [#overview]
 ********************
-'Concurrent' builds upon the standard Fantom [concurrent library]`pod:concurrent` and provides a collection of utility classes for sharing data between threads.
+'Concurrent' builds upon the Fantom's core [concurrent library]`pod:concurrent` and provides a collection of utility classes for sharing data in and between threads.
 
 
 
@@ -75,6 +75,8 @@ See:
  - `AtomicList`
  - `AtomicMap`
 
+The atomic classes are also available in Javascript.
+
 
 
 Local
@@ -131,4 +133,6 @@ See:
  - `LocalRef`
  - `LocalList`
  - `LocalMap`
+
+The local classes are also available in Javascript, but only work with Fantom 1.0.68 or greater.
 

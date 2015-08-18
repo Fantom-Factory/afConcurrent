@@ -2,6 +2,7 @@
 ** Manages a Map stored in 'Actor.locals' with a unique key.
 ** 
 ** Note that 'LocalMaps' are lazy; that is, no Map is created or stored in 'Actor.locals' until accessed.
+// @Js	- see http://fantom.org/forum/topic/1144
 const class LocalMap {
 	
 	** The 'LocalRef' this 'LocalMap' wraps. 

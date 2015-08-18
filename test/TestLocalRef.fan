@@ -1,4 +1,5 @@
 
+@Js
 internal class TestLocalRef : Test {
 	
 	Void testDocumentation() {
@@ -41,12 +42,13 @@ internal class TestLocalRef : Test {
 
 		ref.val = 0
 		verify(ref.isMapped)
-		
+
 		ref.cleanUp
 		verifyFalse(ref.isMapped)
 	}
 }
 
+@Js
 internal class T_Drink {
     LocalRef beer := LocalRef("beer")
 }
