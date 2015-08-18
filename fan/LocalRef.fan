@@ -1,6 +1,7 @@
 using concurrent
 
 ** Manages an Obj reference stored in 'Actor.locals' with a unique key.
+// @Js	- see http://fantom.org/forum/topic/1144
 const class LocalRef {	
 	static 
 	private const AtomicInt	counter	:= AtomicInt(0)
