@@ -134,5 +134,5 @@ See:
  - `LocalList`
  - `LocalMap`
 
-The local classes are also available in Javascript, but only work with Fantom 1.0.68 or greater.
+'LocalRef' is also available in Javascript (as from Fantom 1.0.68) but 'LocalList' and 'LocalMap' are blocked on [      js: Func.toImmutable not implemented]`http://fantom.org/forum/topic/1144#c4`.
 
