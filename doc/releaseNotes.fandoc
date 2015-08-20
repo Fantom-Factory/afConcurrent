@@ -3,7 +3,7 @@ Versions
 v1.0.10
 =======
  - Chg: 'AtomicList' and 'AtomicMap' are now available in Javascript.
- - Chg: 'LocalRef', 'LocalList' and 'LocalMap' also available in Javascript, but only with Fantom 1.0.68.
+ - Chg: 'LocalRef' also available in Javascript, but only with Fantom 1.0.68.
 
 v1.0.8
 ======

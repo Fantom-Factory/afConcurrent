@@ -20,9 +20,9 @@ internal class TestBase64 : Test {
 		verifyEq(Base64.toBase64(75), "1B")
 		verifyEq(Base64.toBase64(76), "1C")
 
-		// TODO: Javascript Ints don't get this big!
-		verifyEq(Base64.toBase64(5293177106265578783), "4br98YWC9qV")
-		verifyEq(Base64.toBase64(Int.maxVal), "7__________")
+		// Javascript Ints aren't as big as Java's!
+		verifyEq(Base64.toBase64(5293177106265578496), "4br98YWC9m0")
+		verifyEq(Base64.toBase64(Int.maxVal), Env.cur.runtime == "js" ? "W00000000" : "7__________")
 	}
 	
 	Void testFromBase64() {
@@ -30,8 +30,8 @@ internal class TestBase64 : Test {
 		verifyEq(Base64.fromBase64("0001"), 1)
 		verifyEq(Base64.fromBase64("0002"), 2)
 
-		// TODO: Javascript Ints don't get this big!
-		verifyEq(Base64.fromBase64("4br98YWC9qV"), 5293177106265578783)
-		verifyEq(Base64.fromBase64("7__________"), Int.maxVal)
+		// Javascript Ints aren't as big as Java's!
+		verifyEq(Base64.fromBase64("4br98YWC9m0"), 5293177106265578496)
+		verifyEq(Base64.fromBase64(Env.cur.runtime == "js" ? "W00000000" : "7__________"), Int.maxVal)
 	}
 }
