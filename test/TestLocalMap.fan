@@ -1,5 +1,5 @@
 
-@Js
+//@Js
 internal class TestLocalMap : ConcurrentTest {
 
 	Void testLazyCreation() {
