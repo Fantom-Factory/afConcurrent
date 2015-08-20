@@ -1,7 +1,7 @@
-#Concurrent v1.0.8
+#Concurrent v1.0.10
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.8](http://img.shields.io/badge/pod-v1.0.8-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
+[![pod: v1.0.10](http://img.shields.io/badge/pod-v1.0.10-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -137,5 +137,5 @@ See:
 - [LocalList](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalList)
 - [LocalMap](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalMap)
 
-The local classes are also available in Javascript, but only work with Fantom 1.0.68 or greater.
+`LocalRef` is also available in Javascript (as from Fantom 1.0.68) but `LocalList` and `LocalMap` are blocked on [      js: Func.toImmutable not implemented](http://fantom.org/forum/topic/1144#c4).
 
