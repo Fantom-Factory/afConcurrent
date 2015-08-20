@@ -1,4 +1,5 @@
 
+//@Js
 internal class TestLocalList : ConcurrentTest {
 
 	Void testLazyCreation() {
@@ -18,11 +19,15 @@ internal class TestLocalList : ConcurrentTest {
 	// because local lists and maps tend to be numerous (one per thread!), 
 	// try not to create loads of empty ones for useless methods
 	Void testLazyLazyCreation() {
+		echo("1")
 		list := LocalList("list")
+		echo("1.4")
 		verifyFalse(list.localRef.isMapped)
+		echo("2")
 		
 		list.clear
 		verifyFalse(list.localRef.isMapped)
+		echo("3")
 
 		verifyFalse(list.contains(6))
 		verifyFalse(list.localRef.isMapped)

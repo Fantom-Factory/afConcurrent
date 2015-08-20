@@ -6,13 +6,13 @@
 
 ## Overview
 
-`Concurrent` builds upon the standard Fantom [concurrent library](http://fantom.org/doc/concurrent/index.html) and provides a collection of utility classes for sharing data between threads.
+`Concurrent` builds upon the Fantom's core [concurrent library](http://fantom.org/doc/concurrent/index.html) and provides a collection of utility classes for sharing data in and between threads.
 
 ## Install
 
 Install `Concurrent` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
-    C:\> fanr install -r http://repo.status302.com/fanr/ afConcurrent
+    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afConcurrent
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
@@ -81,6 +81,8 @@ See:
 - [AtomicList](http://pods.fantomfactory.org/pods/afConcurrent/api/AtomicList)
 - [AtomicMap](http://pods.fantomfactory.org/pods/afConcurrent/api/AtomicMap)
 
+The atomic classes are also available in Javascript.
+
 ### Local
 
 Local Refs, Lists and Maps do not share data between threads, in fact, quite the opposite!
@@ -134,4 +136,6 @@ See:
 - [LocalRef](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRef)
 - [LocalList](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalList)
 - [LocalMap](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalMap)
+
+The local classes are also available in Javascript, but only work with Fantom 1.0.68 or greater.
 
