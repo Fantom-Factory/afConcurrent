@@ -2,7 +2,6 @@ using concurrent
 
 internal class TestCommonListMethods : ConcurrentTest {
 	
-
 	Void testAtomicList() {
 		doCommonList(AtomicList(), true)
 	}
