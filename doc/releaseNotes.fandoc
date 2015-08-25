@@ -1,5 +1,9 @@
 Versions
 ********
+v1.0.12
+=======
+ - Bug: 'AtomicMap.getOrAdd()' could return an unexpected 'null' during race conditions.
+
 v1.0.10
 =======
  - Chg: 'AtomicList' and 'AtomicMap' are now available in Javascript.

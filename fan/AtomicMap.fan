@@ -82,14 +82,15 @@ const class AtomicMap {
 	** value function will be called twice for the same key.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
 		Utils.checkType(key.typeof, keyType, "Map key")
-		iKey  := key.toImmutable
-		if (!containsKey(iKey)) {
-			val  := valFunc.call(iKey)
-			Utils.checkType(val?.typeof, valType, "Map value")
-			iVal := val.toImmutable
-			set(iKey, iVal)
-		}
-		return get(iKey)
+		iKey := key.toImmutable
+		got	 := get(iKey)		
+		if (containsKey(iKey))
+			return got
+		val  := valFunc.call(iKey)
+		Utils.checkType(val?.typeof, valType, "Map value")
+		iVal := val.toImmutable
+		set(iKey, iVal)
+		return iVal
 	}
 
 	** Sets the key / value pair.
