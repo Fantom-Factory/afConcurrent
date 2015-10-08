@@ -1,5 +1,10 @@
 Versions
 ********
+v1.0.14
+=======
+ - New: 'ActorPools' and 'LocalRefManager'.
+ - Chg: Added non-invasive services and modules for use with [IoC v3]`pod:afIoc`.
+
 v1.0.12
 =======
  - Bug: 'AtomicMap.getOrAdd()' could return an unexpected 'null' during race conditions.
