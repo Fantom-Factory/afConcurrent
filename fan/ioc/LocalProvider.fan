@@ -13,12 +13,12 @@ internal const class LocalRefProvider {
 		injectType	:= Type.find("afIoc::Inject")
 		if (ctx->isFieldInjection && !ctx->field->hasFacet(injectType))
 			return false
-		dependencyType := ctx->field?->type ?: ctx->funcParam?->type
+		dependencyType := ((Field?) ctx->field)?.type ?: ((Param?) ctx->funcParam)?.type
 		return localTypes.contains(dependencyType->toNonNullable) && ctx->targetType != null
 	}
 	
 	Obj? provide(Obj scope, Obj ctx) {
-		type := (ctx->field?->type ?: ctx->funcParam?->type)?->toNonNullable
+		type := (((Field?) ctx->field)?.type ?: ((Param?) ctx->funcParam)?.type)?.toNonNullable
 		name := (ctx->targetType->qname->replace("::", ".")).toStr
 		if (ctx->field != null)
 			name += "." + (ctx->field->name)?.toStr

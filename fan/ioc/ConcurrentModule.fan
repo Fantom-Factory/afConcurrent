@@ -19,7 +19,7 @@ const class ConcurrentModule {
 
 			"contributions" : [
 				[
-					"serviceId"	: "afConcurrent::DependencyProviders",
+					"serviceId"	: "afIoc::DependencyProviders",
 					"key"		: "afConcurrent.localRefProvider",
 					"build"		: LocalRefProvider#
 				]
