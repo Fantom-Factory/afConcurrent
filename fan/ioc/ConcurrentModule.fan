@@ -2,7 +2,7 @@
 @NoDoc	// advanced use only
 const class ConcurrentModule {
 	
-	Str:Obj defineModule() {
+	Str:Obj nonInvasiveIocModule() {
 		[
 			"services"	: [
 				[
