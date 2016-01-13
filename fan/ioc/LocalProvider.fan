@@ -10,26 +10,32 @@ internal const class LocalRefProvider {
 
 	Bool canProvide(Obj scope, Obj ctx) {
 		// IoC standards dictate that field injection should be denoted by a facet
+		field		:= (Field?) ctx->field
 		injectType	:= Type.find("afIoc::Inject")
-		if (ctx->isFieldInjection && !ctx->field->hasFacet(injectType))
+		if (ctx->isFieldInjection && !field.hasFacet(injectType))
 			return false
-		dependencyType := ((Field?) ctx->field)?.type ?: ((Param?) ctx->funcParam)?.type
+		dependencyType := field?.type ?: ((Param?) ctx->funcParam)?.type
 		return localTypes.contains(dependencyType->toNonNullable) && ctx->targetType != null
 	}
 	
 	Obj? provide(Obj scope, Obj ctx) {
-		type := (((Field?) ctx->field)?.type ?: ((Param?) ctx->funcParam)?.type)?.toNonNullable
-		name := (ctx->targetType->qname->replace("::", ".")).toStr
-		if (ctx->field != null)
-			name += "." + (ctx->field->name)?.toStr
+		field	:= (Field?) ctx->field
+		type 	:= (field?.type ?: ((Param?) ctx->funcParam)?.type)?.toNonNullable
+		name 	:= (ctx->targetType->qname->replace("::", ".")).toStr
+		if (field != null)
+			name += "." + field?.name
 		if (ctx->funcParam != null)
 			name += "." + (ctx->funcParam->name)?.toStr
 		
+		inject := null
+		if (field != null) {
+			injectType	:= Type.find("afIoc::Inject")
+			inject 		= field.facet(injectType)
+		}
+
 		// let @Inject.id override the default name
-		injectType	:= Type.find("afIoc::Inject")
-		inject		:= ctx->field->facets->findType(injectType)->first
 		if (inject?->id != null)
-			name = inject->id 
+			name = inject->id
 		
 		if (type == LocalRef#)
 			return localManager.createRef(name)
@@ -40,7 +46,7 @@ internal const class LocalRefProvider {
 				return localManager.createList(name)
 
 			if (listType.params["L"] == null)
-				throw Err(localProvider_typeNotList(ctx->field, listType))
+				throw Err(localProvider_typeNotList(field, listType))
 			return LocalList(localManager.createName(name)) {
 				it.valType = listType.params["V"]
 			} 
@@ -52,7 +58,7 @@ internal const class LocalRefProvider {
 				return localManager.createMap(name)
 
 			if (mapType.params["M"] == null)
-				throw Err(localProvider_typeNotMap(ctx->field, mapType))
+				throw Err(localProvider_typeNotMap(field, mapType))
 
 			return LocalMap(localManager.createName(name)) {
 				it.keyType = mapType.params["K"]
