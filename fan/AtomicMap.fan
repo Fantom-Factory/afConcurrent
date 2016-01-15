@@ -1,6 +1,6 @@
 using concurrent::AtomicRef
 
-** A Map that provides fast reads and lightweight writes between threads.
+** A Map that provides fast reads and lightweight writes between threads using the copy on write paradigm. 
 **
 ** The map is stored in an [AtomicRef]`concurrent::AtomicRef` through which all reads are made. 
 ** Writing makes a 'rw' copy of the map and is thus a more expensive operation.
@@ -8,11 +8,11 @@ using concurrent::AtomicRef
 ** > **CAUTION:** 
 ** Write operations ( 'getOrAdd', 'set', 'remove' & 'clear' ) are not synchronised. 
 ** This makes them lightweight but also susceptible to **data-loss** during race conditions.
-** This may be acceptable for *caching* situations where values are easily re-calculated.
+** Though this may be acceptable for *caching* situations where values are re-calculated on demand.
 ** 
 ** All values held in the map must be immutable.
 ** 
-** See [From One Thread to Another...]`http://www.fantomfactory.org/articles/from-one-thread-to-another#atomicMap` for more details.
+** See the article [From One Thread to Another...]`http://www.fantomfactory.org/articles/from-one-thread-to-another#atomicMap` for more details.
 @Js
 const class AtomicMap {
 	private const AtomicRef atomicMap := AtomicRef()
