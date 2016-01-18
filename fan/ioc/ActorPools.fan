@@ -9,7 +9,7 @@ using concurrent
 ** pre>
 ** syntax: fantom
 ** @Contribute { serviceType=ActorPools# }
-** static Void contributeActorPools(Configuration config) {
+** Void contributeActorPools(Configuration config) {
 **     config["myPool"] = ActorPool() { it.name = "MyPool" }
 ** }
 ** <pre  
