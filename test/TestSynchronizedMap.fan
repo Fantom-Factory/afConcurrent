@@ -23,19 +23,19 @@ internal class TestSynchronizedMap : ConcurrentTest {
 
 	Void testMutableMap() {
 		verifyErr(NotImmutableErr#) {
-			SynchronizedMap(ActorPool()).map = [0:Buf()]			
+			SynchronizedMap(ActorPool()).map = [0:NotImmutable()]			
 		}
 	}
 
 	Void testMutableSet() {
 		verifyErr(NotImmutableErr#) {
-			SynchronizedMap(ActorPool())[0] = Buf()			
+			SynchronizedMap(ActorPool())[0] = NotImmutable()			
 		}
 	}
 
 	Void testMutableGetOrAdd() {
 		verifyErr(NotImmutableErr#) {
-			SynchronizedMap(ActorPool()).getOrAdd(0) { Buf() }			
+			SynchronizedMap(ActorPool()).getOrAdd(0) { NotImmutable() }			
 		}
 
 		// funcs need be to immutable too

@@ -23,19 +23,19 @@ internal class TestAtomicMap : ConcurrentTest {
 
 	Void testMutableMap() {
 		verifyErr(NotImmutableErr#) {
-			AtomicMap().map = [0:Buf()]			
+			AtomicMap().map = [0:NotImmutable()]			
 		}
 	}
 
 	Void testMutableSet() {
 		verifyErr(NotImmutableErr#) {
-			AtomicMap()[0] = Buf()			
+			AtomicMap()[0] = NotImmutable()			
 		}
 	}
 
 	Void testMutableGetOrAdd() {
 		verifyErr(NotImmutableErr#) {
-			AtomicMap().getOrAdd(0) { Buf() }			
+			AtomicMap().getOrAdd(0) { NotImmutable() }			
 		}
 
 		// allowed 'cos the func need not be mutable
@@ -77,3 +77,7 @@ internal class TestAtomicMap : ConcurrentTest {
 		}
 	}
 }
+
+@Js
+class NotImmutable { }
+
