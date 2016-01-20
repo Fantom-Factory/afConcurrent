@@ -42,6 +42,9 @@ internal class TestSynchronizedMap : ConcurrentTest {
 		verifyErr(NotImmutableErr#) {
 			SynchronizedMap(ActorPool()).getOrAdd(0) { datum }
 		}
+		
+		// allow nulls to be added - surprisingly, 'null.toImmutable' doesn't throw an Err!
+		SynchronizedMap(ActorPool()).getOrAdd(69) { null }		
 	}
 	private Obj datum() { 69 }
 	

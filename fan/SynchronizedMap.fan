@@ -80,7 +80,7 @@ const class SynchronizedMap {
 
 			val := iFunc.call(iKey)
 			Utils.checkType(val?.typeof, valType, "Map value")
-			iVal := val.toImmutable
+			iVal := val?.toImmutable
 			newMap := map.rw
 			newMap.set(iKey, iVal)
 			map = newMap
@@ -95,7 +95,7 @@ const class SynchronizedMap {
 		Utils.checkType(key.typeof,  keyType, "Map key")
 		Utils.checkType(val?.typeof, valType, "Map value")
 		iKey := key.toImmutable
-		iVal := val.toImmutable
+		iVal := val?.toImmutable
 		lock.synchronized |->| {
 			newMap := map.rw
 			newMap.set(iKey, iVal)
