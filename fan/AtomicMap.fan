@@ -88,7 +88,7 @@ const class AtomicMap {
 			return got
 		val  := valFunc.call(iKey)
 		Utils.checkType(val?.typeof, valType, "Map value")
-		iVal := val.toImmutable
+		iVal := val?.toImmutable
 		set(iKey, iVal)
 		return iVal
 	}
@@ -99,7 +99,7 @@ const class AtomicMap {
 		Utils.checkType(key.typeof,  keyType, "Map key")
 		Utils.checkType(val?.typeof, valType, "Map value")
 		iKey  := key.toImmutable
-		iVal  := val.toImmutable
+		iVal  := val?.toImmutable
 		rwMap := map.rw
 		rwMap[iKey] = iVal
 		map = rwMap

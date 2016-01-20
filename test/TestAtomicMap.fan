@@ -40,6 +40,9 @@ internal class TestAtomicMap : ConcurrentTest {
 
 		// allowed 'cos the func need not be mutable
 		AtomicMap().getOrAdd(0) { datum }
+		
+		// allow nulls to be added - surprisingly, 'null.toImmutable' doesn't throw an Err!
+		AtomicMap().getOrAdd(69) { null }		
 	}
 	private Obj datum() { 69 }
 	
