@@ -1,6 +1,6 @@
 Overview [#overview]
 ********************
-'Concurrent' builds upon the Fantom's core [concurrent library]`pod:concurrent` and provides a collection of utility classes for sharing data in and between threads.
+Concurrent builds upon the Fantom's core [concurrent library]`pod:concurrent` and provides a collection of utility classes for sharing data in and between threads.
 
 
 
@@ -134,5 +134,18 @@ See:
  - `LocalList`
  - `LocalMap`
 
-'LocalRef' is also available in Javascript (as from Fantom 1.0.68) but 'LocalList' and 'LocalMap' are blocked on [      js: Func.toImmutable not implemented]`http://fantom.org/forum/topic/1144#c4`.
+'LocalRef' is also available in Javascript (as from Fantom 1.0.68) but 'LocalList' and 'LocalMap' are blocked on [js: Func.toImmutable not implemented]`http://fantom.org/forum/topic/1144#c4`.
+
+
+
+IoC
+***
+When Concurrent is added as a dependency to an IoC enabled application, such as [BedSheet]`pod:afBedSheet` or [Reflux]`pod:afReflux`, then the following services are automatically made available to IoC:
+
+ - `ActorPools` - takes contributions of 'Str:ActorPool'
+ - `LocalRefManager`
+
+A 'DependencyProvider' is also added that allows you to inject instances of 'LocalRefs', 'LocalLists', and 'LocalMaps'. See `LocalRefManager` for details.
+
+The above makes use of the non-invasive module feature of IoC 3.
 
