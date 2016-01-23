@@ -4,7 +4,8 @@ using concurrent
 ** Maintains a collection of named 'ActorPools'. Use to keep tabs on your resources, particularly 
 ** useful when creating 'SynchronizedMap' and 'SynchronizedList' instances.
 ** 
-** IoC itself uses an 'ActorPool' named 'afIoc.system'. Contribute your own via your 'AppModule':
+** 'ActorPools' is automatically made available in IoC enabled applications. 
+** Contribute to 'ActorPools' via 'AppModule' contributions:
 ** 
 ** pre>
 ** syntax: fantom
@@ -27,6 +28,10 @@ const mixin ActorPools {
 	** Returns a map of 'ActorPool' names and the number of times it's been requested. 
 	abstract Str:Int stats()
 
+	** Creates an 'ActorPools' instance. Use in non-IoC environments. 
+	static new make(Str:ActorPool actorPools) {
+		ActorPoolsImpl(actorPools)
+	}
 }
 
 internal const class ActorPoolsImpl : ActorPools {

@@ -2,7 +2,7 @@ using concurrent
 
 ** (Service) -
 ** Use to create 'LocalRef' / 'LocalList' / 'LocalMap' instances whose contents can be *cleaned* up. 
-** Erm, I mean deleted! 
+** Erm, I mean deleted!
 **  
 ** This is particularly important in the context of web applications where resources need to be 
 ** *cleaned* up at the end of a web request / thread. 
@@ -10,10 +10,12 @@ using concurrent
 ** Then when 'cleanUpThread()' is called, all thread local data created by this manager will be
 ** deleted from 'Actor.locals' 
 **
+** 'LocalRefManager' is automatically made available in IoC enabled applications. 
+** 
 ** LocalXXX Injection
 ** ******************
-** IoC defines a 'DependencyProvider' that injects 'LocalXXX' instances directly into your class.
-** Where possible, the field name is used as the *local* name. 
+** The Concurrent library also defines an IoC 'DependencyProvider' that injects 'LocalXXX' instances directly into your class.
+** Where possible, the field name is used as the *local* name. Example: 
 ** 
 ** pre>
 ** syntax: fantom
