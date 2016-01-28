@@ -14,6 +14,23 @@ using concurrent
 **     return 69
 ** }
 ** <pre
+** 
+** 
+** IoC Injection
+** *************
+** The Concurrent library defines an IoC 'SynchronizedProvider' that injects 'Synchronized' instances directly into your class.
+** To use, ensure the 'id' field is set to a contributed 'ActorPool': 
+** 
+** pre>
+** syntax: fantom
+** const class Example {
+** 
+**     @Inject { id="actorPoolId" } 
+**     const Synchronized lock
+** 
+**     new make(|This|in) { in(this) }
+** }
+** <pre
 const class Synchronized {
 	private static const Log	log 	:= Synchronized#.pod.log
 	
