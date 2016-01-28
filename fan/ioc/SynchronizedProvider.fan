@@ -32,6 +32,6 @@ internal const class SynchronizedProvider {
 		if (poolId == null)
 			throw Err("@Inject.id is not defined for: $field.qname")
 
-		return actorPools[poolId]
+		return Synchronized(actorPools[poolId])
 	}
 }
