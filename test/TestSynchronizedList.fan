@@ -15,18 +15,18 @@ internal class TestSynchronizedList : ConcurrentTest {
 	}
 	
 	Void testListType() {
-		verifyEq(SynchronizedList(ActorPool()) { listType = Obj?# }.list.typeof,	Obj?[]#)			
-		verifyEq(SynchronizedList(ActorPool()) { listType = Obj?# }.list.of, 		Obj?#)
+		verifyEq(SynchronizedList(ActorPool()) { valType = Obj?# }.list.typeof,	Obj?[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { valType = Obj?# }.list.of, 		Obj?#)
 
-		verifyEq(SynchronizedList(ActorPool()) { listType = Str?# }.list.typeof,	Str?[]#)			
-		verifyEq(SynchronizedList(ActorPool()) { listType = Str?# }.list.of,		Str?#)
+		verifyEq(SynchronizedList(ActorPool()) { valType = Str?# }.list.typeof,	Str?[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { valType = Str?# }.list.of,		Str?#)
 
-		verifyEq(SynchronizedList(ActorPool()) { listType = Int# }.list.typeof,		Int[]#)			
-		verifyEq(SynchronizedList(ActorPool()) { listType = Int# }.list.of, 		Int#)
+		verifyEq(SynchronizedList(ActorPool()) { valType = Int# }.list.typeof,		Int[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { valType = Int# }.list.of, 		Int#)
 	}
 	
 	Void testListTypeChecks() {
-		list := SynchronizedList(ActorPool()) { listType = Str# }
+		list := SynchronizedList(ActorPool()) { valType = Str# }
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "List value")) {
 			list.add(39)

@@ -17,8 +17,17 @@ const class SynchronizedList {
 	** The 'lock' object should you need to 'synchronize' on the List.
 	const Synchronized	lock
 	
+	@NoDoc @Deprecated { msg="Use 'valType' instead" }
+	Type listType {
+		get { valType }
+		set { throw ReadonlyErr() }
+	}
+
 	** Used to parameterize the backing list. 
-	const Type listType	:= Obj?#
+	** 
+	**   syntax: fantom
+	**   SynchronizedList(actorPool) { it.valType = Str# }
+	const Type valType	:= Obj?#
 
 	** Creates a 'SynchronizedMap' with the given 'ActorPool'.
 	new make(ActorPool actorPool, |This|? f := null) {
@@ -30,11 +39,11 @@ const class SynchronizedList {
 	Obj?[] list {
 		get { 
 			if (atomicList.val == null)
-				atomicList.val = listType.emptyList
+				atomicList.val = valType.emptyList
 			return atomicList.val 
 		}
 		set { 
-			Utils.checkListType(it.typeof, listType)
+			Utils.checkListType(it.typeof, valType)
 			atomicList.val = it.toImmutable 
 		}
 	}
@@ -43,7 +52,7 @@ const class SynchronizedList {
 	** Return this. 
 	@Operator
 	This add(Obj? val) {
-		Utils.checkType(val?.typeof, listType, "List value")
+		Utils.checkType(val?.typeof, valType, "List value")
 		lock.synchronized |->| {
 			rwList := list.rw
 			rwList.add(val)
