@@ -46,7 +46,7 @@ internal const class LocalRefProvider {
 				return localManager.createList(name)
 
 			if (listType.params["L"] == null)
-				throw Err(localProvider_typeNotList(field, listType))
+				throw Err(msg_typeNotList(field, listType))
 			return LocalList(localManager.createName(name)) {
 				it.valType = listType.params["V"]
 			} 
@@ -58,7 +58,7 @@ internal const class LocalRefProvider {
 				return localManager.createMap(name)
 
 			if (mapType.params["M"] == null)
-				throw Err(localProvider_typeNotMap(field, mapType))
+				throw Err(msg_typeNotMap(field, mapType))
 
 			return LocalMap(localManager.createName(name)) {
 				it.keyType = mapType.params["K"]
@@ -73,11 +73,11 @@ internal const class LocalRefProvider {
 		throw Err("What's a {$type->qname}???")
 	}
 	
-	static Str localProvider_typeNotList(Field field, Type type) {
+	static Str msg_typeNotList(Field field, Type type) {
 		"@Inject { type=${type.signature}# } on field ${field.qname} should be a list type, e.g. @Inject { type=Str[]# }"
 	}
 
-	static Str localProvider_typeNotMap(Field field, Type type) {
+	static Str msg_typeNotMap(Field field, Type type) {
 		"@Inject { type=${type.signature}# } on field ${field.qname} should be a map type, e.g. @Inject { type=[Int:Str]# }"
 	}
 }
