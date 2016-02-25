@@ -74,8 +74,8 @@ const class SynchronizedList {
 
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
-		lock.synchronized |->Obj| {
-			list = list.rw.clear			
+		lock.synchronized |->| {
+			list = list.rw.clear
 		}
 		return this
 	}
