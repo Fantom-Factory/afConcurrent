@@ -38,7 +38,7 @@ internal const class SynchronizedProvider {
 		if (type == Synchronized#)
 			return Synchronized(actorPool)
 		
-		if (type == LocalList#) {
+		if (type == SynchronizedList#) {
 			listType := (Type?) inject?->type
 			if (listType == null)
 				return SynchronizedList(actorPool)
@@ -50,7 +50,7 @@ internal const class SynchronizedProvider {
 			} 
 		}
 
-		if (type == LocalMap#) {
+		if (type == SynchronizedMap#) {
 			mapType := (Type?) inject?->type
 			if (mapType == null)
 				return SynchronizedMap(actorPool)
@@ -68,7 +68,7 @@ internal const class SynchronizedProvider {
 			} 
 		}
 		
-		throw Err("What's a {$type->qname}???")
+		throw Err("What's a ${type.qname}???")
 	}
 	
 	static Str msg_typeNotList(Field field, Type type) {

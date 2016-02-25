@@ -70,7 +70,7 @@ internal const class LocalRefProvider {
 			} 
 		}
 
-		throw Err("What's a {$type->qname}???")
+		throw Err("What's a ${type.qname}???")
 	}
 	
 	static Str msg_typeNotList(Field field, Type type) {
