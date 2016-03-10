@@ -1,4 +1,5 @@
 using build
+using afBuild
 
 class Build : BuildPod {
 
@@ -21,5 +22,15 @@ class Build : BuildPod {
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/ioc/`, `test/`]
 		resDirs = [`doc/`]
+	}
+
+	@Target { help = "Compile to pod file and associated natives" }
+	override Void compile() {
+		BuildTask(this).run
+	}
+
+	@Target { help = "Builds, publishes, and Hg tags a new pod release" }
+	Void release() {
+		ReleaseTask(this).run
 	}
 }

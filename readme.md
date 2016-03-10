@@ -146,7 +146,9 @@ When Concurrent is added as a dependency to an IoC enabled application, such as 
 - [ActorPools](http://pods.fantomfactory.org/pods/afConcurrent/api/ActorPools) - takes contributions of `Str:ActorPool`
 - [LocalRefManager](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRefManager)
 
-A `DependencyProvider` is also added that allows you to inject instances of `LocalRefs`, `LocalLists`, and `LocalMaps`. See [LocalRefManager](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRefManager) for details.
+A `DependencyProvider` allows you to inject instances of `LocalRefs`, `LocalLists`, and `LocalMaps`. See [LocalRefManager](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRefManager) for details.
+
+A `SynchronizedProvider` also allows you to inject instances of `Synchronized` with a named `ActorPool`.
 
 The above makes use of the non-invasive module feature of IoC 3.
 
