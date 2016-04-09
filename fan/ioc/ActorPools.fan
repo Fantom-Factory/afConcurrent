@@ -18,7 +18,6 @@ using concurrent
 ** Note it is always a good idea to name your 'ActorPools' for debugging purposes.
 ** 
 ** @uses Configuration of 'Str:ActorPool'
-@NoDoc
 const mixin ActorPools {
 
 	** Returns the 'ActorPool' mapped to the given name, or throws a 'IocErr' / 'NotFoundErr' if it doesn't exist.
