@@ -11,7 +11,7 @@ class Build : BuildPod {
 			"proj.name"		: "Concurrent",
 			"afIoc.module"	: "afConcurrent::ConcurrentModule",
 			"repo.tags"		: "system",
-			"repo.public"	: "false"
+			"repo.public"	: "true"
 		]
 
 		depends = [
