@@ -75,6 +75,19 @@ const class Synchronized {
 		return future	// sounds cool, huh!?
 	}
 
+	** Runs the given func asynchronously, after the given duration has elapsed.
+	** 
+	** Errs that occur within the block are logged but not rethrown unless you call 'get()' on 
+	** the returned 'Future'. 
+	** 
+	** The given func and return value must be immutable.
+	Future asyncLater(Duration d, |->Obj?| f) {
+		// explicit call to .toImmutable() - see http://fantom.org/sidewalk/topic/1798#c12190
+		func	:= f.toImmutable
+		future 	:= actor.sendLater(d, [true, func].toImmutable)
+		return future	// sounds cool, huh!?
+	}
+
 	** This effectively wraps the given func in a Java 'synchronized { ... }' block and returns its
 	** calculated value. 
 	** 

@@ -1,6 +1,10 @@
 Versions
 ********
 
+v1.0.14
+=======
+ - New: 'Synchronized.asyncLater()'.
+ 
 v1.0.12
 =======
  - New: 'ActorPools' and 'LocalRefManager'.
