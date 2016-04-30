@@ -1,0 +1,153 @@
+Overview [#overview]
+********************
+Concurrent builds upon the Fantom's core [concurrent library]`pod:concurrent` and provides a collection of utility classes for sharing data in and between threads.
+
+
+
+Usage
+*****
+The 'Concurrent' library provides strategies for sharing data between threads:
+
+
+
+Synchronized
+============
+`Synchronized` provides synchronized serial access to a block of code, akin to Java's 'synchronized' keyword. Extend the 'Synchronized' class to use the familiar syntax:
+
+pre>
+syntax: fantom
+
+const class Example : Synchronized {
+    new make() : super(ActorPool()) { }
+
+    Void main() {
+        synchronized |->| {
+            // ...
+            // important stuff
+            // ...
+        }
+    }
+}
+<pre
+
+'Synchronized' works by calling the function from within the 'receive()' method of an [Actor]`concurrent::Actor`, which has important implications.
+First, the passed in function needs to be an [immutable func]`sys::Func`.
+Next, any object returned also has to be immutable (preferably) or serializable.
+
+Instances of 'Synchronized' may also be used as a mechanism for exclusive locking. For example:
+
+pre>
+syntax: fantom
+
+class Example {
+    Synchronized lock := Synchronized(ActorPool())
+
+    Void main() {
+        lock.synchronized |->| {
+            // ...
+            // important stuff
+            // ...
+        }
+    }
+}
+<pre
+
+The Concurrent library supplies the following *synchronized* constructs:
+
+ - `Synchronized`
+ - `SynchronizedState`
+ - `SynchronizedList`
+ - `SynchronizedMap`
+ - `SynchronizedFileMap`
+
+See the individual classes for more details.
+
+
+
+Atomic
+======
+Atomic Lists and Maps are similar to their Synchronized counterparts in that they are backed by an object held in an 'AtomicRef'.
+But their write operations are *not* synchronized.
+This means they are much more *lightweight* but it also means they are susceptible to **data-loss** during race conditions between multiple threads.
+If used for caching situations where it is not essential for values to exist, this may be acceptable.
+
+See:
+ - `AtomicList`
+ - `AtomicMap`
+
+The atomic classes are also available in Javascript.
+
+
+
+Local
+=====
+Local Refs, Lists and Maps do not share data between threads, in fact, quite the opposite!
+
+They wrap data stored in 'Actor.locals()' thereby constraining it to only be accessed by the executing thread. The data is said to be *local* to that thread.
+
+The problem is that data held in 'Actor.locals()' is susceptible to being overwritten due to name clashes. Consider:
+
+pre>
+syntax: fantom
+
+class Drink {
+    Str beer {
+      get { Actor.locals["beer"] }
+      set { Actor.locals["beer"] = it }
+    }
+}
+
+man := Drink()
+man.beer = "Ale"
+
+kid := Drink()
+kid.beer = "Ginger Ale"
+
+echo(man.beer)  // --> Ginger Ale (WRONG!)
+echo(kid.beer)  // --> Ginger Ale
+<pre
+
+To prevent this, `LocalRef` creates a unique qualified name to store the data under:
+
+pre>
+class Drink {
+    LocalRef beer := LocalRef("beer")
+}
+
+man := Drink()
+man.beer.val = "Ale"
+
+kid := Drink()
+kid.beer.val = "Ginger Ale"
+
+echo(man.beer.val)   // --> Ale
+echo(kid.beer.val)   // --> Ginger Ale
+
+echo(man.beer.qname) // --> 0001.beer
+echo(kid.beer.qname) // --> 0002.beer
+<pre
+
+While 'LocalRefs' are not too exciting on their own, [BedSheet]`pod:afBedSheet` and [IoC]`pod:afIoc` use them to keep track of data to be cleaned up at the end of HTTP web requests.
+
+See:
+ - `LocalRef`
+ - `LocalList`
+ - `LocalMap`
+
+'LocalRef' is also available in Javascript (as from Fantom 1.0.68) but 'LocalList' and 'LocalMap' are blocked on [js: Func.toImmutable not implemented]`http://fantom.org/forum/topic/1144#c4`.
+
+
+
+IoC
+***
+When Concurrent is added as a dependency to an IoC enabled application, such as [BedSheet]`pod:afBedSheet` or [Reflux]`pod:afReflux`, then the following services are automatically made available to IoC:
+
+ - `ActorPools` - takes contributions of 'Str:ActorPool'
+ - `LocalRefManager`
+
+A 'DependencyProvider' allows you to inject instances of 'LocalRefs', 'LocalLists', and 'LocalMaps'. See `LocalRefManager` for details.
+
+A 'SynchronizedProvider' also allows you to inject instances of 'Synchronized' with a named 'ActorPool'.
+
+The above makes use of the non-invasive module feature of IoC 3.
+
