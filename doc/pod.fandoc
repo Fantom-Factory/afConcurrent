@@ -12,29 +12,7 @@ The 'Concurrent' library provides strategies for sharing data between threads:
 
 Synchronized
 ============
-`Synchronized` provides synchronized serial access to a block of code, akin to Java's 'synchronized' keyword. Extend the 'Synchronized' class to use the familiar syntax:
-
-pre>
-syntax: fantom
-
-const class Example : Synchronized {
-    new make() : super(ActorPool()) { }
-
-    Void main() {
-        synchronized |->| {
-            // ...
-            // important stuff
-            // ...
-        }
-    }
-}
-<pre
-
-'Synchronized' works by calling the function from within the 'receive()' method of an [Actor]`concurrent::Actor`, which has important implications.
-First, the passed in function needs to be an [immutable func]`sys::Func`.
-Next, any object returned also has to be immutable (preferably) or serializable.
-
-Instances of 'Synchronized' may also be used as a mechanism for exclusive locking. For example:
+The `Synchronized` class provides synchronized serial access to a block of code, akin to Java's 'synchronized' keyword. It can be used as a mechanism for exclusive locking. For example:
 
 pre>
 syntax: fantom
@@ -45,22 +23,26 @@ class Example {
     Void main() {
         lock.synchronized |->| {
             // ...
-            // important stuff
+            // put important thread safe code here
             // ...
         }
     }
 }
 <pre
 
-The Concurrent library supplies the following *synchronized* constructs:
+'Synchronized' works by calling the thread safe function from within the 'receive()' method of an [Actor]`concurrent::Actor`, which has some important implications:
 
- - `Synchronized`
+ 1. The passed in function needs to be an [immutable func]`sys::Func`.
+ 2. Any object returned also has to be immutable.
+
+Alien-Factory's Concurrent library uses this *synchronized* construct to supply the following useful classes:
+
  - `SynchronizedState`
  - `SynchronizedList`
  - `SynchronizedMap`
  - `SynchronizedFileMap`
 
-See the individual classes for more details.
+See the individual class documentation for more details.
 
 
 
