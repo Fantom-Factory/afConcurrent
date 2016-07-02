@@ -1,7 +1,7 @@
-#Concurrent v1.0.12
+#Concurrent v1.0.14
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.12](http://img.shields.io/badge/pod-v1.0.12-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
+[![pod: v1.0.14](http://img.shields.io/badge/pod-v1.0.14-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -28,25 +28,7 @@ The `Concurrent` library provides strategies for sharing data between threads:
 
 ### Synchronized
 
-[Synchronized](http://pods.fantomfactory.org/pods/afConcurrent/api/Synchronized) provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. Extend the `Synchronized` class to use the familiar syntax:
-
-```
-const class Example : Synchronized {
-    new make() : super(ActorPool()) { }
-
-    Void main() {
-        synchronized |->| {
-            // ...
-            // important stuff
-            // ...
-        }
-    }
-}
-```
-
-`Synchronized` works by calling the function from within the `receive()` method of an [Actor](http://fantom.org/doc/concurrent/Actor.html), which has important implications. First, the passed in function needs to be an [immutable func](http://fantom.org/doc/sys/Func.html). Next, any object returned also has to be immutable (preferably) or serializable.
-
-Instances of `Synchronized` may also be used as a mechanism for exclusive locking. For example:
+The [Synchronized](http://pods.fantomfactory.org/pods/afConcurrent/api/Synchronized) class provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. It can be used as a mechanism for exclusive locking. For example:
 
 ```
 class Example {
@@ -55,22 +37,26 @@ class Example {
     Void main() {
         lock.synchronized |->| {
             // ...
-            // important stuff
+            // put important thread safe code here
             // ...
         }
     }
 }
 ```
 
-The Concurrent library supplies the following *synchronized* constructs:
+`Synchronized` works by calling the thread safe function from within the `receive()` method of an [Actor](http://fantom.org/doc/concurrent/Actor.html), which has some important implications:
 
-- [Synchronized](http://pods.fantomfactory.org/pods/afConcurrent/api/Synchronized)
+1. The passed in function needs to be an [immutable func](http://fantom.org/doc/sys/Func.html).
+2. Any object returned also has to be immutable.
+
+Alien-Factory's Concurrent library uses this *synchronized* construct to supply the following useful classes:
+
 - [SynchronizedState](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedState)
 - [SynchronizedList](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedList)
 - [SynchronizedMap](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedMap)
 - [SynchronizedFileMap](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedFileMap)
 
-See the individual classes for more details.
+See the individual class documentation for more details.
 
 ### Atomic
 
