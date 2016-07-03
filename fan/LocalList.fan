@@ -45,6 +45,13 @@ const class LocalList {
 		list.remove(item)
 	}
 
+	** Remove the object at the specified index. 
+	** A negative index may be used to access an index from the end of the list. 
+	** Return the item removed.
+	Obj? removeAt(Int index) {
+		list.removeAt(index)
+	}
+
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
 		if (localRef.isMapped)
