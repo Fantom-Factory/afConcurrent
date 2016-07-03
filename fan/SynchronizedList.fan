@@ -72,6 +72,18 @@ const class SynchronizedList {
 		}
 	}
 
+	** Remove the object at the specified index. 
+	** A negative index may be used to access an index from the end of the list. 
+	** Return the item removed.
+	Obj? removeAt(Int index) {
+		lock.synchronized |->Obj| {
+			rwList := list.rw
+			oVal := rwList.removeAt(index)
+			list = rwList
+			return oVal
+		}
+	}
+
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
 		lock.synchronized |->| {
