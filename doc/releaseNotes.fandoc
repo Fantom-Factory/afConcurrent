@@ -4,11 +4,12 @@ Versions
 v1.0.16
 =======
  - New: Added 'removeAt()' to all Lists.
- 
+ - Chg: Exposed 'Actor' on 'Synchronized'.
+
 v1.0.14
 =======
  - New: 'Synchronized.asyncLater()'.
- 
+
 v1.0.12
 =======
  - New: 'ActorPools' and 'LocalRefManager'.
