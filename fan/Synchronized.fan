@@ -34,7 +34,8 @@ using concurrent
 const class Synchronized {
 	private static const Log	log 	:= Synchronized#.pod.log
 	
-	private const Actor 		actor
+	** The 'Actor' used to process all sync and async calls.
+	@NoDoc  const Actor 		actor
 	private const LocalRef		insync	:= LocalRef("synchronized")
 
 	** The default timeout to use when waiting for 'synchronized' blocks to complete.
@@ -53,7 +54,7 @@ const class Synchronized {
 	** Defaults to 'true'.
 	const Bool reentrant := true
 	
-	** Create a 'Synchronized' class that uses the given 'ActorPool' and timeout.
+	** Create a 'Synchronized' class from the given 'ActorPool' and timeout.
 	** 
 	** The default timeout of 'null' blocks forever.
 	new make(ActorPool actorPool, Duration? timeout := null, |This|? f := null) {
