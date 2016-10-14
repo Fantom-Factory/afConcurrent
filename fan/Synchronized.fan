@@ -69,7 +69,7 @@ const class Synchronized {
 	** the returned 'Future'. 
 	** 
 	** The given func and return value must be immutable.
-	Future async(|->Obj?| f) {
+	virtual Future async(|->Obj?| f) {
 		// explicit call to .toImmutable() - see http://fantom.org/sidewalk/topic/1798#c12190
 		func	:= f.toImmutable
 		future 	:= actor.send([true, func].toImmutable)
@@ -82,7 +82,7 @@ const class Synchronized {
 	** the returned 'Future'. 
 	** 
 	** The given func and return value must be immutable.
-	Future asyncLater(Duration d, |->Obj?| f) {
+	virtual Future asyncLater(Duration d, |->Obj?| f) {
 		// explicit call to .toImmutable() - see http://fantom.org/sidewalk/topic/1798#c12190
 		func	:= f.toImmutable
 		future 	:= actor.sendLater(d, [true, func].toImmutable)
@@ -93,7 +93,7 @@ const class Synchronized {
 	** calculated value. 
 	** 
 	** The given func and return value must be immutable.
-	Obj? synchronized(|->Obj?| f) {
+	virtual Obj? synchronized(|->Obj?| f) {
 		if (reentrant && inSync)
 			return f.call()
 

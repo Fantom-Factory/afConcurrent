@@ -5,6 +5,7 @@ v1.0.16
 =======
  - New: Added 'removeAt()' to all Lists.
  - Chg: Exposed 'Actor' on 'Synchronized'.
+ - Chg: Made 'Synchronized' methods 'virtual' - happy overriding!
 
 v1.0.14
 =======
