@@ -1,7 +1,7 @@
-#Concurrent v1.0.14
+#Concurrent v1.0.16
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.14](http://img.shields.io/badge/pod-v1.0.14-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
+[![pod: v1.0.16](http://img.shields.io/badge/pod-v1.0.16-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
