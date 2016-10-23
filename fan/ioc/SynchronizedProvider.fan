@@ -1,3 +1,4 @@
+using concurrent
 
 internal const class SynchronizedProvider {
 
@@ -18,7 +19,7 @@ internal const class SynchronizedProvider {
 			return false
 		
 		type := field.type.toNonNullable
-		if (!type.fits(Synchronized#) && type != SynchronizedList# && type != SynchronizedMap#)
+		if (!type.fits(Synchronized#) && type != SynchronizedList# && type != SynchronizedMap# && type != ActorPool#)
 			return false
 		
 		return true
@@ -35,6 +36,9 @@ internal const class SynchronizedProvider {
 			throw Err("@Inject.id is not defined for: $field.qname")
 		actorPool := actorPools[poolId]
 
+		if (type == ActorPool#)
+			return actorPool
+			
 		if (type.fits(Synchronized#))
 			return type.make([actorPool])
 		
