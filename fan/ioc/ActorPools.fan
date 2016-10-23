@@ -13,7 +13,16 @@ using concurrent
 ** Void contributeActorPools(Configuration config) {
 **     config["myPool"] = ActorPool() { it.name = "MyPool" }
 ** }
-** <pre  
+** <pre
+** 
+** 'ActorPools' is then used behind the scenes to create and inject instances of 'ActorPool', 'Synchronized', 
+** 'SynchronizedList', and 'SynchronizedMap' with a named 'ActorPool'. Example:
+** 
+** pre>
+** syntax: fantom
+** @Inject { id="myPool"; type=User[]# }
+** private const SynchronizedList loggedInUsers
+** <pre
 ** 
 ** Note it is always a good idea to name your 'ActorPools' for debugging purposes.
 ** 

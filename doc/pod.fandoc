@@ -129,7 +129,7 @@ When Concurrent is added as a dependency to an IoC enabled application, such as 
 
 A 'DependencyProvider' allows you to inject instances of 'LocalRefs', 'LocalLists', and 'LocalMaps'. See `LocalRefManager` for details.
 
-A 'SynchronizedProvider' also allows you to inject instances of 'Synchronized' with a named 'ActorPool'.
+A 'SynchronizedProvider' also allows you to inject instances of 'ActorPool', 'Synchronized', 'SynchronizedList', and 'SynchronizedMap' with a named 'ActorPool'.
 
 The above makes use of the non-invasive module feature of IoC 3.
 
