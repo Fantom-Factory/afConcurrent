@@ -5,13 +5,13 @@ class Build : BuildPod {
 	new make() {
 		podName = "afConcurrent"
 		summary = "Utility classes for synchronising and sharing data between threads"
-		version = Version("1.0.17")
+		version = Version("1.0.16")
 
 		meta = [
 			"pod.displayName"	: "Concurrent",
 			"afIoc.module"		: "afConcurrent::ConcurrentModule",
 			"repo.tags"			: "system",
-			"repo.public	"	: "true"
+			"repo.public"		: "true"
 		]
 
 		depends = [

@@ -1,13 +1,10 @@
 Versions
 ********
 
-v1.0.18
-=======
- - New: 'SynchronizedProvider' now provides 'ActorPool' instances.
-
 v1.0.16
 =======
  - New: Added 'removeAt()' to all Lists.
+ - New: 'SynchronizedProvider' now provides 'ActorPool' instances.
  - Chg: Exposed 'Actor' on 'Synchronized'.
  - Chg: Made 'Synchronized' methods 'virtual' - happy overriding!
 
