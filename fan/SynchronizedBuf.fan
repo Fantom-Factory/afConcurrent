@@ -88,7 +88,6 @@ const class SynchronizedBuf {
 		threadState.getState |SynchronizedBufState state -> Buf| {
 			b := Buf()
 			state.buf.in.readBuf(b, n)
-			state.buf.in.readBuf(b, n)
 			return b.toImmutable
 		}
 	}
