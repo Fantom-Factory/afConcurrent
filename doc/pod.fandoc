@@ -41,6 +41,9 @@ Alien-Factory's Concurrent library uses this *synchronized* construct to supply 
  - `SynchronizedList`
  - `SynchronizedMap`
  - `SynchronizedFileMap`
+ - `SynchronizedBuf`
+
+All *Synchronized* classes are 'const', mutable, and may be shared between threads.
 
 See the individual class documentation for more details.
 
@@ -48,10 +51,9 @@ See the individual class documentation for more details.
 
 Atomic
 ======
-Atomic Lists and Maps are similar to their Synchronized counterparts in that they are backed by an object held in an 'AtomicRef'.
-But their write operations are *not* synchronized.
-This means they are much more *lightweight* but it also means they are susceptible to **data-loss** during race conditions between multiple threads.
-If used for caching situations where it is not essential for values to exist, this may be acceptable.
+Atomic Lists and Maps are backed by an object held in an 'AtomicRef'. They do not perform any processing in a separate thread, hence are more *lightweight* than their synchronized counterparts.
+
+But write operations make a copy the backing object before appling changes, and are *not* synchronized. This means they are susceptible to **data-loss** during race conditions between multiple threads. If used for caching situations where values may be calcuated on the fly, then this may be acceptable.
 
 See:
  - `AtomicList`
