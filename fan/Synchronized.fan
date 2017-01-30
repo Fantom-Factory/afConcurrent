@@ -58,7 +58,7 @@ const class Synchronized {
 	** 
 	** The default timeout of 'null' blocks forever.
 	new make(ActorPool actorPool, Duration? timeout := null, |This|? f := null) {
-		this.actor	 = Actor(actorPool, |Obj? obj -> Obj?| { receive(obj) })
+		this.actor	 = Actor(actorPool, #receive.func.bind([this]))
 		this.timeout = timeout
 		f?.call(this)
 	}
