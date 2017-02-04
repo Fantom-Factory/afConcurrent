@@ -52,6 +52,10 @@ internal class TestCommonListMethods : ConcurrentTest {
 		if (rw)
 			verifyEq(list->rw->size, 1)
 
+		list->insert(0, 59)
+		verifyEq(list->first, 59)
+		verifyEq(list->last,   9)
+		
 		list->clear
 		verify(list->isEmpty)
 

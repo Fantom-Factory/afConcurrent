@@ -1,5 +1,9 @@
 Versions
 ********
+v1.0.18
+=======
+ - New: A thread safe and const 'SynchronizedBuf'.
+ - New: Added 'insert()', 'first()', & 'last()' to all Lists.
 
 v1.0.16
 =======

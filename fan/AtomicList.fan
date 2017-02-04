@@ -49,6 +49,20 @@ const class AtomicList {
 		return this
 	}
 	
+	** Insert the item at the specified index.
+	** A negative index may be used to access an index from the end of the list.
+	** Size is incremented by 1.
+	** Return this.
+	** Throw IndexErr if index is out of range.
+	** Throw ReadonlyErr if readonly. 
+	This insert(Int index, Obj? val) {
+		Utils.checkType(val?.typeof, valType, "List value")
+		rwList := list.rw
+		rwList.insert(index, val)
+		list = rwList
+		return this
+	}
+	
 	** Removes the specified item from the list, returning the removed item.
 	** If the item was not mapped then return 'null'.
 	Obj? remove(Obj item) {
@@ -91,6 +105,16 @@ const class AtomicList {
 	@Operator
 	Obj? get(Int index) {
 		list[index]
+	}
+	
+	** Return the item at index 0, or if empty return null.
+	Obj? first() {
+		list.first
+	}
+	
+	** Return the item at index-1, or if empty return null.
+	Obj? last() {
+		list.last
 	}
 	
 	** Return 'true' if size() == 0

@@ -38,6 +38,18 @@ const class LocalList {
 		list.add(val)
 		return this
 	}
+	
+	** Insert the item at the specified index.
+	** A negative index may be used to access an index from the end of the list.
+	** Size is incremented by 1.
+	** Return this.
+	** Throw IndexErr if index is out of range.
+	** Throw ReadonlyErr if readonly. 
+	This insert(Int index, Obj? val) {
+		Utils.checkType(val?.typeof, valType, "List value")
+		list.insert(index, val)
+		return this
+	}
 
 	** Removes the specified item from the list, returning the removed item.
 	** If the item was not mapped then return 'null'.
@@ -77,6 +89,16 @@ const class LocalList {
 	@Operator
 	Obj? get(Int index) {
 		localRef.isMapped ? list[index] : throw IndexErr(index.toStr)
+	}
+	
+	** Return the item at index 0, or if empty return null.
+	Obj? first() {
+		localRef.isMapped ? list.first : null
+	}
+	
+	** Return the item at index-1, or if empty return null.
+	Obj? last() {
+		localRef.isMapped ? list.last : null
 	}
 	
 	** Return 'true' if size() == 0
