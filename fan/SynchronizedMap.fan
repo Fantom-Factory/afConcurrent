@@ -135,6 +135,11 @@ const class SynchronizedMap {
 		map.containsKey(key)
 	}
 	
+	** Call the specified function for every key/value in the map.
+	Void each(|Obj? val, Obj key| c) {
+		map.each(c)
+	}
+
 	** Returns the value associated with the given key. 
 	** If key is not mapped, then return the value of the 'def' parameter.  
 	** If 'def' is omitted it defaults to 'null'.
