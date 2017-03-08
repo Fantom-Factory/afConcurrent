@@ -80,7 +80,7 @@ const class SynchronizedList {
 	** Removes the specified item from the list, returning the removed item.
 	** If the item was not mapped then return 'null'.
 	Obj? remove(Obj item) {
-		lock.synchronized |->Obj| {
+		lock.synchronized |->Obj?| {
 			rwList := list.rw
 			oVal := rwList.remove(item)
 			list = rwList
@@ -92,7 +92,7 @@ const class SynchronizedList {
 	** A negative index may be used to access an index from the end of the list. 
 	** Return the item removed.
 	Obj? removeAt(Int index) {
-		lock.synchronized |->Obj| {
+		lock.synchronized |->Obj?| {
 			rwList := list.rw
 			oVal := rwList.removeAt(index)
 			list = rwList
