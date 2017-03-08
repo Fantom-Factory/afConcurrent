@@ -47,6 +47,7 @@ internal class TestCommonListMethods : ConcurrentTest {
 		}
 		
 		list->remove(6)
+		list->remove(6)	// test NPE bug by making it return null
 		verifyEq(list->get(0), 9)
 		verifyEq(list->size, 1)
 		if (rw)
