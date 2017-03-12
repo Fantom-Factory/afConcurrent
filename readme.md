@@ -1,8 +1,9 @@
-#Concurrent v1.0.16
+#Concurrent v1.0.18
 ---
-[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.16](http://img.shields.io/badge/pod-v1.0.16-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
-![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
+
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
+[![pod: v1.0.18](http://img.shields.io/badge/pod-v1.0.18-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
+![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)
 
 ## Overview
 
@@ -10,17 +11,21 @@ Concurrent builds upon the Fantom's core [concurrent library](http://fantom.org/
 
 ## Install
 
-Install `Concurrent` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
+Install `Concurrent` with the Fantom Pod Manager ( [FPM](http://eggbox.fantomfactory.org/pods/afFpm) ):
 
-    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afConcurrent
+    C:\> fpm install afConcurrent
 
-To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
+Or install `Concurrent` with [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
+
+    C:\> fanr install -r http://eggbox.fantomfactory.org/fanr/ afConcurrent
+
+To use in a [Fantom](http://fantom-lang.org/) project, add a dependency to `build.fan`:
 
     depends = ["sys 1.0", ..., "afConcurrent 1.0"]
 
 ## Documentation
 
-Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afConcurrent/).
+Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afConcurrent/) - the Fantom Pod Repository.
 
 ## Usage
 
@@ -28,7 +33,7 @@ The `Concurrent` library provides strategies for sharing data between threads:
 
 ### Synchronized
 
-The [Synchronized](http://pods.fantomfactory.org/pods/afConcurrent/api/Synchronized) class provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. It can be used as a mechanism for exclusive locking. For example:
+The [Synchronized](http://eggbox.fantomfactory.org/pods/afConcurrent/api/Synchronized) class provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. It can be used as a mechanism for exclusive locking. For example:
 
 ```
 class Example {
@@ -51,21 +56,26 @@ class Example {
 
 Alien-Factory's Concurrent library uses this *synchronized* construct to supply the following useful classes:
 
-- [SynchronizedState](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedState)
-- [SynchronizedList](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedList)
-- [SynchronizedMap](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedMap)
-- [SynchronizedFileMap](http://pods.fantomfactory.org/pods/afConcurrent/api/SynchronizedFileMap)
+- [SynchronizedState](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedState)
+- [SynchronizedList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedList)
+- [SynchronizedMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedMap)
+- [SynchronizedFileMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedFileMap)
+- [SynchronizedBuf](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedBuf)
+
+All *Synchronized* classes are `const`, mutable, and may be shared between threads.
 
 See the individual class documentation for more details.
 
 ### Atomic
 
-Atomic Lists and Maps are similar to their Synchronized counterparts in that they are backed by an object held in an `AtomicRef`. But their write operations are *not* synchronized. This means they are much more *lightweight* but it also means they are susceptible to **data-loss** during race conditions between multiple threads. If used for caching situations where it is not essential for values to exist, this may be acceptable.
+Atomic Lists and Maps are backed by an object held in an `AtomicRef`. They do not perform any processing in a separate thread, hence are more *lightweight* than their synchronized counterparts.
+
+But write operations make a copy the backing object before appling changes, and are *not* synchronized. This means they are susceptible to **data-loss** during race conditions between multiple threads. If used for caching situations where values may be calcuated on the fly, then this may be acceptable.
 
 See:
 
-- [AtomicList](http://pods.fantomfactory.org/pods/afConcurrent/api/AtomicList)
-- [AtomicMap](http://pods.fantomfactory.org/pods/afConcurrent/api/AtomicMap)
+- [AtomicList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/AtomicList)
+- [AtomicMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/AtomicMap)
 
 The atomic classes are also available in Javascript.
 
@@ -95,7 +105,7 @@ echo(man.beer)  // --> Ginger Ale (WRONG!)
 echo(kid.beer)  // --> Ginger Ale
 ```
 
-To prevent this, [LocalRef](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRef) creates a unique qualified name to store the data under:
+To prevent this, [LocalRef](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRef) creates a unique qualified name to store the data under:
 
 ```
 class Drink {
@@ -115,24 +125,24 @@ echo(man.beer.qname) // --> 0001.beer
 echo(kid.beer.qname) // --> 0002.beer
 ```
 
-While `LocalRefs` are not too exciting on their own, [BedSheet](http://pods.fantomfactory.org/pods/afBedSheet) and [IoC](http://pods.fantomfactory.org/pods/afIoc) use them to keep track of data to be cleaned up at the end of HTTP web requests.
+While `LocalRefs` are not too exciting on their own, [BedSheet](http://eggbox.fantomfactory.org/pods/afBedSheet) and [IoC](http://eggbox.fantomfactory.org/pods/afIoc) use them to keep track of data to be cleaned up at the end of HTTP web requests.
 
 See:
 
-- [LocalRef](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRef)
-- [LocalList](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalList)
-- [LocalMap](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalMap)
+- [LocalRef](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRef)
+- [LocalList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalList)
+- [LocalMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalMap)
 
 `LocalRef` is also available in Javascript (as from Fantom 1.0.68) but `LocalList` and `LocalMap` are blocked on [js: Func.toImmutable not implemented](http://fantom.org/forum/topic/1144#c4).
 
 ## IoC
 
-When Concurrent is added as a dependency to an IoC enabled application, such as [BedSheet](http://pods.fantomfactory.org/pods/afBedSheet) or [Reflux](http://pods.fantomfactory.org/pods/afReflux), then the following services are automatically made available to IoC:
+When Concurrent is added as a dependency to an IoC enabled application, such as [BedSheet](http://eggbox.fantomfactory.org/pods/afBedSheet) or [Reflux](http://eggbox.fantomfactory.org/pods/afReflux), then the following services are automatically made available to IoC:
 
-- [ActorPools](http://pods.fantomfactory.org/pods/afConcurrent/api/ActorPools) - takes contributions of `Str:ActorPool`
-- [LocalRefManager](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRefManager)
+- [ActorPools](http://eggbox.fantomfactory.org/pods/afConcurrent/api/ActorPools) - takes contributions of `Str:ActorPool`
+- [LocalRefManager](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRefManager)
 
-A `DependencyProvider` allows you to inject instances of `LocalRefs`, `LocalLists`, and `LocalMaps`. See [LocalRefManager](http://pods.fantomfactory.org/pods/afConcurrent/api/LocalRefManager) for details.
+A `DependencyProvider` allows you to inject instances of `LocalRefs`, `LocalLists`, and `LocalMaps`. See [LocalRefManager](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRefManager) for details.
 
 A `SynchronizedProvider` also allows you to inject instances of `ActorPool`, `Synchronized`, `SynchronizedList`, and `SynchronizedMap` with a named `ActorPool`.
 
