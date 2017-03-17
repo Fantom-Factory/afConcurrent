@@ -63,7 +63,7 @@ const class Synchronized {
 		f?.call(this)
 	}
 
-	** Runs the given func asynchronously, using this Synchronized's 'ActorPool'.
+	** Runs the given func asynchronously.
 	** 
 	** Errs that occur within the block are logged but not rethrown unless you call 'get()' on 
 	** the returned 'Future'. 
@@ -109,6 +109,16 @@ const class Synchronized {
 		} catch (IOErr err) {
 			throw err.msg.contains("Not serializable") ? IOErr(ErrMsgs.synchronized_notImmutable(f.returns), err) : err
 		}
+	}
+	
+	** Alias for 'synchronized()'.
+	** 
+	** Effectively wraps the given func in a Java 'synchronized { ... }' block and returns its
+	** calculated value. 
+	** 
+	** The given func and return value must be immutable.
+	Obj? sync(|->Obj?| f) {
+		synchronized(f)
 	}
 
 	** Returns 'true' if the current thread is running inside the synchronised Actor. E.g.:
