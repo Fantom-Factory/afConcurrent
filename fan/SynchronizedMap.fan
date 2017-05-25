@@ -172,4 +172,9 @@ const class SynchronizedMap {
 	Obj?[] vals() {
 		map.vals
 	}
+
+	** Returns a string representation the map.
+	override Str toStr() {
+		map.toStr
+	}
 }

@@ -110,4 +110,9 @@ const class LocalList {
 	Int size() {
 		localRef.isMapped ? list.size : 0
 	}
+	
+	** Returns a string representation the list.
+	override Str toStr() {
+		list.toStr
+	}
 }

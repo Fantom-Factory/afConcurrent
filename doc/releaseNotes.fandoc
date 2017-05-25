@@ -1,5 +1,9 @@
 Versions
 ********
+v1.0.20
+=======
+ - New: Added 'toStr()' methods to all Maps and Lists.
+
 v1.0.18
 =======
  - New: A thread safe and const 'SynchronizedBuf'.

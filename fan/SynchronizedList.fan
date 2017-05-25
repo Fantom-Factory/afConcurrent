@@ -151,4 +151,9 @@ const class SynchronizedList {
 	Int size() {
 		list.size
 	}
+
+	** Returns a string representation the list.
+	override Str toStr() {
+		list.toStr
+	}
 }

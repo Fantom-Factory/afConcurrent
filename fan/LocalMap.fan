@@ -140,4 +140,9 @@ const class LocalMap {
 	Obj?[] vals() {
 		localRef.isMapped ? map.vals : valType.emptyList
 	}
+
+	** Returns a string representation the map.
+	override Str toStr() {
+		map.toStr
+	}
 }
