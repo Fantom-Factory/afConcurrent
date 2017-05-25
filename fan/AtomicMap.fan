@@ -164,5 +164,10 @@ const class AtomicMap {
 	** Returns a list of all the mapped values.
 	Obj?[] vals() {
 		map.vals
-	}	
+	}
+	
+	** Returns a string representation the map.
+	override Str toStr() {
+		map.toStr
+	}
 }

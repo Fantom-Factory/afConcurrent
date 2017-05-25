@@ -107,6 +107,13 @@ const class SynchronizedBuf {
 			state.buf.in.skip(n)
 		}
 	}
+
+	@NoDoc
+	override Str toStr() {
+		threadState.getState |SynchronizedBufState state -> Str| {
+			"SynchronizedBuf - size=${state.buf.size}, pos=${state.buf.pos}"
+		}
+	}
 }
 
 internal class SynchronizedBufState {

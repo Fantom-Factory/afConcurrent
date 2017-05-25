@@ -60,4 +60,9 @@ const class LocalRef {
 		prefix 	:= inter.replace("\${id}", padded)
 		return prefix
 	}
+
+	** Returns a string representation the referenced value.
+	override Str toStr() {
+		val?.toStr ?: "null"
+	}
 }

@@ -100,5 +100,10 @@ const class SynchronizedState {
 			stateRef.val = stateFactory.call		
 		return func.call(stateRef.val)		
 	}
+	
+	** Returns a string representation the state.
+	override Str toStr() {
+		sync { it.toStr }
+	}
 }
 

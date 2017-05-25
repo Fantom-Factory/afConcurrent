@@ -227,6 +227,11 @@ const class SynchronizedFileMap {
 	Obj?[] vals() {
 		map.vals
 	}
+
+	@NoDoc
+	override Str toStr() {
+		"SynchronizedFileMap - size=${size}"
+	}
 }
 
 internal const class FileModState {
