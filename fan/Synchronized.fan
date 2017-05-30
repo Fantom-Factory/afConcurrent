@@ -65,7 +65,7 @@ const class Synchronized {
 
 	** Runs the given func asynchronously.
 	** 
-	** Errs that occur within the block are logged but not rethrown unless you call 'get()' on 
+	** Errs that occur within the block are logged but not re-thrown unless you call 'get()' on 
 	** the returned 'Future'. 
 	** 
 	** The given func and return value must be immutable.
