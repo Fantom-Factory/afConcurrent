@@ -108,6 +108,29 @@ const class SynchronizedList {
 		return this
 	}
 
+	This push(Obj? val) {
+		Utils.checkType(val?.typeof, valType, "List value")
+		lock.synchronized |->| {
+			rwList := list.rw
+			rwList.push(val)
+			list = rwList
+		}
+		return this
+	}
+
+	Obj? pop() {
+		lock.synchronized |->Obj?| {
+			rwList := list.rw
+			oVal := rwList.pop
+			list = rwList
+			return oVal
+		}
+	}
+
+	Obj? peek() {
+		list.peek
+	}
+
 	// ---- Common List Methods --------------------------------------------------------------------
 
 	** Returns 'true' if this list contains the specified item.
@@ -151,7 +174,7 @@ const class SynchronizedList {
 	Int size() {
 		list.size
 	}
-
+	
 	** Returns a string representation the list.
 	override Str toStr() {
 		list.toStr

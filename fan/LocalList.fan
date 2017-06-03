@@ -70,6 +70,20 @@ const class LocalList {
 			list.clear
 		return this
 	}
+	
+	This push(Obj? val) {
+		list.push(val)
+		return this
+	}
+
+	Obj? pop() {
+		list.pop
+	}
+
+	Obj? peek() {
+		list.peek
+	}
+
 
 	// ---- Common List Methods --------------------------------------------------------------------
 
