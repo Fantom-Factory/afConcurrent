@@ -2,6 +2,7 @@ Versions
 ********
 v1.0.20
 =======
+ - New: Added 'push()', 'pop()', and 'peek()' to all Lists.
  - New: Added 'toStr()' methods to all Maps and Lists.
 
 v1.0.18

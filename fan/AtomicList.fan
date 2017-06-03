@@ -88,6 +88,25 @@ const class AtomicList {
 		return this
 	}
 
+	This push(Obj? val) {
+		Utils.checkType(val?.typeof, valType, "List value")
+		rwList := list.rw
+		rwList.push(val)
+		list = rwList
+		return this
+	}
+
+	Obj? pop() {
+		rwList := list.rw
+		oVal := rwList.pop
+		list = rwList
+		return oVal
+	}
+
+	Obj? peek() {
+		list.peek
+	}
+
 	// ---- Common List Methods --------------------------------------------------------------------
 
 	** Returns 'true' if this list contains the specified item.
