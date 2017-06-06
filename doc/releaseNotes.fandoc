@@ -4,6 +4,7 @@ v1.0.20
 =======
  - New: Added 'push()', 'pop()', and 'peek()' to all Lists.
  - New: Added 'toStr()' methods to all Maps and Lists.
+ - New: Added ctors to 'SynchronizedState' that take a ready made 'Synchronized' lock object.
 
 v1.0.18
 =======
