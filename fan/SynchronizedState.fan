@@ -44,9 +44,23 @@ const class SynchronizedState {
 		this.stateFactory	= |->Obj?| { stateType.make }		
 	}
 
+	** The given state type must have a public no-args ctor as per [Type.make]`sys::Type.make`.
+	new makeWithTypeLock(Synchronized lock, Type stateType) {
+		this.lock			= lock 
+		this.stateRef		= LocalRef(stateType.name)
+		this.stateFactory	= |->Obj?| { stateType.make }		
+	}
+
 	** The given (immutable) factory func is used to create the state object inside it's thread.
 	new makeWithFactory(ActorPool actorPool, |->Obj?| stateFactory) {
 		this.lock			= Synchronized(actorPool) 
+		this.stateRef		= LocalRef(SynchronizedState#.name)
+		this.stateFactory	= stateFactory
+	}
+
+	** The given (immutable) factory func is used to create the state object inside it's thread.
+	new makeWithFactoryLock(Synchronized lock, |->Obj?| stateFactory) {
+		this.lock			= lock
 		this.stateRef		= LocalRef(SynchronizedState#.name)
 		this.stateFactory	= stateFactory
 	}
