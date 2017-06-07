@@ -19,7 +19,7 @@ internal const class SynchronizedProvider {
 			return false
 		
 		type := field.type.toNonNullable
-		if (!type.fits(Synchronized#) && type != SynchronizedList# && type != SynchronizedMap# && type != ActorPool#)
+		if (!type.fits(Synchronized#) && type != SynchronizedList# && type != SynchronizedMap# && type != SynchronizedState# && type != ActorPool#)
 			return false
 		
 		return true
@@ -71,6 +71,13 @@ internal const class SynchronizedProvider {
 					it.ordered = true
 			} 
 		}
+
+		if (type == SynchronizedState#) {
+			stateType := (Type?) inject?->type
+			if (stateType == null)
+				throw Err(msg_typeNull(field))
+			return SynchronizedState(actorPool, stateType)
+		}
 		
 		throw Err("What's a ${type.qname}???")
 	}
@@ -83,4 +90,7 @@ internal const class SynchronizedProvider {
 		"@Inject { type=${type.signature}# } on field ${field.qname} should be a map type, e.g. @Inject { type=[Int:Str]# }"
 	}
 
+	static Str msg_typeNull(Field field) {
+		"@Inject on field ${field.qname} should take a type attribute, e.g. @Inject { type=MyState# }"
+	}
 }
