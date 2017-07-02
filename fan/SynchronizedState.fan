@@ -37,30 +37,28 @@ const class SynchronizedState {
 	** The 'lock' object should you need to 'synchronize' on the state.
 	const Synchronized	lock
 
+	** Creates a 'SynchronizedState' instance.
+	** 
 	** The given state type must have a public no-args ctor as per [Type.make]`sys::Type.make`.
-	new makeWithType(ActorPool actorPool, Type stateType) {
-		this.lock			= Synchronized(actorPool) 
+	** 
+	** The given 'syncPool' must be an 'ActorPool' or a 'Synchronized' instance.
+	new makeWithType(Obj syncPool, Type stateType) {
+		if (syncPool isnot ActorPool && syncPool isnot Synchronized)
+			throw ArgErr("SyncPool should either be an instance of ActorPool or Synchronized: $syncPool.typeof.qname")
+		this.lock			= syncPool is Synchronized ? syncPool : Synchronized(syncPool) 
 		this.stateRef		= LocalRef(stateType.name)
 		this.stateFactory	= |->Obj?| { stateType.make }		
 	}
 
-	** The given state type must have a public no-args ctor as per [Type.make]`sys::Type.make`.
-	new makeWithTypeLock(Synchronized lock, Type stateType) {
-		this.lock			= lock 
-		this.stateRef		= LocalRef(stateType.name)
-		this.stateFactory	= |->Obj?| { stateType.make }		
-	}
-
+	** Creates a 'SynchronizedState' instance.
+	** 
 	** The given (immutable) factory func is used to create the state object inside it's thread.
-	new makeWithFactory(ActorPool actorPool, |->Obj?| stateFactory) {
-		this.lock			= Synchronized(actorPool) 
-		this.stateRef		= LocalRef(SynchronizedState#.name)
-		this.stateFactory	= stateFactory
-	}
-
-	** The given (immutable) factory func is used to create the state object inside it's thread.
-	new makeWithFactoryLock(Synchronized lock, |->Obj?| stateFactory) {
-		this.lock			= lock
+	** 
+	** The given 'syncPool' must be an 'ActorPool' or a 'Synchronized' instance.
+	new makeWithFactory(Obj syncPool, |->Obj?| stateFactory) {
+		if (syncPool isnot ActorPool && syncPool isnot Synchronized)
+			throw ArgErr("SyncPool should either be an instance of ActorPool or Synchronized: $syncPool.typeof.qname")
+		this.lock			= syncPool is Synchronized ? syncPool : Synchronized(syncPool) 
 		this.stateRef		= LocalRef(SynchronizedState#.name)
 		this.stateFactory	= stateFactory
 	}
