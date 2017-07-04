@@ -40,7 +40,7 @@ const class SynchronizedBuf {
 	** 
 	** This method return immediately, with the processing happening in the Buf thread.
 	This write(Int b) {
-		threadState.withState |SynchronizedBufState state| {
+		threadState.async |SynchronizedBufState state| {
 			pos := state.buf.pos
 			state.buf.seek(state.buf.size)
 			state.buf.out.write(b)
@@ -56,7 +56,7 @@ const class SynchronizedBuf {
 	** 
 	** Due to the use of 'Buf.toImmutable()' the given 'Buf' is cleared / invalidated upon return.
 	This writeBuf(Buf buf, Int n := buf.remaining) {
-		threadState.withState |SynchronizedBufState state| {
+		threadState.async |SynchronizedBufState state| {
 			if (n <= 0) return
 			pos := state.buf.pos
 			state.buf.seek(state.buf.size)
@@ -69,7 +69,7 @@ const class SynchronizedBuf {
 	** Return the number of bytes available on the input stream without blocking.
 	** Return zero if no bytes available or unknown.
 	Int avail() {
-		threadState.getState |SynchronizedBufState state -> Int| {
+		threadState.sync |SynchronizedBufState state -> Int| {
 			state.buf.in.avail
 		}
 	}
@@ -77,7 +77,7 @@ const class SynchronizedBuf {
 	** Read the next unsigned byte from the input stream.
 	** Return 'null' if at end of stream.
 	Int? read() {
-		threadState.getState |SynchronizedBufState state -> Int?| {
+		threadState.sync |SynchronizedBufState state -> Int?| {
 			state.buf.in.read
 		}
 	}
@@ -85,7 +85,7 @@ const class SynchronizedBuf {
 	** Attempt to read the next n bytes.
 	** Note this method may not read the full number of n bytes.
 	Buf readBuf(Int n) {
-		threadState.getState |SynchronizedBufState state -> Buf| {
+		threadState.sync |SynchronizedBufState state -> Buf| {
 			b := Buf()
 			state.buf.in.readBuf(b, n)
 			return b.toImmutable
@@ -95,7 +95,7 @@ const class SynchronizedBuf {
 	** Pushback a byte so that it is the next byte to be read.
 	** There is a finite limit to the number of bytes which may be pushed back.
 	Void unread(Int b) {
-		threadState.withState |SynchronizedBufState state| {
+		threadState.sync |SynchronizedBufState state| {
 			state.buf.in.unread(b)
 		}
 	}
@@ -103,14 +103,14 @@ const class SynchronizedBuf {
 	** Attempt to skip 'n' number of bytes.  Return the number of bytes
 	** actually skipped which may be equal to or lesser than 'n'.
 	Int skip(Int n) {
-		threadState.getState |SynchronizedBufState state -> Int| {
+		threadState.sync |SynchronizedBufState state -> Int| {
 			state.buf.in.skip(n)
 		}
 	}
 
 	@NoDoc
 	override Str toStr() {
-		threadState.getState |SynchronizedBufState state -> Str| {
+		threadState.sync |SynchronizedBufState state -> Str| {
 			"SynchronizedBuf - size=${state.buf.size}, pos=${state.buf.pos}"
 		}
 	}

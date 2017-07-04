@@ -4,8 +4,9 @@ v1.0.20
 =======
  - New: Added 'push()', 'pop()', and 'peek()' to all Lists.
  - New: Added 'toStr()' methods to all Maps and Lists.
- - New: Added ctors to 'SynchronizedState' that take a ready made 'Synchronized' lock object.
+ - New: Added 'it-block' ctor to 'SynchronizedState' so you may set your own 'Synchronized' lock object.
  - New: IoC 'SynchronizedProvider' now injects 'SynchronizedState' instances.
+ - Chg: Deprecated 'getState()' and 'withState()' on 'SynchronizedState' in favour of 'sync()' and 'async()'.
 
 v1.0.18
 =======
