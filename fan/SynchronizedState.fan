@@ -31,21 +31,23 @@ using concurrent::Future
 ** }
 ** <pre
 const class SynchronizedState {
-	private const |->Obj?| 		stateFactory
-	private const LocalRef 		stateRef
+	@NoDoc	// advanced use only
+	const |->Obj?| 		stateFactory
+	@NoDoc	// advanced use only
+	const LocalRef 		stateRef
 	
 	** The 'lock' object should you need to 'synchronize' on the state.
 	const Synchronized	lock
+	
+	// Note we don't create a ctor(syncPool, type) 'cos that leads to ambiguous ctors in existing libs like afParrotSdk2
+	@NoDoc	// advanced use only - for setting own lock
+	new make(|This| f) { f(this) }
 
 	** Creates a 'SynchronizedState' instance.
 	** 
 	** The given state type must have a public no-args ctor as per [Type.make]`sys::Type.make`.
-	** 
-	** The given 'syncPool' must be an 'ActorPool' or a 'Synchronized' instance.
-	new makeWithType(Obj syncPool, Type stateType) {
-		if (syncPool isnot ActorPool && syncPool isnot Synchronized)
-			throw ArgErr("SyncPool should either be an instance of ActorPool or Synchronized: $syncPool.typeof.qname")
-		this.lock			= syncPool is Synchronized ? syncPool : Synchronized(syncPool) 
+	new makeWithType(ActorPool actorPool, Type stateType) {
+		this.lock			= Synchronized(actorPool) 
 		this.stateRef		= LocalRef(stateType.name)
 		this.stateFactory	= |->Obj?| { stateType.make }		
 	}
@@ -53,12 +55,8 @@ const class SynchronizedState {
 	** Creates a 'SynchronizedState' instance.
 	** 
 	** The given (immutable) factory func is used to create the state object inside it's thread.
-	** 
-	** The given 'syncPool' must be an 'ActorPool' or a 'Synchronized' instance.
-	new makeWithFactory(Obj syncPool, |->Obj?| stateFactory) {
-		if (syncPool isnot ActorPool && syncPool isnot Synchronized)
-			throw ArgErr("SyncPool should either be an instance of ActorPool or Synchronized: $syncPool.typeof.qname")
-		this.lock			= syncPool is Synchronized ? syncPool : Synchronized(syncPool) 
+	new makeWithFactory(ActorPool actorPool, |->Obj?| stateFactory) {
+		this.lock			= Synchronized(actorPool) 
 		this.stateRef		= LocalRef(SynchronizedState#.name)
 		this.stateFactory	= stateFactory
 	}
@@ -69,6 +67,7 @@ const class SynchronizedState {
 	** response.
 	**  
 	** The given func should be immutable. 
+	@NoDoc @Deprecated { msg="Use sync() instead" }
 	Obj? getState(|Obj state -> Obj?| func) {
 		sync(func)
 	}
@@ -78,6 +77,7 @@ const class SynchronizedState {
 	** Calls the given func asynchronously, passing in the State object.
 	** 
 	** The given func should be immutable. 
+	@NoDoc @Deprecated { msg="Use async() instead" }
 	Future withState(|Obj state -> Obj?| func) {
 		async(func)
 	}
