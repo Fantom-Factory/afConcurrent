@@ -32,10 +32,10 @@ const class SynchronizedFileMap {
 
 	** The 'lock' object should you need to 'synchronize' on the file map.
 	const Synchronized	lock
-	
+
 	** The default value to use for `get` when a key isn't mapped.
 	const Obj? def				:= null
-	
+
 	** Used to parameterize the backing map. 
 	const Type valType			:= Obj?#
 
@@ -48,22 +48,28 @@ const class SynchronizedFileMap {
 		this.lock		= cache.lock
 	}
 	
-	** Gets or sets a read-only copy of the backing map.
+	@NoDoc @Deprecated { msg="Use 'val' instead" }
 	[File:Obj?] map {
-		get { cache.map }
+		get { val }
+		set { val = it }
+	}
+
+	** Gets or sets a read-only copy of the backing map.
+	[File:Obj?] val {
+		get { cache.val }
 		
 		// private until I sync the file keys with the 'fileData' map 
-		private set { cache.map = it }
+		private set { cache.val = it }
 	}
 
 	** Sets the key / value pair, ensuring no data is lost during multi-threaded race conditions.
 	** 
 	** Nothing is added should the file not exist.
 	@Operator
-	Void set(File key, Obj? val) {
-		Utils.checkType(val?.typeof, valType, "Map value")
+	Void set(File key, Obj? item) {
+		Utils.checkType(item?.typeof, valType, "Map value")
 		iKey := key.toImmutable
-		iVal := val?.toImmutable
+		iVal := item?.toImmutable
 		cache.lock.synchronized |->| {
 			setFile(iKey, |->Obj?| { iVal })
 		}
@@ -72,7 +78,7 @@ const class SynchronizedFileMap {
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
 		cache.lock.synchronized |->| {
-			cache.map = cache.map.rw.clear
+			cache.val = cache.val.rw.clear
 			fileData.clear
 		}		
 		return this
@@ -84,10 +90,10 @@ const class SynchronizedFileMap {
 	Obj? remove(File key) {
 		iKey := key.toImmutable
 		return cache.lock.synchronized |->Obj?| {
-			newMap := cache.map.rw
+			newMap := cache.val.rw
 			val := newMap.remove(iKey)
 			fileData.remove(iKey)
-			cache.map = newMap
+			cache.val = newMap
 			return val 
 		}
 	}
@@ -168,16 +174,16 @@ const class SynchronizedFileMap {
 		
 		// only cache when the file exists
 		if (iKey.exists) {
-			newMap := cache.map.rw
+			newMap := cache.val.rw
 			newMap.set(iKey, iVal)
 			fileData.set(iKey, FileModState(iKey.modified))
-			cache.map = newMap
+			cache.val = newMap
 		
 		} else if (cache.containsKey(iKey)) {
-			newMap := cache.map.rw
+			newMap := cache.val.rw
 			newMap.remove(iKey)
 			fileData.remove(iKey)
-			cache.map = newMap
+			cache.val = newMap
 		}
 
 		return iVal
@@ -187,12 +193,12 @@ const class SynchronizedFileMap {
 
 	** Returns 'true' if the map contains the given file
 	Bool containsKey(File key) {
-		map.containsKey(key)
+		val.containsKey(key)
 	}
 	
 	** Call the specified function for every key/value in the map.
-	Void each(|Obj? val, File key| c) {
-		map.each(c)
+	Void each(|Obj? item, File key| c) {
+		val.each(c)
 	}
 
 	** Returns the value associated with the given key. 
@@ -200,32 +206,32 @@ const class SynchronizedFileMap {
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
 	Obj? get(File key, Obj? def := this.def) {
-		map.get(key, def)
+		val.get(key, def)
 	}
 
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
-		map.isEmpty
+		val.isEmpty
 	}
 
 	** Returns a list of all the mapped keys.
 	Obj[] keys() {
-		map.keys
+		val.keys
 	}
 
 	** Get a read-write, mutable Map instance with the same contents.
 	[Obj:Obj?] rw() {
-		map.rw
+		val.rw
 	}
 
 	** Get the number of key/value pairs in the map.
 	Int size() {
-		map.size
+		val.size
 	}
 	
 	** Returns a list of all the mapped values.
 	Obj?[] vals() {
-		map.vals
+		val.vals
 	}
 
 	@NoDoc

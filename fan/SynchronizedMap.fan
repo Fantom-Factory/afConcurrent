@@ -41,8 +41,14 @@ const class SynchronizedMap {
 			keyType = Str#
 	}
 	
-	** Gets or sets a read-only copy of the backing map.
+	@NoDoc @Deprecated { msg="Use 'val' instead" }
 	[Obj:Obj?] map {
+		get { val }
+		set { val = it }
+	}
+	
+	** Gets or sets a read-only copy of the backing map.
+	[Obj:Obj?] val {
 		get { 
 			if (atomicMap.val == null)
 				atomicMap.val = Map.make(Map#.parameterize(["K":keyType, "V":valType])) {
@@ -78,12 +84,12 @@ const class SynchronizedMap {
 			if (containsKey(iKey))
 				return get(iKey)
 
-			val := iFunc.call(iKey)
-			Utils.checkType(val?.typeof, valType, "Map value")
-			iVal := val?.toImmutable
-			newMap := map.rw
+			item := iFunc.call(iKey)
+			Utils.checkType(item?.typeof, valType, "Map value")
+			iVal := item?.toImmutable
+			newMap := val.rw
 			newMap.set(iKey, iVal)
-			map = newMap
+			val = newMap
 			return iVal
 		}
 	}
@@ -91,15 +97,15 @@ const class SynchronizedMap {
 	** Sets the key / value pair, ensuring no data is lost during multi-threaded race conditions.
 	** Both the 'key' and 'val' must be immutable. 
 	@Operator
-	Void set(Obj key, Obj? val) {
+	Void set(Obj key, Obj? item) {
 		Utils.checkType(key.typeof,  keyType, "Map key")
-		Utils.checkType(val?.typeof, valType, "Map value")
+		Utils.checkType(item?.typeof, valType, "Map value")
 		iKey := key.toImmutable
-		iVal := val?.toImmutable
+		iVal := item?.toImmutable
 		lock.synchronized |->| {
-			newMap := map.rw
+			newMap := val.rw
 			newMap.set(iKey, iVal)
-			map = newMap
+			val = newMap
 		}
 	}
 
@@ -110,7 +116,7 @@ const class SynchronizedMap {
 		// - we clear
 		// - the write func the sets the map back! 
 		lock.synchronized |->| {
-			map = map.rw.clear
+			val = val.rw.clear
 		}
 		return this
 	}
@@ -121,10 +127,10 @@ const class SynchronizedMap {
 	Obj? remove(Obj key) {
 		iKey := key.toImmutable
 		return lock.synchronized |->Obj?| {
-			newMap := map.rw
-			val := newMap.remove(iKey)
-			map = newMap
-			return val 
+			newMap := val.rw
+			itm := newMap.remove(iKey)
+			val = newMap
+			return itm 
 		}
 	}
 	
@@ -132,12 +138,12 @@ const class SynchronizedMap {
 
 	** Returns 'true' if the map contains the given key
 	Bool containsKey(Obj key) {
-		map.containsKey(key)
+		val.containsKey(key)
 	}
 	
 	** Call the specified function for every key/value in the map.
-	Void each(|Obj? val, Obj key| c) {
-		map.each(c)
+	Void each(|Obj? item, Obj key| c) {
+		val.each(c)
 	}
 
 	** Returns the value associated with the given key. 
@@ -145,36 +151,36 @@ const class SynchronizedMap {
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
 	Obj? get(Obj key, Obj? def := this.def) {
-		map.get(key, def)
+		val.get(key, def)
 	}
 	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
-		map.isEmpty
+		val.isEmpty
 	}
 
 	** Returns a list of all the mapped keys.
 	Obj[] keys() {
-		map.keys
+		val.keys
 	}
 
 	** Get a read-write, mutable Map instance with the same contents.
 	[Obj:Obj?] rw() {
-		map.rw
+		val.rw
 	}
 
 	** Get the number of key/value pairs in the map.
 	Int size() {
-		map.size
+		val.size
 	}
 
 	** Returns a list of all the mapped values.
 	Obj?[] vals() {
-		map.vals
+		val.vals
 	}
 
 	** Returns a string representation the map.
 	override Str toStr() {
-		map.toStr
+		val.toStr
 	}
 }

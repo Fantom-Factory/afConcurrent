@@ -4,7 +4,7 @@ internal class TestSynchronizedList : ConcurrentTest {
 	
 	Void testMutableLists() {
 		verifyErr(NotImmutableErr#) {
-			SynchronizedList(ActorPool()).list = [NotImmutable()]			
+			SynchronizedList(ActorPool()).val = [NotImmutable()]			
 		}
 	}
 
@@ -15,14 +15,14 @@ internal class TestSynchronizedList : ConcurrentTest {
 	}
 	
 	Void testListType() {
-		verifyEq(SynchronizedList(ActorPool()) { valType = Obj?# }.list.typeof,	Obj?[]#)			
-		verifyEq(SynchronizedList(ActorPool()) { valType = Obj?# }.list.of, 		Obj?#)
+		verifyEq(SynchronizedList(ActorPool()) { valType = Obj?# }.val.typeof,	Obj?[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { valType = Obj?# }.val.of, 		Obj?#)
 
-		verifyEq(SynchronizedList(ActorPool()) { valType = Str?# }.list.typeof,	Str?[]#)			
-		verifyEq(SynchronizedList(ActorPool()) { valType = Str?# }.list.of,		Str?#)
+		verifyEq(SynchronizedList(ActorPool()) { valType = Str?# }.val.typeof,	Str?[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { valType = Str?# }.val.of,		Str?#)
 
-		verifyEq(SynchronizedList(ActorPool()) { valType = Int# }.list.typeof,		Int[]#)			
-		verifyEq(SynchronizedList(ActorPool()) { valType = Int# }.list.of, 		Int#)
+		verifyEq(SynchronizedList(ActorPool()) { valType = Int# }.val.typeof,	Int[]#)			
+		verifyEq(SynchronizedList(ActorPool()) { valType = Int# }.val.of, 		Int#)
 	}
 	
 	Void testListTypeChecks() {
@@ -33,7 +33,7 @@ internal class TestSynchronizedList : ConcurrentTest {
 		}
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int[]#, Str[]#, "List")) {
-			list.list = Int[,]
+			list.val = Int[,]
 		}
 
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "List value")) {

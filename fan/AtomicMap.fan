@@ -56,8 +56,14 @@ const class AtomicMap {
 			keyType = Str#
 	}
 	
-	** Gets or sets a read-only copy of the backing map.
+	@NoDoc @Deprecated { msg="Use 'val' instead" }
 	[Obj:Obj?] map {
+		get { val }
+		set { val = it }
+	}
+
+	** Gets or sets a read-only copy of the backing map.
+	[Obj:Obj?] val {
 		get { 
 			if (atomicMap.val == null)
 				atomicMap.val = Map.make(Map#.parameterize(["K":keyType, "V":valType])) {
@@ -95,19 +101,19 @@ const class AtomicMap {
 
 	** Sets the key / value pair.
 	@Operator
-	Void set(Obj key, Obj? val) {
+	Void set(Obj key, Obj? item) {
 		Utils.checkType(key.typeof,  keyType, "Map key")
-		Utils.checkType(val?.typeof, valType, "Map value")
+		Utils.checkType(item?.typeof, valType, "Map value")
 		iKey  := key.toImmutable
-		iVal  := val?.toImmutable
-		rwMap := map.rw
+		iVal  := item?.toImmutable
+		rwMap := val.rw
 		rwMap[iKey] = iVal
-		map = rwMap
+		val = rwMap
 	}
 
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
-		map = map.rw.clear
+		val = val.rw.clear
 		return this
 	}
 
@@ -115,9 +121,9 @@ const class AtomicMap {
 	** from the map and return the value. 
 	** If the key was not mapped then return 'null'.
 	Obj? remove(Obj key) {
-		rwMap := map.rw
+		rwMap := val.rw
 		oVal  := rwMap.remove(key)
-		map = rwMap
+		val = rwMap
 		return oVal 
 	}
 
@@ -125,12 +131,12 @@ const class AtomicMap {
 
 	** Returns 'true' if the map contains the given key
 	Bool containsKey(Obj key) {
-		map.containsKey(key)
+		val.containsKey(key)
 	}
 	
 	** Call the specified function for every key/value in the map.
-	Void each(|Obj? val, Obj key| c) {
-		map.each(c)
+	Void each(|Obj? item, Obj key| c) {
+		val.each(c)
 	}
 
 	** Returns the value associated with the given key. 
@@ -138,36 +144,36 @@ const class AtomicMap {
 	** If 'def' is omitted it defaults to 'null'.
 	@Operator
 	Obj? get(Obj key, Obj? def := this.def) {
-		map.get(key, def)
+		val.get(key, def)
 	}
 	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
-		map.isEmpty
+		val.isEmpty
 	}
 
 	** Returns a list of all the mapped keys.
 	Obj[] keys() {
-		map.keys
+		val.keys
 	}
 
 	** Get a read-write, mutable Map instance with the same contents.
 	[Obj:Obj?] rw() {
-		map.rw
+		val.rw
 	}
 
 	** Get the number of key/value pairs in the map.
 	Int size() {
-		map.size
+		val.size
 	}
 
 	** Returns a list of all the mapped values.
 	Obj?[] vals() {
-		map.vals
+		val.vals
 	}
 	
 	** Returns a string representation the map.
 	override Str toStr() {
-		map.toStr
+		val.toStr
 	}
 }

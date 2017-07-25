@@ -4,7 +4,7 @@ internal class TestAtomicList : ConcurrentTest {
 	
 	Void testMutableLists() {
 		verifyErr(NotImmutableErr#) {
-			AtomicList().list = [Buf()]			
+			AtomicList().val = [Buf()]			
 		}
 	}
 
@@ -15,14 +15,14 @@ internal class TestAtomicList : ConcurrentTest {
 	}
 
 	Void testListType() {
-		verifyEq(AtomicList() { valType = Obj?# }.list.typeof,	Obj?[]#)			
-		verifyEq(AtomicList() { valType = Obj?# }.list.of, 		Obj?#)
+		verifyEq(AtomicList() { valType = Obj?# }.val.typeof,	Obj?[]#)			
+		verifyEq(AtomicList() { valType = Obj?# }.val.of, 		Obj?#)
 
-		verifyEq(AtomicList() { valType = Str?# }.list.typeof,	Str?[]#)			
-		verifyEq(AtomicList() { valType = Str?# }.list.of, 		Str?#)
+		verifyEq(AtomicList() { valType = Str?# }.val.typeof,	Str?[]#)			
+		verifyEq(AtomicList() { valType = Str?# }.val.of, 		Str?#)
 
-		verifyEq(AtomicList() { valType = Int# }.list.typeof,	Int[]#)			
-		verifyEq(AtomicList() { valType = Int# }.list.of, 		Int#)
+		verifyEq(AtomicList() { valType = Int# }.val.typeof,	Int[]#)			
+		verifyEq(AtomicList() { valType = Int# }.val.of, 		Int#)
 	}
 	
 	Void testListTypeChecks() {
@@ -33,7 +33,7 @@ internal class TestAtomicList : ConcurrentTest {
 		}
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int[]#, Str[]#, "List")) {
-			list.list = Int[,]
+			list.val = Int[,]
 		}
 
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "List value")) {
