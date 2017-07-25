@@ -32,4 +32,35 @@ class TestSynchronizedBuf : Test {
 		verifyEq(buf.flip.readAllStr, "o")
 	}
 	
+	Void testSyncBufSize() {
+		buf	:= SynchronizedBuf(ActorPool())
+
+		buf.out.print("Hello").flush
+		verifyEq(buf.size, 5)
+		
+		buf.read
+		verifyEq(buf.size, 5)
+		buf.read
+		verifyEq(buf.size, 5)
+		buf.read
+		verifyEq(buf.size, 5)
+
+		buf.out.print(" ").flush
+		verifyEq(buf.size, 6)
+		
+		buf.read
+		verifyEq(buf.size, 6)
+		buf.read
+		verifyEq(buf.size, 6)
+		buf.read
+		verifyEq(buf.size, 0)	// RESET!
+		
+		buf.out.print("Mum!").flush
+		verifyEq(buf.size, 4)
+		
+		buf.readBuf(2)
+		verifyEq(buf.size, 4)
+		buf.readBuf(2)
+		verifyEq(buf.size, 0)	// RESET!
+	}
 }

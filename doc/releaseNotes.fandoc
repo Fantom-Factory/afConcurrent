@@ -8,6 +8,8 @@ v1.0.20
  - New: IoC 'SynchronizedProvider' now injects 'SynchronizedState' instances.
  - Chg: Deprecated 'getState()' and 'withState()' on 'SynchronizedState' in favour of 'sync()' and 'async()'.
  - Chg: Consolodated all '*List.list' and '*Map.map' fields to 'val' (renamed).
+ - Bug: 'SynchronizedBuf' could grow unbounded. It now empties once
+ reading catches up with the writing.
 
 v1.0.18
 =======

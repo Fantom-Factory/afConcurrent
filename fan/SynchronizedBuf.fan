@@ -18,33 +18,37 @@ using afConcurrent::SynchronizedState
 **  ---<---<---                  ---<---<---
 ** <pre
 ** 
+** Note that 'SynchronizedBuf' grows unbounded. Until, that is, reading catches up with the 
+** writing; at which point the internal Buf is cleared and reset to initial capacity.
+** 
 ** See [Threaded Streams]`http://fantom.org/forum/topic/2586` on the Fantom forum for the initial design.
 const class SynchronizedBuf {
 	private const SynchronizedState threadState
 	
-	new make(ActorPool actorPool) {
-		threadState = SynchronizedState(actorPool, SynchronizedBufState#)
+	new make(ActorPool actorPool, Int capacity := 1024) {
+		threadState = SynchronizedState(actorPool) |->Obj| { SynchronizedBufState(capacity) }
 	}
 
-	** Creates a thread safe 'OutStream' wrapper for this 'Buf'. 
+	** Creates and returns a thread safe 'OutStream' wrapper for this 'Buf'.
+	** 'OutStream' instances should be cached for re-use. 
+	** 
+	** Note you need to call 'flush()' to make data available to the 'InStream'. 
 	OutStream out() {
 		ThreadedOutStream(this)
 	}
 	
-	** Creates a thread safe 'InStream' wrapper for this 'Buf'. 
+	** Creates and returns a thread safe 'InStream' wrapper for this 'Buf'. 
+	** 'InStream' instances should be cached for re-use. 
 	InStream in() {
 		ThreadedInStream(this)
 	}
 	
 	** Write a byte to the output stream.
 	** 
-	** This method return immediately, with the processing happening in the Buf thread.
+	** This method returns immediately, with the processing happening in the Buf thread.
 	This write(Int b) {
 		threadState.async |SynchronizedBufState state| {
-			pos := state.buf.pos
-			state.buf.seek(state.buf.size)
-			state.buf.out.write(b)
-			state.buf.seek(pos)
+			state.write(b)
 		}
 		return this
 	}
@@ -57,11 +61,7 @@ const class SynchronizedBuf {
 	** Due to the use of 'Buf.toImmutable()' the given 'Buf' is cleared / invalidated upon return.
 	This writeBuf(Buf buf, Int n := buf.remaining) {
 		threadState.async |SynchronizedBufState state| {
-			if (n <= 0) return
-			pos := state.buf.pos
-			state.buf.seek(state.buf.size)
-			state.buf.out.writeBuf(buf, n)
-			state.buf.seek(pos)
+			state.writeBuf(buf, n)
 		}
 		return this
 	}
@@ -70,7 +70,7 @@ const class SynchronizedBuf {
 	** Return zero if no bytes available or unknown.
 	Int avail() {
 		threadState.sync |SynchronizedBufState state -> Int| {
-			state.buf.in.avail
+			state.avail
 		}
 	}
 	
@@ -78,7 +78,7 @@ const class SynchronizedBuf {
 	** Return 'null' if at end of stream.
 	Int? read() {
 		threadState.sync |SynchronizedBufState state -> Int?| {
-			state.buf.in.read
+			state.read
 		}
 	}
 	
@@ -86,9 +86,7 @@ const class SynchronizedBuf {
 	** Note this method may not read the full number of n bytes.
 	Buf readBuf(Int n) {
 		threadState.sync |SynchronizedBufState state -> Buf| {
-			b := Buf()
-			state.buf.in.readBuf(b, n)
-			return b.toImmutable
+			state.readBuf(n)
 		}
 	}
 	
@@ -96,7 +94,7 @@ const class SynchronizedBuf {
 	** There is a finite limit to the number of bytes which may be pushed back.
 	Void unread(Int b) {
 		threadState.sync |SynchronizedBufState state| {
-			state.buf.in.unread(b)
+			state.unread(b)
 		}
 	}
 	
@@ -104,20 +102,91 @@ const class SynchronizedBuf {
 	** actually skipped which may be equal to or lesser than 'n'.
 	Int skip(Int n) {
 		threadState.sync |SynchronizedBufState state -> Int| {
-			state.buf.in.skip(n)
+			state.skip(n)
+		}
+	}
+	
+	** Return the total number of bytes in the buffer. This is NOT the same as 'avail()'.
+	** 
+	** The internal buffer forever expands until the contents have been read, then it is cleared. 
+	Int size() {
+		threadState.sync |SynchronizedBufState state -> Int| {
+			state.size
 		}
 	}
 
 	@NoDoc
 	override Str toStr() {
 		threadState.sync |SynchronizedBufState state -> Str| {
-			"SynchronizedBuf - size=${state.buf.size}, pos=${state.buf.pos}"
+			"SynchronizedBuf - size=${state.size}, pos=${state.pos}"
 		}
 	}
 }
 
 internal class SynchronizedBufState {
-	Buf	buf	:= Buf()
+	private Int capactity
+	private Buf	buf	:= Buf()
+	
+	new make(Int capactity) {
+		this.capactity = capactity
+	}
+	
+	Void write(Int b) {
+		pos := buf.pos
+		buf.seek(buf.size)
+		buf.out.write(b)
+		buf.seek(pos)
+	}
+	
+	Void writeBuf(Buf b, Int n := b.remaining) {
+		if (n <= 0) return
+		pos := buf.pos
+		buf.seek(buf.size)
+		buf.out.writeBuf(b, n)
+		buf.seek(pos)
+	}
+
+	Int avail() {
+		buf.in.avail
+	}
+	
+	Int? read() {
+		val := buf.in.read
+		clear
+		return val
+	}
+	
+	Buf readBuf(Int n) {
+		b := Buf()
+		buf.in.readBuf(b, n)
+		clear
+		return b.toImmutable
+	}
+	
+	Void unread(Int b) {
+		buf.in.unread(b)
+	}
+	
+	Int skip(Int n) {
+		val := buf.in.skip(n)
+		clear
+		return val
+	}
+	
+	Int pos() {
+		buf.pos
+	}
+	
+	Int size() {
+		buf.size
+	}
+	
+	private Void clear() {
+		if (avail == 0) {
+			buf.clear
+			buf.capacity = capactity
+		}
+	}
 }
 
 internal class ThreadedOutStream : OutStream {
