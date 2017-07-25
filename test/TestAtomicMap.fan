@@ -23,7 +23,7 @@ internal class TestAtomicMap : ConcurrentTest {
 
 	Void testMutableMap() {
 		verifyErr(NotImmutableErr#) {
-			AtomicMap().map = [0:NotImmutable()]			
+			AtomicMap().val = [0:NotImmutable()]			
 		}
 	}
 
@@ -47,9 +47,9 @@ internal class TestAtomicMap : ConcurrentTest {
 	private Obj datum() { 69 }
 	
 	Void testMapType() {
-		verifyEq(AtomicMap() { keyType = Obj#; valType = Obj?# }.map.typeof,	[Obj:Obj?]#)			
-		verifyEq(AtomicMap() { keyType = Int#; valType = Str?# }.map.typeof,	[Int:Str?]#)			
-		verifyEq(AtomicMap() { keyType = Int#; valType = Str#  }.map.typeof,	[Int:Str]#)
+		verifyEq(AtomicMap() { keyType = Obj#; valType = Obj?# }.val.typeof,	[Obj:Obj?]#)			
+		verifyEq(AtomicMap() { keyType = Int#; valType = Str?# }.val.typeof,	[Int:Str?]#)			
+		verifyEq(AtomicMap() { keyType = Int#; valType = Str#  }.val.typeof,	[Int:Str]#)
 	}
 	
 	Void testMapTypeChecks() {
@@ -72,7 +72,7 @@ internal class TestAtomicMap : ConcurrentTest {
 		}
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int:Obj#, Int:Str#, "Map")) {
-			map.map = Int:Obj[:]
+			map.val = Int:Obj[:]
 		}
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "Map value")) {

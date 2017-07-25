@@ -48,14 +48,14 @@ internal class TestLocalList : ConcurrentTest {
 	}
 	
 	Void testListType() {
-		verifyEq(LocalList("list") { valType = Obj?# }.list.typeof,	Obj?[]#)			
-		verifyEq(LocalList("list") { valType = Obj?# }.list.of, 	Obj?#)
+		verifyEq(LocalList("list") { valType = Obj?# }.val.typeof,	Obj?[]#)			
+		verifyEq(LocalList("list") { valType = Obj?# }.val.of, 		Obj?#)
 
-		verifyEq(LocalList("list") { valType = Str?# }.list.typeof,	Str?[]#)			
-		verifyEq(LocalList("list") { valType = Str?# }.list.of,		Str?#)
+		verifyEq(LocalList("list") { valType = Str?# }.val.typeof,	Str?[]#)			
+		verifyEq(LocalList("list") { valType = Str?# }.val.of,		Str?#)
 
-		verifyEq(LocalList("list") { valType = Int# }.list.typeof,	Int[]#)			
-		verifyEq(LocalList("list") { valType = Int# }.list.of, 		Int#)
+		verifyEq(LocalList("list") { valType = Int# }.val.typeof,	Int[]#)			
+		verifyEq(LocalList("list") { valType = Int# }.val.of, 		Int#)
 	}
 	
 	Void testListTypeChecks() {
@@ -66,7 +66,7 @@ internal class TestLocalList : ConcurrentTest {
 		}
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int[]#, Str[]#, "List")) {
-			list.list = Int[,]
+			list.val = Int[,]
 		}
 
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "List value")) {

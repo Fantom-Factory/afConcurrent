@@ -53,8 +53,8 @@ internal class TestSynchronizedFileMap : ConcurrentTest {
 	}
 	
 	Void testMapType() {
-		verifyEq(SynchronizedFileMap(ActorPool(), 100ms) { valType = Obj?# }.map.typeof,	[File:Obj?]#)			
-		verifyEq(SynchronizedFileMap(ActorPool(), 100ms) { valType = Str#  }.map.typeof,	[File:Str]#)
+		verifyEq(SynchronizedFileMap(ActorPool(), 100ms) { valType = Obj?# }.val.typeof,	[File:Obj?]#)			
+		verifyEq(SynchronizedFileMap(ActorPool(), 100ms) { valType = Str#  }.val.typeof,	[File:Str]#)
 	}
 	
 	Void testMapTypeChecks() {

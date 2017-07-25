@@ -7,6 +7,7 @@ v1.0.20
  - New: Added 'it-block' ctor to 'SynchronizedState' so you may set your own 'Synchronized' lock object.
  - New: IoC 'SynchronizedProvider' now injects 'SynchronizedState' instances.
  - Chg: Deprecated 'getState()' and 'withState()' on 'SynchronizedState' in favour of 'sync()' and 'async()'.
+ - Chg: Consolodated all '*List.list' and '*Map.map' fields to 'val' (renamed).
 
 v1.0.18
 =======

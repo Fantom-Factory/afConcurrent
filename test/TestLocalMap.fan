@@ -64,9 +64,9 @@ internal class TestLocalMap : ConcurrentTest {
 	}
 	
 	Void testMapType() {
-		verifyEq(LocalMap("map") { keyType = Obj#; valType = Obj?# }.map.typeof,	[Obj:Obj?]#)			
-		verifyEq(LocalMap("map") { keyType = Int#; valType = Str?# }.map.typeof,	[Int:Str?]#)			
-		verifyEq(LocalMap("map") { keyType = Int#; valType = Str#  }.map.typeof,	[Int:Str]#)
+		verifyEq(LocalMap("map") { keyType = Obj#; valType = Obj?# }.val.typeof,	[Obj:Obj?]#)			
+		verifyEq(LocalMap("map") { keyType = Int#; valType = Str?# }.val.typeof,	[Int:Str?]#)			
+		verifyEq(LocalMap("map") { keyType = Int#; valType = Str#  }.val.typeof,	[Int:Str]#)
 		
 		empty := LocalMap("map") { keyType = Int#; valType = Str#  }
 		verifyEq(empty.keys.of, Int#)
@@ -93,7 +93,7 @@ internal class TestLocalMap : ConcurrentTest {
 		}
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int:Obj#, Int:Str#, "Map")) {
-			map.map = Int:Obj[:]
+			map.val = Int:Obj[:]
 		}
 
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "Map value")) {

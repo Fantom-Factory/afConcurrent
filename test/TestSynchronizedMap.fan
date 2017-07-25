@@ -23,7 +23,7 @@ internal class TestSynchronizedMap : ConcurrentTest {
 
 	Void testMutableMap() {
 		verifyErr(NotImmutableErr#) {
-			SynchronizedMap(ActorPool()).map = [0:NotImmutable()]			
+			SynchronizedMap(ActorPool()).val = [0:NotImmutable()]			
 		}
 	}
 
@@ -49,9 +49,9 @@ internal class TestSynchronizedMap : ConcurrentTest {
 	private Obj datum() { 69 }
 	
 	Void testMapType() {
-		verifyEq(SynchronizedMap(ActorPool()) { keyType = Obj#; valType = Obj?# }.map.typeof,	[Obj:Obj?]#)			
-		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str?# }.map.typeof,	[Int:Str?]#)			
-		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str#  }.map.typeof,	[Int:Str]#)
+		verifyEq(SynchronizedMap(ActorPool()) { keyType = Obj#; valType = Obj?# }.val.typeof,	[Obj:Obj?]#)			
+		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str?# }.val.typeof,	[Int:Str?]#)			
+		verifyEq(SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str#  }.val.typeof,	[Int:Str]#)
 	}
 	
 	Void testMapTypeChecks() {
@@ -74,7 +74,7 @@ internal class TestSynchronizedMap : ConcurrentTest {
 		}
 		
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int:Obj#, Int:Str#, "Map")) {
-			map.map = Int:Obj[:]
+			map.val = Int:Obj[:]
 		}
 
 		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "Map value")) {

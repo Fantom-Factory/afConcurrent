@@ -23,6 +23,12 @@ const class SynchronizedList {
 		set { throw ReadonlyErr() }
 	}
 
+	@NoDoc @Deprecated { msg="Use 'val' instead" }
+	Obj?[] list {
+		get { val }
+		set { val = it } 
+	}
+
 	** Used to parameterize the backing list. 
 	** 
 	**   syntax: fantom
@@ -36,7 +42,7 @@ const class SynchronizedList {
 	}
 	
 	** Gets or sets a read-only copy of the backing map.
-	Obj?[] list {
+	Obj?[] val {
 		get { 
 			if (atomicList.val == null)
 				atomicList.val = valType.emptyList
@@ -51,12 +57,12 @@ const class SynchronizedList {
 	** Add the specified item to the end of the list.
 	** Return this. 
 	@Operator
-	This add(Obj? val) {
-		Utils.checkType(val?.typeof, valType, "List value")
+	This add(Obj? item) {
+		Utils.checkType(item?.typeof, valType, "List value")
 		lock.synchronized |->| {
-			rwList := list.rw
-			rwList.add(val)
-			list = rwList
+			rwList := val.rw
+			rwList.add(item)
+			val = rwList
 		}
 		return this
 	}
@@ -67,12 +73,12 @@ const class SynchronizedList {
 	** Return this.
 	** Throw IndexErr if index is out of range.
 	** Throw ReadonlyErr if readonly. 
-	This insert(Int index, Obj? val) {
-		Utils.checkType(val?.typeof, valType, "List value")
+	This insert(Int index, Obj? item) {
+		Utils.checkType(item?.typeof, valType, "List value")
 		lock.synchronized |->| {
-			rwList := list.rw
-			rwList.insert(index, val)
-			list = rwList
+			rwList := val.rw
+			rwList.insert(index, item)
+			val = rwList
 		}
 		return this
 	}
@@ -81,9 +87,9 @@ const class SynchronizedList {
 	** If the item was not mapped then return 'null'.
 	Obj? remove(Obj item) {
 		lock.synchronized |->Obj?| {
-			rwList := list.rw
+			rwList := val.rw
 			oVal := rwList.remove(item)
-			list = rwList
+			val = rwList
 			return oVal
 		}
 	}
@@ -93,9 +99,9 @@ const class SynchronizedList {
 	** Return the item removed.
 	Obj? removeAt(Int index) {
 		lock.synchronized |->Obj?| {
-			rwList := list.rw
+			rwList := val.rw
 			oVal := rwList.removeAt(index)
-			list = rwList
+			val = rwList
 			return oVal
 		}
 	}
@@ -103,80 +109,80 @@ const class SynchronizedList {
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
 		lock.synchronized |->| {
-			list = list.rw.clear
+			val = val.rw.clear
 		}
 		return this
 	}
 
-	This push(Obj? val) {
-		Utils.checkType(val?.typeof, valType, "List value")
+	This push(Obj? item) {
+		Utils.checkType(item?.typeof, valType, "List value")
 		lock.synchronized |->| {
-			rwList := list.rw
-			rwList.push(val)
-			list = rwList
+			rwList := val.rw
+			rwList.push(item)
+			val = rwList
 		}
 		return this
 	}
 
 	Obj? pop() {
 		lock.synchronized |->Obj?| {
-			rwList := list.rw
+			rwList := val.rw
 			oVal := rwList.pop
-			list = rwList
+			val = rwList
 			return oVal
 		}
 	}
 
 	Obj? peek() {
-		list.peek
+		val.peek
 	}
 
 	// ---- Common List Methods --------------------------------------------------------------------
 
 	** Returns 'true' if this list contains the specified item.
 	Bool contains(Obj? item) {
-		list.contains(item)
+		val.contains(item)
 	}
 	
 	** Call the specified function for every item in the list.
 	Void each(|Obj? item, Int index| c) {
-		list.each(c)
+		val.each(c)
 	}
 	
 	** Returns the item at the specified index.
 	** A negative index may be used to access an index from the end of the list.
 	@Operator
 	Obj? get(Int index) {
-		list[index]
+		val[index]
 	}
 	
 	** Return the item at index 0, or if empty return null.
 	Obj? first() {
-		list.first
+		val.first
 	}
 	
 	** Return the item at index-1, or if empty return null.
 	Obj? last() {
-		list.last
+		val.last
 	}
 	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
-		list.isEmpty
+		val.isEmpty
 	}
 
 	** Get a read-write, mutable List instance with the same contents.
 	Obj?[] rw() {
-		list.rw
+		val.rw
 	}
 	
 	** Get the number of values in the map.
 	Int size() {
-		list.size
+		val.size
 	}
 	
 	** Returns a string representation the list.
 	override Str toStr() {
-		list.toStr
+		val.toStr
 	}
 }

@@ -22,20 +22,26 @@ const class LocalList {
 	}
 
 	** Gets or sets the thread local list
-	Obj?[] list {
+	Obj?[] val {
 		get { localRef.val }
 		set { 
 			Utils.checkListType(it.typeof, valType)
 			localRef.val = it 
 		}
 	}
+
+	@NoDoc @Deprecated { msg="Use 'val' instead" }
+	Obj?[] list {
+		get { val }
+		set { val = it }
+	}
 	
 	** Add the specified item to the end of the list.
 	** Return this. 
 	@Operator
-	This add(Obj? val) {
-		Utils.checkType(val?.typeof, valType, "List value")
-		list.add(val)
+	This add(Obj? item) {
+		Utils.checkType(item?.typeof, valType, "List value")
+		val.add(item)
 		return this
 	}
 	
@@ -45,43 +51,43 @@ const class LocalList {
 	** Return this.
 	** Throw IndexErr if index is out of range.
 	** Throw ReadonlyErr if readonly. 
-	This insert(Int index, Obj? val) {
-		Utils.checkType(val?.typeof, valType, "List value")
-		list.insert(index, val)
+	This insert(Int index, Obj? item) {
+		Utils.checkType(item?.typeof, valType, "List value")
+		val.insert(index, item)
 		return this
 	}
 
 	** Removes the specified item from the list, returning the removed item.
 	** If the item was not mapped then return 'null'.
 	Obj? remove(Obj item) {
-		list.remove(item)
+		val.remove(item)
 	}
 
 	** Remove the object at the specified index. 
 	** A negative index may be used to access an index from the end of the list. 
 	** Return the item removed.
 	Obj? removeAt(Int index) {
-		list.removeAt(index)
+		val.removeAt(index)
 	}
 
 	** Remove all key/value pairs from the map. Return this.
 	This clear() {
 		if (localRef.isMapped)
-			list.clear
+			val.clear
 		return this
 	}
 	
-	This push(Obj? val) {
-		list.push(val)
+	This push(Obj? item) {
+		val.push(item)
 		return this
 	}
 
 	Obj? pop() {
-		list.pop
+		val.pop
 	}
 
 	Obj? peek() {
-		list.peek
+		val.peek
 	}
 
 
@@ -89,44 +95,44 @@ const class LocalList {
 
 	** Returns 'true' if this list contains the specified item.
 	Bool contains(Obj? item) {
-		localRef.isMapped ? list.contains(item) : false
+		localRef.isMapped ? val.contains(item) : false
 	}
 	
 	** Call the specified function for every item in the list.
 	Void each(|Obj? item, Int index| c) {
 		if (localRef.isMapped)
-			list.each(c)
+			val.each(c)
 	}
 	
 	** Returns the item at the specified index.
 	** A negative index may be used to access an index from the end of the list.
 	@Operator
 	Obj? get(Int index) {
-		localRef.isMapped ? list[index] : throw IndexErr(index.toStr)
+		localRef.isMapped ? val[index] : throw IndexErr(index.toStr)
 	}
 	
 	** Return the item at index 0, or if empty return null.
 	Obj? first() {
-		localRef.isMapped ? list.first : null
+		localRef.isMapped ? val.first : null
 	}
 	
 	** Return the item at index-1, or if empty return null.
 	Obj? last() {
-		localRef.isMapped ? list.last : null
+		localRef.isMapped ? val.last : null
 	}
 	
 	** Return 'true' if size() == 0
 	Bool isEmpty() {
-		localRef.isMapped ? list.isEmpty : true
+		localRef.isMapped ? val.isEmpty : true
 	}
 	
 	** Get the number of values in the map.
 	Int size() {
-		localRef.isMapped ? list.size : 0
+		localRef.isMapped ? val.size : 0
 	}
 	
 	** Returns a string representation the list.
 	override Str toStr() {
-		list.toStr
+		val.toStr
 	}
 }
