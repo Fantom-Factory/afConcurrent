@@ -1,8 +1,8 @@
-#Concurrent v1.0.18
+#Concurrent v1.0.20
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
-[![pod: v1.0.18](http://img.shields.io/badge/pod-v1.0.18-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
+[![pod: v1.0.20](http://img.shields.io/badge/pod-v1.0.20-yellow.svg)](http://www.fantomfactory.org/pods/afConcurrent)
 ![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)
 
 ## Overview
@@ -142,9 +142,29 @@ When Concurrent is added as a dependency to an IoC enabled application, such as 
 - [ActorPools](http://eggbox.fantomfactory.org/pods/afConcurrent/api/ActorPools) - takes contributions of `Str:ActorPool`
 - [LocalRefManager](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRefManager)
 
-A `DependencyProvider` allows you to inject instances of `LocalRefs`, `LocalLists`, and `LocalMaps`. See [LocalRefManager](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRefManager) for details.
+A `DependencyProvider` then allows you to inject instances of:
 
-A `SynchronizedProvider` also allows you to inject instances of `ActorPool`, `Synchronized`, `SynchronizedList`, and `SynchronizedMap` with a named `ActorPool`.
+- `LocalRefs`
+- `LocalLists`
+- `LocalMaps`
 
-The above makes use of the non-invasive module feature of IoC 3.
+```
+@Inject { type=[Str:Slot?]# }
+const LocalMap localMap
+```
+
+Another provider allows you to name an `ActorPool` and inject instances of:
+
+- `ActorPool`
+- `Synchronized`
+- `SynchronizedList`
+- `SynchronizedMap`
+- `SynchronizedState`
+
+```
+@Inject { id="<actorPool.id>" type=[Str:Slot?]# }
+const SynchronizedMap syncMap
+```
+
+All the above makes use of the non-invasive module feature of IoC 3.
 
