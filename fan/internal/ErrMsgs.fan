@@ -10,8 +10,8 @@ internal mixin ErrMsgs {
 		"This Err is being logged to avoid it being swallowed as Errs thrown in async {...} blocks do not propagate to the calling thread."
 	}
 	
-	static Str synchronized_notImmutable(Type returns) {
-		stripSys("Synchronized return type ${returns.signature} is not immutable or serializable")
+	static Str synchronized_notImmutable(Type? returns) {
+		stripSys("Synchronized return type ${returns?.signature} is not immutable or serializable")
 	}
 
 	static Str wrongType(Type? wrong, Type right, Str type) {

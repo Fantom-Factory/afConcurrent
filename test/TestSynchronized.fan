@@ -86,8 +86,8 @@ internal class TestSynchronized : ConcurrentTest {
 	
 	Void testImmutableReturnValue() {
 		lock := Synchronized(ActorPool())
-		verifyErrMsg(IOErr#, ErrMsgs.synchronized_notImmutable(Buf#)) {
-			lock.synchronized |->Buf| { Buf() }
+		verifyErrMsg(NotImmutableErr#, ErrMsgs.synchronized_notImmutable(T_State#)) {
+			lock.synchronized |->Obj| { T_State() }
 		}
 		verify(logs.isEmpty)
 		
@@ -100,7 +100,7 @@ internal class TestSynchronized : ConcurrentTest {
 	Void testTimeout() {
 		lock := Synchronized(ActorPool(), 50ms)
 		verifyErrMsg(TimeoutErr#, "Future.get timed out") {
-			lock.synchronized |->| { Actor.sleep(1sec) }
+			lock.synchronized |->| { Actor.sleep(100ms) }
 		}
 		verify(logs.isEmpty)
 	}
