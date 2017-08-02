@@ -7,6 +7,8 @@ v1.0.20
  - New: IoC 'SynchronizedProvider' now injects 'SynchronizedState' instances.
  - Chg: Deprecated 'getState()' and 'withState()' on 'SynchronizedState' in favour of 'sync()' and 'async()'.
  - Chg: Consolodated all '*List.list' and '*Map.map' fields to 'val' (renamed).
+ - Chg: 'Synchronized' explicitly calls '.toImmutable()' on returned objects to avoid *Not serializable* errors when returning lists and maps.
+ - Chg: More details exposed on 'NotImmutableErr' thrown from 'Synchronized'.
  - Bug: 'SynchronizedBuf' could grow unbounded. It now empties once
  reading catches up with the writing.
 

@@ -23,15 +23,24 @@ internal class TestSynchronizedState : ConcurrentTest {
 	}
 	
 	Void testTrap() {
-		sync  := SynchronizedState(ActorPool(), Buf#)
-		sync.sync |Buf buf| { buf.print("Fanny!") }
+		sync  := SynchronizedState(ActorPool(), T_State#)
 		
-		size := sync->size
-		verifyEq(size, 6)
+		// used to throw "Not serializable"
+		size := sync->constData
+		verifyEq(size->size, 1)
 	}
 }
 
 internal class T_State {
 	Int data
+	
+	// needs to be a list for the test to fail with a: 
+	//    -> sys::IOErr: Not serializable: afConcurrent::T_State2 
+	T_State2[] constData() {
+		T_State2[T_State2()]
+	}
 }
 
+internal const class T_State2 {
+	const Int data := 69
+}

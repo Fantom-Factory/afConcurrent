@@ -107,7 +107,7 @@ const class Synchronized {
 		try {
 			return future.get(timeout)
 		} catch (IOErr err) {
-			throw err.msg.contains("Not serializable") ? IOErr(ErrMsgs.synchronized_notImmutable(f.returns), err) : err
+			throw err.msg.contains("Not serializable") ? NotImmutableErr(ErrMsgs.synchronized_notImmutable(f.returns), err) : err
 		}
 	}
 	
@@ -142,7 +142,15 @@ const class Synchronized {
 
 		insync.val = true
 		try {
-			return func.call()
+			result := func.call()
+
+			// call .toImmutable() to explicitly convert lists and maps
+			try return result.toImmutable
+			catch (NotImmutableErr err)
+				// calculate the err msg here, and not on the receiving end, as here we know the 
+				// exact return type whereas the receiving end can only use the Func return type
+				// which is often just Obj?#
+				throw NotImmutableErr(ErrMsgs.synchronized_notImmutable(result?.typeof), err)
 
 		} catch (Err e) {
 			// log the Err so the thread doesn't fail silently
