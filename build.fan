@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afConcurrent"
 		summary = "Utility classes for synchronising and sharing data between threads"
-		version = Version("1.0.19")
+		version = Version("1.0.20")
 
 		meta = [
 			"pod.dis"			: "Concurrent",
@@ -15,8 +15,8 @@ class Build : BuildPod {
 		]
 
 		depends = [
-			"sys        1.0.67 - 1.0",
-			"concurrent 1.0.67 - 1.0"
+			"sys        1.0.69 - 1.0",
+			"concurrent 1.0.69 - 1.0"
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/ioc/`, `test/`]
