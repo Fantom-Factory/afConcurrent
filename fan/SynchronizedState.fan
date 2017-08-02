@@ -30,6 +30,15 @@ using concurrent::Future
 **     Buf buf := Buf()
 ** }
 ** <pre
+** 
+** Note 'SynchronizedState' overrides 'trap()' to make convenience calls to 'sync()' allowing dynamic calls:
+** 
+** pre>
+** syntax: fantom
+** sync := SynchronizedState(ActorPool(), Mutable#)
+** 
+** size := sync->buf.size  //--> returns size of Mutable.buf
+** <pre
 const class SynchronizedState {
 	@NoDoc	// advanced use only
 	const |->Obj?| 		stateFactory
@@ -39,9 +48,13 @@ const class SynchronizedState {
 	** The 'lock' object should you need to 'synchronize' on the state.
 	const Synchronized	lock
 	
-	// Note we don't create a ctor(syncPool, type) 'cos that leads to ambiguous ctors in existing libs like afParrotSdk2
+	// Note we can't create a ctor(syncPool, type) 'cos that leads to ambiguous ctors in existing libs like afBedSheet / afParrotSdk2
 	@NoDoc	// advanced use only - for setting own lock
-	new make(|This| f) { f(this) }
+	new make(|This| f) {
+		f(this)
+		if (this.stateRef == null)
+			this.stateRef = LocalRef(SynchronizedState#.name)
+	}
 
 	** Creates a 'SynchronizedState' instance.
 	** 
@@ -105,6 +118,22 @@ const class SynchronizedState {
 	Future asyncLater(Duration duration, |Obj state -> Obj?| func) {
 		iFunc := func.toImmutable
 		return lock.asyncLater(duration) |->Obj?| { callFunc(iFunc) }
+	}
+	
+	** Routes trap() to the enclosed state object. Allows convenience calls for calling 'sync()' 
+	** and returning state:
+	**
+	** pre>
+	** syntax: fantom
+	** sync := SynchronizedState(ActorPool(), Buf#)
+	** 
+	** size := sync->size  //--> returns size of Buf
+	** <pre
+	override Obj? trap(Str name, Obj?[]? args := null) {
+		iargs := args?.toImmutable
+		return sync |state->Obj?| {
+			state.trap(name, iargs)
+		}
 	}
 	
 	private Obj? callFunc(|Obj?->Obj?| func) {

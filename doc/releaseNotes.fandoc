@@ -1,7 +1,6 @@
-Versions
-********
 v1.0.20
 =======
+ - New: Added 'SynchronizedState.trap()' as convenience for calling state methods on 'sync()'.
  - New: Added 'push()', 'pop()', and 'peek()' to all Lists.
  - New: Added 'toStr()' methods to all Maps and Lists.
  - New: Added 'it-block' ctor to 'SynchronizedState' so you may set your own 'Synchronized' lock object.

@@ -2,7 +2,7 @@ using concurrent
 
 internal class TestSynchronizedState : ConcurrentTest {
 
-	Void testWithState() {
+	Void testSync() {
 		sync  := SynchronizedState(ActorPool(), T_State#)
 		
 		val := sync.sync |T_State state -> Obj| { ++state.data }
@@ -12,7 +12,7 @@ internal class TestSynchronizedState : ConcurrentTest {
 		verifyEq(val, 2)
 	}
 
-	Void testGetState() {
+	Void testAsync() {
 		sync  := SynchronizedState(ActorPool(), T_State#)
 
 		val := sync.async |T_State state -> Obj| { ++state.data }.get
@@ -20,6 +20,14 @@ internal class TestSynchronizedState : ConcurrentTest {
 
 		val  = sync.async |T_State state -> Obj| { ++state.data }.get
 		verifyEq(val, 2)
+	}
+	
+	Void testTrap() {
+		sync  := SynchronizedState(ActorPool(), Buf#)
+		sync.sync |Buf buf| { buf.print("Fanny!") }
+		
+		size := sync->size
+		verifyEq(size, 6)
 	}
 }
 
