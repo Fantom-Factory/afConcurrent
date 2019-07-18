@@ -16,7 +16,7 @@ internal class TestSynchronized : ConcurrentTest {
 	
 	Void testNestingSyncInsideSync() {
 		pool := ActorPool()
-		verifyErrMsg(Err#, ErrMsgs.synchronized_nestedCallsNotAllowed) {
+		verifyErrMsg(Err#, "This lock is NOT re-entrant. Due to Actor semantics, nested calls to synchronized() result in a Deadlock.") {
 			T_Sync(pool) { it.reentrant = false }.syncToSync			
 		}
 		verify(logs.isEmpty)
@@ -36,8 +36,8 @@ internal class TestSynchronized : ConcurrentTest {
 		
 		pool.stop.join
 		rec := logs[0] as LogRec
-		verifyEq(rec.msg, ErrMsgs.synchronized_silentErr)
-		verifyEq(rec.err.msg, ErrMsgs.synchronized_nestedCallsNotAllowed)
+		verifyEq(rec.msg, "This Err is being logged to avoid it being swallowed as Errs thrown in async {...} blocks do not propagate to the calling thread.")
+		verifyEq(rec.err.msg, "This lock is NOT re-entrant. Due to Actor semantics, nested calls to synchronized() result in a Deadlock.")
 	}
 
 	Void testNestingSyncInsideAsyncReentrant() {
@@ -80,13 +80,13 @@ internal class TestSynchronized : ConcurrentTest {
 		
 		pool.stop.join
 		rec := logs[0] as LogRec
-		verifyEq(rec.msg, ErrMsgs.synchronized_silentErr)
+		verifyEq(rec.msg, "This Err is being logged to avoid it being swallowed as Errs thrown in async {...} blocks do not propagate to the calling thread.")
 		verifyEq(rec.err.msg, "Whoops! -> syncAndForget")
 	}
 	
 	Void testImmutableReturnValue() {
 		lock := Synchronized(ActorPool())
-		verifyErrMsg(NotImmutableErr#, ErrMsgs.synchronized_notImmutable(T_State#)) {
+		verifyErrMsg(NotImmutableErr#, "Synchronized return type afConcurrent::T_State is not immutable or serializable") {
 			lock.synchronized |->Obj| { T_State() }
 		}
 		verify(logs.isEmpty)

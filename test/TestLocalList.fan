@@ -61,15 +61,15 @@ internal class TestLocalList : ConcurrentTest {
 	Void testListTypeChecks() {
 		list := LocalList("list") { valType = Str# }
 		
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "List value")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(Int#, Str#, "List value")) {
 			list.add(39)
 		}
 		
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int[]#, Str[]#, "List")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(Int[]#, Str[]#, "List")) {
 			list.val = Int[,]
 		}
 
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "List value")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(null, Str#, "List value")) {
 			list.add(null)
 		}
 	}

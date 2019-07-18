@@ -98,7 +98,7 @@ const class Synchronized {
 			return f.call()
 
 		if (inSync)
-			throw Err(ErrMsgs.synchronized_nestedCallsNotAllowed)
+			throw Err("This lock is NOT re-entrant. Due to Actor semantics, nested calls to synchronized() result in a Deadlock.")
 
 		// explicit call to .toImmutable() - see http://fantom.org/sidewalk/topic/1798#c12190
 		func	:= f.toImmutable
@@ -107,7 +107,7 @@ const class Synchronized {
 		try {
 			return future.get(timeout)
 		} catch (IOErr err) {
-			throw err.msg.contains("Not serializable") ? NotImmutableErr(ErrMsgs.synchronized_notImmutable(f.returns), err) : err
+			throw err.msg.contains("Not serializable") ? NotImmutableErr("Synchronized return type ${f.returns.signature} is not immutable or serializable".replace("sys::", ""), err) : err
 		}
 	}
 	
@@ -150,12 +150,12 @@ const class Synchronized {
 				// calculate the err msg here, and not on the receiving end, as here we know the 
 				// exact return type whereas the receiving end can only use the Func return type
 				// which is often just Obj?#
-				throw NotImmutableErr(ErrMsgs.synchronized_notImmutable(result?.typeof), err)
+				throw NotImmutableErr("Synchronized return type ${result?.typeof?.signature} is not immutable or serializable".replace("sys::", ""), err)
 
 		} catch (Err e) {
 			// log the Err so the thread doesn't fail silently
 			if (logErr)
-				log.err(ErrMsgs.synchronized_silentErr, e)
+				log.err("This Err is being logged to avoid it being swallowed as Errs thrown in async {...} blocks do not propagate to the calling thread.", e)
 			throw e
 
 		} finally {

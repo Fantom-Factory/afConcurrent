@@ -16,18 +16,22 @@ internal class Utils {
 	
 	static Void checkType(Type? actual, Type expected, Str type) {
 		if (actual == null && !expected.isNullable)
-			throw ArgErr(ErrMsgs.wrongType(actual, expected, type))
+			throw ArgErr(wrongType(actual, expected, type))
 		if (actual != null && !actual.fits(expected))
-			throw ArgErr(ErrMsgs.wrongType(actual, expected, type))
+			throw ArgErr(wrongType(actual, expected, type))
 	}
 
 	static Void checkListType(Type actual, Type expected) {
 		if (!actual.params["V"].fits(expected))
-			throw ArgErr(ErrMsgs.wrongType(actual, expected.toListOf, "List"))
+			throw ArgErr(wrongType(actual, expected.toListOf, "List"))
 	}
 
 	static Void checkMapType(Type actual, Type keyType, Type valType) {
 		if (!actual.params["K"].fits(keyType) || !actual.params["V"].fits(valType))
-			throw ArgErr(ErrMsgs.wrongType(actual, Map#.parameterize(["K":keyType, "V":valType]), "Map"))
+			throw ArgErr(wrongType(actual, Map#.parameterize(["K":keyType, "V":valType]), "Map"))
+	}
+	
+	static Str wrongType(Type? wrong, Type right, Str type) {
+		"'${wrong?.signature}' does not fit ${type} type '${right.signature}'".replace("sys::", "")
 	}
 }

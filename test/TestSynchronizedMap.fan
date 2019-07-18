@@ -57,27 +57,27 @@ internal class TestSynchronizedMap : ConcurrentTest {
 	Void testMapTypeChecks() {
 		map := SynchronizedMap(ActorPool()) { keyType = Int#; valType = Str# }
 		
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Str#, Int#, "Map key")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(Str#, Int#, "Map key")) {
 			map["str"] = "str"
 		}
 
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Str#, Int#, "Map key")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(Str#, Int#, "Map key")) {
 			map.getOrAdd("str") { "str" }
 		}
 		
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "Map value")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(Int#, Str#, "Map value")) {
 			map[13] = 13
 		}
 
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int#, Str#, "Map value")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(Int#, Str#, "Map value")) {
 			map.getOrAdd(13) { 13 }
 		}
 		
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(Int:Obj#, Int:Str#, "Map")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(Int:Obj#, Int:Str#, "Map")) {
 			map.val = Int:Obj[:]
 		}
 
-		verifyErrMsg(ArgErr#, ErrMsgs.wrongType(null, Str#, "Map value")) {
+		verifyErrMsg(ArgErr#, Utils.wrongType(null, Str#, "Map value")) {
 			map[13] = null
 		}
 	}
