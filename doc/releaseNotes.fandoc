@@ -1,3 +1,7 @@
+v1.0.22
+=======
+  - New: 'afConcurrent' now available as a SkySpark extension.
+
 v1.0.20
 =======
  - New: Added 'SynchronizedState.trap()' as convenience for calling state methods on 'sync()'.

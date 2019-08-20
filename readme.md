@@ -1,8 +1,8 @@
-# Concurrent v1.0.20
+# Concurrent v1.0.22
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
-[![pod: v1.0.20](http://img.shields.io/badge/pod-v1.0.20-yellow.svg)](http://eggbox.fantomfactory.org/pods/afConcurrent)
+[![pod: v1.0.22](http://img.shields.io/badge/pod-v1.0.22-yellow.svg)](http://eggbox.fantomfactory.org/pods/afConcurrent)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview

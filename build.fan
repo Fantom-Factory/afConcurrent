@@ -5,13 +5,23 @@ class Build : BuildPod {
 	new make() {
 		podName = "afConcurrent"
 		summary = "Utility classes for synchronising and sharing data between threads"
-		version = Version("1.0.21")
+		version = Version("1.0.22")
 
-		meta = [
-			"pod.dis"			: "Concurrent",
-			"afIoc.module"		: "afConcurrent::ConcurrentModule",
-			"repo.tags"			: "system",
-			"repo.public"		: "true"
+		meta 	= [
+			"pod.dis"		: "Concurrent",
+			"afIoc.module"	: "afConcurrent::ConcurrentModule",
+			"repo.tags"		: "system",
+			"repo.public"	: "true",
+
+			// ---- SkySpark ----
+			"ext.name"		: "afConcurrent",
+			"ext.icon"		: "afConcurrent",
+//			"ext.depends"	: "",
+			"skyarc.icons"	: "true",
+		]
+		
+		index	= [
+			"skyarc.ext"	: "afConcurrent"
 		]
 
 		depends = [
@@ -20,6 +30,6 @@ class Build : BuildPod {
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/ioc/`, `test/`]
-		resDirs = [`doc/`]
+		resDirs = [`doc/`, `svg/`]
 	}
 }
