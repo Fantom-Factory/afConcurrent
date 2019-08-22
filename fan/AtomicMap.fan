@@ -10,7 +10,7 @@ using concurrent::AtomicRef
 ** This makes them lightweight but also susceptible to **data-loss** during race conditions.
 ** Though this may be acceptable for *caching* situations where values are re-calculated on demand.
 ** 
-** All values held in the map must be immutable.
+** All values held in the map must be immutable, except if you're caching funcs in a Javascipt environment. 
 ** 
 ** See the article [From One Thread to Another...]`http://www.fantomfactory.org/articles/from-one-thread-to-another#atomicMap` for more details.
 @Js
@@ -73,7 +73,10 @@ const class AtomicMap {
 						it.caseInsensitive = this.caseInsensitive 
 					it.ordered = this.ordered 
 				}.toImmutable
-			return atomicMap.val 
+			val := (Map) atomicMap.val
+			if (Env.cur.runtime == "js")
+				val = val.map { _unwrap(it) }
+			return val
 		}
 		set {
 			Utils.checkMapType(it.typeof, keyType, valType)
@@ -94,7 +97,7 @@ const class AtomicMap {
 			return got
 		val  := valFunc.call(iKey)
 		Utils.checkType(val?.typeof, valType, "Map value")
-		iVal := val?.toImmutable
+		iVal := (Env.cur.runtime == "js") ? val : val?.toImmutable
 		set(iKey, iVal)
 		return iVal
 	}
@@ -105,7 +108,7 @@ const class AtomicMap {
 		Utils.checkType(key.typeof,  keyType, "Map key")
 		Utils.checkType(item?.typeof, valType, "Map value")
 		iKey  := key.toImmutable
-		iVal  := item?.toImmutable
+		iVal  := (item is Func && Env.cur.runtime == "js") ? Unsafe(item) : item?.toImmutable
 		rwMap := val.rw
 		rwMap[iKey] = iVal
 		val = rwMap
@@ -175,5 +178,9 @@ const class AtomicMap {
 	** Returns a string representation the map.
 	override Str toStr() {
 		val.toStr
+	}
+	
+	private Obj? _unwrap(Obj? obj) {
+		(obj is Unsafe && ((Unsafe) obj).val is Func) ? ((Unsafe) obj).val : obj
 	}
 }
