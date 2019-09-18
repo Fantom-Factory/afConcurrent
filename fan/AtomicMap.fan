@@ -80,7 +80,10 @@ const class AtomicMap {
 		}
 		set {
 			Utils.checkMapType(it.typeof, keyType, valType)
-			atomicMap.val = it.toImmutable 
+			val := it
+			if (Env.cur.runtime == "js")
+				val = val.map { _wrap(it) }
+			atomicMap.val = val.toImmutable 
 		}
 	}
 	
@@ -108,7 +111,7 @@ const class AtomicMap {
 		Utils.checkType(key.typeof,  keyType, "Map key")
 		Utils.checkType(item?.typeof, valType, "Map value")
 		iKey  := key.toImmutable
-		iVal  := (item is Func && Env.cur.runtime == "js") ? Unsafe(item) : item?.toImmutable
+		iVal  := (Env.cur.runtime == "js") ? item : item?.toImmutable
 		rwMap := val.rw
 		rwMap[iKey] = iVal
 		val = rwMap
@@ -182,5 +185,9 @@ const class AtomicMap {
 	
 	private Obj? _unwrap(Obj? obj) {
 		(obj is Unsafe && ((Unsafe) obj).val is Func) ? ((Unsafe) obj).val : obj
+	}
+
+	private Obj? _wrap(Obj? obj) {
+		(obj is Func) ? Unsafe(obj) : obj
 	}
 }

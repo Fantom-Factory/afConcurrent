@@ -1,3 +1,7 @@
+v1.0.24
+=======
+ - Bug: Fixed 'AtomicMap' to really work with funcs in Javascript environments.
+
 v1.0.22
 =======
  - New: 'afConcurrent' now available as a SkySpark extension.
