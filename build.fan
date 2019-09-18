@@ -9,20 +9,23 @@ class Build : BuildPod {
 
 		meta 	= [
 			"pod.dis"		: "Concurrent",
+			"pod.proj"		: "Fantom Factory Libraries",
 			"afIoc.module"	: "afConcurrent::ConcurrentModule",
 			"repo.tags"		: "system",
 			"repo.public"	: "true",
 
 			// ---- SkySpark ----
-//			"ext.name"		: "afConcurrent",
-//			"ext.icon"		: "afConcurrent",
-////			"ext.depends"	: "",
-//			"skyarc.icons"	: "true",
+			"ext.name"		: "afConcurrent",
+			"ext.icon"		: "afConcurrent",
+//			"ext.depends"	: "",
+			"skyarc.icons"	: "true",
 		]
-		
-//		index	= [
-//			"skyarc.ext"	: "afConcurrent"
-//		]
+
+		// this NEEDS to be a SkySpark extension so the pod will be loaded in JS UI Views
+		// a requirement for development before we UberPod everything
+		index	= [
+			"skyarc.ext"	: "afConcurrent"
+		]
 
 		depends = [
 			"sys        1.0.69 - 1.0",
@@ -30,7 +33,6 @@ class Build : BuildPod {
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/ioc/`, `test/`]
-//		resDirs = [`doc/`, `svg/`]
-		resDirs = [`doc/`]
+		resDirs = [`doc/`, `svg/`]
 	}
 }
