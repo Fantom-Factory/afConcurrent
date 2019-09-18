@@ -14,15 +14,15 @@ class Build : BuildPod {
 			"repo.public"	: "true",
 
 			// ---- SkySpark ----
-			"ext.name"		: "afConcurrent",
-			"ext.icon"		: "afConcurrent",
-//			"ext.depends"	: "",
-			"skyarc.icons"	: "true",
+//			"ext.name"		: "afConcurrent",
+//			"ext.icon"		: "afConcurrent",
+////			"ext.depends"	: "",
+//			"skyarc.icons"	: "true",
 		]
 		
-		index	= [
-			"skyarc.ext"	: "afConcurrent"
-		]
+//		index	= [
+//			"skyarc.ext"	: "afConcurrent"
+//		]
 
 		depends = [
 			"sys        1.0.69 - 1.0",
@@ -30,6 +30,7 @@ class Build : BuildPod {
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/ioc/`, `test/`]
-		resDirs = [`doc/`, `svg/`]
+//		resDirs = [`doc/`, `svg/`]
+		resDirs = [`doc/`]
 	}
 }
