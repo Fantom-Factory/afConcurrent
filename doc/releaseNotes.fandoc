@@ -1,3 +1,7 @@
+v1.0.26
+=======
+ - New: 'WorkerPool' class combines 'ActorPool' with 'Synchronized'.
+
 v1.0.24
 =======
  - Bug: Fixed 'AtomicMap' to really work with funcs in Javascript environments.
