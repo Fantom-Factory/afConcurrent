@@ -67,7 +67,7 @@ const class SynchronizedFileMap {
 	** Nothing is added should the file not exist.
 	@Operator
 	Void set(File key, Obj? item) {
-		Utils.checkType(item?.typeof, valType, "Map value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "Map value")
 		iKey := key.toImmutable
 		iVal := item?.toImmutable
 		cache.lock.synchronized |->| {
@@ -169,7 +169,7 @@ const class SynchronizedFileMap {
 	
 	private Obj? setFile(File iKey, |File->Obj?| iFunc) {
 		val  := iFunc.call(iKey)
-		Utils.checkType(val?.typeof, valType, "Map value")
+		ConcurrentUtils.checkType(val?.typeof, valType, "Map value")
 		iVal := val?.toImmutable
 		
 		// only cache when the file exists

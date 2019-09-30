@@ -66,7 +66,7 @@ const class LocalMap {
 	[Obj:Obj?] val {
 		get { localRef.val }
 		set { 
-			Utils.checkMapType(it.typeof, keyType, valType)
+			ConcurrentUtils.checkMapType(it.typeof, keyType, valType)
 			localRef.val = it 
 		}
 	}
@@ -76,10 +76,10 @@ const class LocalMap {
 	** 
 	** This method is thread safe. 'valFunc' will not be called twice for the same key.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
-		Utils.checkType(key.typeof,  keyType, "Map key")
+		ConcurrentUtils.checkType(key.typeof,  keyType, "Map key")
 		return val.getOrAdd(key) |Obj k1->Obj?| {
 			val := valFunc(k1)
-			Utils.checkType(val?.typeof, valType, "Map value")
+			ConcurrentUtils.checkType(val?.typeof, valType, "Map value")
 			return val
 		}
 	}
@@ -88,8 +88,8 @@ const class LocalMap {
 	** Though the same key may be overridden. Both the 'key' and 'val' must be immutable. 
 	@Operator
 	Void set(Obj key, Obj? item) {
-		Utils.checkType(key.typeof,  keyType, "Map key")
-		Utils.checkType(item?.typeof, valType, "Map value")
+		ConcurrentUtils.checkType(key.typeof,  keyType, "Map key")
+		ConcurrentUtils.checkType(item?.typeof, valType, "Map value")
 		val[key] = item
 	}
 

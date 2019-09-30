@@ -61,19 +61,19 @@ internal class TestSynchronizedFileMap : ConcurrentTest {
 		map := SynchronizedFileMap(ActorPool(), null) { valType = Str# }
 		f1 := File.createTemp("afConcurrent", ".txt").deleteOnExit
 		
-		verifyErrMsg(ArgErr#, Utils.wrongType(Int#, Str#, "Map value")) {
+		verifyErrMsg(ArgErr#, ConcurrentUtils.wrongType(Int#, Str#, "Map value")) {
 			map[f1] = 13
 		}
 
-		verifyErrMsg(ArgErr#, Utils.wrongType(Int#, Str#, "Map value")) {
+		verifyErrMsg(ArgErr#, ConcurrentUtils.wrongType(Int#, Str#, "Map value")) {
 			map.getOrAdd(f1) { 13 }
 		}
 
-		verifyErrMsg(ArgErr#, Utils.wrongType(Int#, Str#, "Map value")) {
+		verifyErrMsg(ArgErr#, ConcurrentUtils.wrongType(Int#, Str#, "Map value")) {
 			map.getOrAddOrUpdate(f1) { 13 }
 		}
 
-		verifyErrMsg(ArgErr#, Utils.wrongType(null, Str#, "Map value")) {
+		verifyErrMsg(ArgErr#, ConcurrentUtils.wrongType(null, Str#, "Map value")) {
 			map[f1] = null
 		}
 	}

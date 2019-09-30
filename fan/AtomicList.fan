@@ -39,7 +39,7 @@ const class AtomicList {
 			return atomicList.val 
 		}
 		set {
-			Utils.checkListType(it.typeof, valType)
+			ConcurrentUtils.checkListType(it.typeof, valType)
 			atomicList.val = it.toImmutable 
 		}
 	}
@@ -48,7 +48,7 @@ const class AtomicList {
 	** Return this. 
 	@Operator
 	This add(Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		rwList := val.rw
 		rwList.add(item)
 		val = rwList
@@ -62,7 +62,7 @@ const class AtomicList {
 	** Throw IndexErr if index is out of range.
 	** Throw ReadonlyErr if readonly. 
 	This insert(Int index, Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		rwList := val.rw
 		rwList.insert(index, item)
 		val = rwList
@@ -95,7 +95,7 @@ const class AtomicList {
 	}
 
 	This push(Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		rwList := val.rw
 		rwList.push(item)
 		val = rwList

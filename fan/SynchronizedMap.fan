@@ -61,7 +61,7 @@ const class SynchronizedMap {
 			return atomicMap.val 
 		}
 		set { 
-			Utils.checkMapType(it.typeof, keyType, valType)
+			ConcurrentUtils.checkMapType(it.typeof, keyType, valType)
 			atomicMap.val = it.toImmutable 
 		}
 	}
@@ -73,7 +73,7 @@ const class SynchronizedMap {
 	**  
 	** Note that 'valFunc' should be immutable and, if used, is executed in a different thread to the calling thread.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
-		Utils.checkType(key.typeof,  keyType, "Map key")
+		ConcurrentUtils.checkType(key.typeof,  keyType, "Map key")
 		if (containsKey(key))
 			return get(key)
 		
@@ -85,7 +85,7 @@ const class SynchronizedMap {
 				return get(iKey)
 
 			item := iFunc.call(iKey)
-			Utils.checkType(item?.typeof, valType, "Map value")
+			ConcurrentUtils.checkType(item?.typeof, valType, "Map value")
 			iVal := item?.toImmutable
 			newMap := val.rw
 			newMap.set(iKey, iVal)
@@ -98,8 +98,8 @@ const class SynchronizedMap {
 	** Both the 'key' and 'val' must be immutable. 
 	@Operator
 	Void set(Obj key, Obj? item) {
-		Utils.checkType(key.typeof,  keyType, "Map key")
-		Utils.checkType(item?.typeof, valType, "Map value")
+		ConcurrentUtils.checkType(key.typeof,  keyType, "Map key")
+		ConcurrentUtils.checkType(item?.typeof, valType, "Map value")
 		iKey := key.toImmutable
 		iVal := item?.toImmutable
 		lock.synchronized |->| {

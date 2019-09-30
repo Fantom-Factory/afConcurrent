@@ -1,7 +1,7 @@
 using concurrent
 
 @Js
-internal class Utils {
+internal class ConcurrentUtils {
 	
 	** A read only copy of the 'Actor.locals' map with the keys sorted alphabetically. Handy for 
 	** debugging. Example:

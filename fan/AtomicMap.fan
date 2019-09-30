@@ -79,7 +79,7 @@ const class AtomicMap {
 			return val
 		}
 		set {
-			Utils.checkMapType(it.typeof, keyType, valType)
+			ConcurrentUtils.checkMapType(it.typeof, keyType, valType)
 			val := it
 			if (Env.cur.runtime == "js")
 				val = val.map { _wrap(it) }
@@ -93,13 +93,13 @@ const class AtomicMap {
 	** This method is **NOT** thread safe. If two Actors call this method at the same time, the 
 	** value function will be called twice for the same key.
 	Obj? getOrAdd(Obj key, |Obj key->Obj?| valFunc) {
-		Utils.checkType(key.typeof, keyType, "Map key")
+		ConcurrentUtils.checkType(key.typeof, keyType, "Map key")
 		iKey := key.toImmutable
 		got	 := get(iKey)		
 		if (containsKey(iKey))
 			return got
 		val  := valFunc.call(iKey)
-		Utils.checkType(val?.typeof, valType, "Map value")
+		ConcurrentUtils.checkType(val?.typeof, valType, "Map value")
 		iVal := (Env.cur.runtime == "js") ? val : val?.toImmutable
 		set(iKey, iVal)
 		return iVal
@@ -108,8 +108,8 @@ const class AtomicMap {
 	** Sets the key / value pair.
 	@Operator
 	Void set(Obj key, Obj? item) {
-		Utils.checkType(key.typeof,  keyType, "Map key")
-		Utils.checkType(item?.typeof, valType, "Map value")
+		ConcurrentUtils.checkType(key.typeof,  keyType, "Map key")
+		ConcurrentUtils.checkType(item?.typeof, valType, "Map value")
 		iKey  := key.toImmutable
 		iVal  := (Env.cur.runtime == "js") ? item : item?.toImmutable
 		rwMap := val.rw

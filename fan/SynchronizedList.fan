@@ -49,7 +49,7 @@ const class SynchronizedList {
 			return atomicList.val 
 		}
 		set { 
-			Utils.checkListType(it.typeof, valType)
+			ConcurrentUtils.checkListType(it.typeof, valType)
 			atomicList.val = it.toImmutable 
 		}
 	}
@@ -58,7 +58,7 @@ const class SynchronizedList {
 	** Return this. 
 	@Operator
 	This add(Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		lock.synchronized |->| {
 			rwList := val.rw
 			rwList.add(item)
@@ -74,7 +74,7 @@ const class SynchronizedList {
 	** Throw IndexErr if index is out of range.
 	** Throw ReadonlyErr if readonly. 
 	This insert(Int index, Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		lock.synchronized |->| {
 			rwList := val.rw
 			rwList.insert(index, item)
@@ -115,7 +115,7 @@ const class SynchronizedList {
 	}
 
 	This push(Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		lock.synchronized |->| {
 			rwList := val.rw
 			rwList.push(item)

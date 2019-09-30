@@ -25,7 +25,7 @@ const class LocalList {
 	Obj?[] val {
 		get { localRef.val }
 		set { 
-			Utils.checkListType(it.typeof, valType)
+			ConcurrentUtils.checkListType(it.typeof, valType)
 			localRef.val = it 
 		}
 	}
@@ -40,7 +40,7 @@ const class LocalList {
 	** Return this. 
 	@Operator
 	This add(Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		val.add(item)
 		return this
 	}
@@ -52,7 +52,7 @@ const class LocalList {
 	** Throw IndexErr if index is out of range.
 	** Throw ReadonlyErr if readonly. 
 	This insert(Int index, Obj? item) {
-		Utils.checkType(item?.typeof, valType, "List value")
+		ConcurrentUtils.checkType(item?.typeof, valType, "List value")
 		val.insert(index, item)
 		return this
 	}

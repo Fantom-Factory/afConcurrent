@@ -55,7 +55,7 @@ const class LocalRef {
 	
 	private Str createPrefix(Str name, Int pad) {
 		count 	:= counter.incrementAndGet
-		padded	:= Base64.toBase64(count, pad)
+		padded	:= ConcurrentBase64.toBase64(count, pad)
 		inter	:= name.contains("\${id}") ? name : "\${id}.${name}"
 		prefix 	:= inter.replace("\${id}", padded)
 		return prefix

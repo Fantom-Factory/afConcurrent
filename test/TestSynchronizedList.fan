@@ -28,15 +28,15 @@ internal class TestSynchronizedList : ConcurrentTest {
 	Void testListTypeChecks() {
 		list := SynchronizedList(ActorPool()) { valType = Str# }
 		
-		verifyErrMsg(ArgErr#, Utils.wrongType(Int#, Str#, "List value")) {
+		verifyErrMsg(ArgErr#, ConcurrentUtils.wrongType(Int#, Str#, "List value")) {
 			list.add(39)
 		}
 		
-		verifyErrMsg(ArgErr#, Utils.wrongType(Int[]#, Str[]#, "List")) {
+		verifyErrMsg(ArgErr#, ConcurrentUtils.wrongType(Int[]#, Str[]#, "List")) {
 			list.val = Int[,]
 		}
 
-		verifyErrMsg(ArgErr#, Utils.wrongType(null, Str#, "List value")) {
+		verifyErrMsg(ArgErr#, ConcurrentUtils.wrongType(null, Str#, "List value")) {
 			list.add(null)
 		}
 	}
