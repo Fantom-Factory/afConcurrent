@@ -1,17 +1,21 @@
-v1.0.26
+Release Notes [#releaseNotes]
+*************
+
+
+v1.0.26 [#v1.0.26]
 =======
  - New: 'WorkerPool' class combines 'ActorPool' with 'Synchronized'.
 
-v1.0.24
+v1.0.24 [#v1.0.24]
 =======
  - Bug: Fixed 'AtomicMap' to really work with funcs in Javascript environments.
 
-v1.0.22
+v1.0.22 [#v1.0.22]
 =======
  - New: 'afConcurrent' now available as a SkySpark extension.
  - New: Added workaround so 'AtomicMap' may hold funcs in Javascript environments.
 
-v1.0.20
+v1.0.20 [#v1.0.20]
 =======
  - New: Added 'SynchronizedState.trap()' as convenience for calling state methods on 'sync()'.
  - New: Added 'push()', 'pop()', and 'peek()' to all Lists.
@@ -25,7 +29,7 @@ v1.0.20
  - Bug: 'SynchronizedBuf' could grow unbounded. It now empties once
  reading catches up with the writing.
 
-v1.0.18
+v1.0.18 [#v1.0.18]
 =======
  - New: A thread safe and const 'SynchronizedBuf'.
  - New: Added 'insert()', 'first()', & 'last()' to all Lists.
@@ -33,53 +37,53 @@ v1.0.18
  - New: Added 'sync()', 'async()', & 'asyncLater()' to SynchronizedState.
  - Bug: 'SynchronizedList.remove()' & 'SynchronizedList.removeAt()' threw an NPE if the item was 'null' or didn't exist.
 
-v1.0.16
+v1.0.16 [#v1.0.16]
 =======
  - New: Added 'removeAt()' to all Lists.
  - New: 'SynchronizedProvider' now provides 'ActorPool' instances.
  - Chg: Exposed 'Actor' on 'Synchronized'.
  - Chg: Made 'Synchronized' methods 'virtual' - happy overriding!
 
-v1.0.14
+v1.0.14 [#v1.0.14]
 =======
  - New: 'Synchronized.asyncLater()'.
 
-v1.0.12
+v1.0.12 [#v1.0.12]
 =======
  - New: 'ActorPools' and 'LocalRefManager'.
  - Chg: Added non-invasive services and modules for use with [IoC v3]`pod:afIoc`.
  - Chg: Renamed 'SynchronizedList.listType' to 'valType'.
  - Bug: 'AtomicMap.getOrAdd()' could return an unexpected 'null' during race conditions.
 
-v1.0.10
+v1.0.10 [#v1.0.10]
 =======
  - Chg: 'AtomicList' and 'AtomicMap' are now available in Javascript.
  - Chg: 'LocalRef' also available in Javascript, but only with Fantom 1.0.68.
 
-v1.0.8
+v1.0.8 [#v1.0.8]
 ======
  - New: Added 'Synchronized.inSync()' method to tell if you're currently in the Sync thread or not.
  - Chg: Renamed 'listType' to 'valType' in 'LocalList' and 'AtomicList'. (Potential breaking change.)
 
-v1.0.6
+v1.0.6 [#v1.0.6]
 ======
  - New: 'Synchronized' locks are re-entrant by default.
  - Chg: 'SynchronizedFileMap' only caches values whose associated file exists.
  - Bug: 'SynchronizedFileMap' would Err if handed a non-existant file.
 
-v1.0.4
+v1.0.4 [#v1.0.4]
 ======
  - New: Runtime type checks on all List and Map, keys and values.
  - Bug: 'Synchronized' could mistakenly wrap un-related 'IOErrs' with it's own immutable err msg.
  - Bug: Could not set the `SynchronizedFileMap` timeout to 'null'.
 
-v1.0.2
+v1.0.2 [#v1.0.2]
 ======
  - New: All Maps and Lists can be parameterized with Types. Set them in the it-block ctor.
  - New: 'LocalRefs', 'LocalLists' and 'LocalMaps' are now really lazy and don't create objects unless they really need to.
  - New: Added 'SynchronizedFileMap.isModified(File)'.
 
-v1.0.0
+v1.0.0 [#v1.0.0]
 ======
  - New: Initial release.
  - New: Added 'SynchronizedFileMap'.
