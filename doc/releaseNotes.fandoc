@@ -1,6 +1,10 @@
 Release Notes [#releaseNotes]
 *************
 
+v1.0.28 [#v1.0.28]
+=======
+ - Chg: Remove warnings from SkySpark doc generation
+ - Chg: Recompiled to remove the 'sourceMappingURL' comment from the Fantom JS.
 
 v1.0.26 [#v1.0.26]
 =======

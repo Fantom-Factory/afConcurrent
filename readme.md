@@ -1,13 +1,13 @@
-# Concurrent v1.0.26
+# Concurrent v1.0.28
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
-[![pod: v1.0.26](http://img.shields.io/badge/pod-v1.0.26-yellow.svg)](http://eggbox.fantomfactory.org/pods/afConcurrent)
+[![pod: v1.0.28](http://img.shields.io/badge/pod-v1.0.28-yellow.svg)](http://eggbox.fantomfactory.org/pods/afConcurrent)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## <a name="overview"></a>Overview
 
-Concurrent builds upon the Fantom's core [concurrent library](https://fantom.org/doc/concurrent/index.html) and provides a collection of utility classes for sharing data in and between threads.
+Concurrent builds upon the Fantom's core [concurrent library](https://fantom.org/doc/concurrent/index) and provides a collection of utility classes for sharing data in and between threads.
 
 ## <a name="Install"></a>Install
 
@@ -27,13 +27,13 @@ To use in a [Fantom](https://fantom-lang.org/) project, add a dependency to `bui
 
 Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afConcurrent/) - the Fantom Pod Repository.
 
-## Usage
+## <a name="usage"></a>Usage
 
 The `Concurrent` library provides strategies for sharing data between threads:
 
-### Synchronized
+### <a name="synchronized"></a>Synchronized
 
-The [Synchronized](http://eggbox.fantomfactory.org/pods/afConcurrent/api/Synchronized) class provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. It can be used as a mechanism for exclusive locking. For example:
+The [afConcurrent::Synchronized](http://eggbox.fantomfactory.org/pods/afConcurrent/api/Synchronized) class provides synchronized serial access to a block of code, akin to Java's `synchronized` keyword. It can be used as a mechanism for exclusive locking. For example:
 
     class Example {
         Synchronized lock := Synchronized(ActorPool())
@@ -56,18 +56,18 @@ The [Synchronized](http://eggbox.fantomfactory.org/pods/afConcurrent/api/Synchro
 
 Alien-Factory's Concurrent library uses this *synchronized* construct to supply the following useful classes:
 
-* [SynchronizedState](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedState)
-* [SynchronizedList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedList)
-* [SynchronizedMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedMap)
-* [SynchronizedFileMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedFileMap)
-* [SynchronizedBuf](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedBuf)
+* [afConcurrent::SynchronizedState](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedState)
+* [afConcurrent::SynchronizedList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedList)
+* [afConcurrent::SynchronizedMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedMap)
+* [afConcurrent::SynchronizedFileMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedFileMap)
+* [afConcurrent::SynchronizedBuf](http://eggbox.fantomfactory.org/pods/afConcurrent/api/SynchronizedBuf)
 
 
 All *Synchronized* classes are `const`, mutable, and may be shared between threads.
 
 See the individual class documentation for more details.
 
-### Atomic
+### <a name="atomic"></a>Atomic
 
 Atomic Lists and Maps are backed by an object held in an `AtomicRef`. They do not perform any processing in a separate thread, hence are more *lightweight* than their synchronized counterparts.
 
@@ -75,13 +75,13 @@ But write operations make a copy the backing object before appling changes, and 
 
 See:
 
-* [AtomicList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/AtomicList)
-* [AtomicMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/AtomicMap)
+* [afConcurrent::AtomicList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/AtomicList)
+* [afConcurrent::AtomicMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/AtomicMap)
 
 
 The atomic classes are also available in Javascript.
 
-### Local
+### <a name="local"></a>Local
 
 Local Refs, Lists and Maps do not share data between threads, in fact, quite the opposite!
 
@@ -106,7 +106,7 @@ The problem is that data held in `Actor.locals()` is susceptible to being overwr
     echo(kid.beer)  // --> Ginger Ale
     
 
-To prevent this, [LocalRef](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRef) creates a unique qualified name to store the data under:
+To prevent this, [afConcurrent::LocalRef](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRef) creates a unique qualified name to store the data under:
 
     class Drink {
         LocalRef beer := LocalRef("beer")
@@ -129,19 +129,19 @@ While `LocalRefs` are not too exciting on their own, [BedSheet](http://eggbox.fa
 
 See:
 
-* [LocalRef](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRef)
-* [LocalList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalList)
-* [LocalMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalMap)
+* [afConcurrent::LocalRef](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRef)
+* [afConcurrent::LocalList](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalList)
+* [afConcurrent::LocalMap](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalMap)
 
 
 `LocalRef` is also available in Javascript (as from Fantom 1.0.68) but `LocalList` and `LocalMap` are blocked on [js: Func.toImmutable not implemented](http://fantom.org/forum/topic/1144#c4).
 
-## IoC
+## <a name="ioC"></a>IoC
 
 When Concurrent is added as a dependency to an IoC enabled application, such as [BedSheet](http://eggbox.fantomfactory.org/pods/afBedSheet) or [Reflux](http://eggbox.fantomfactory.org/pods/afReflux), then the following services are automatically made available to IoC:
 
-* [ActorPools](http://eggbox.fantomfactory.org/pods/afConcurrent/api/ActorPools) - takes contributions of `Str:ActorPool`
-* [LocalRefManager](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRefManager)
+* [afConcurrent::ActorPools](http://eggbox.fantomfactory.org/pods/afConcurrent/api/ActorPools) - takes contributions of `Str:ActorPool`
+* [afConcurrent::LocalRefManager](http://eggbox.fantomfactory.org/pods/afConcurrent/api/LocalRefManager)
 
 
 A `DependencyProvider` then allows you to inject instances of:
